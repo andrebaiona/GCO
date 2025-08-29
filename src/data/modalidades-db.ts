@@ -1,5 +1,19 @@
 import prisma from "@/lib/prisma";
 
+export type Modalidade = {
+  id: number;
+  nome: string;
+  slug: string;
+  icone: string;
+  descricao: string;
+  ativo: boolean;
+};
+
+export async function fetchAllModalidades(): Promise<Modalidade[]> {
+  const modalidades = await prisma.modalidades.findMany();
+  return modalidades as Modalidade[];
+}
+
 export async function fetchAllModalidadeSlugs() {
   const modalidades = await prisma.modalidades.findMany({
     select: { slug: true }
@@ -26,9 +40,9 @@ export async function fetchModalidadeBySlug(slug: string) {
   // Cria um novo objeto, sem modificar o original
   return {
     ...modalidade,
-    niveis: modalidade.niveis.map((n) => n.descricao),
-    equipamento: modalidade.equipamento.map((e) => e.nome),
-    competicoes: modalidade.competicoes.map((c) => c.nome),
+    niveis: modalidade.niveis.map((n: { descricao: any; }) => n.descricao),
+    equipamento: modalidade.equipamento.map((e: { nome: any; }) => e.nome),
+    competicoes: modalidade.competicoes.map((c: { nome: any; }) => c.nome),
     contacto: modalidade.contacto_modalidade[0] || {},
     preco: modalidade.preco, // Mantém como array, como vem do Prisma
   };
