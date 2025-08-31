@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { fetchModalidadeBySlug } from "@/data/modalidades-db";
 import { fetchAllModalidadeSlugs } from "@/data/modalidades-db";
+import TabsEscaloes from "@/components/TabsEscaloes";
 
 interface ModalidadePageProps {
   params: { slug: string };
@@ -81,23 +82,22 @@ export default async function ModalidadePage({ params }: ModalidadePageProps) {
           </div>
         </div>
 
-        {/* Escolha de escalão */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Escolha o Escalão</h2>
-          <div className="flex flex-wrap gap-4">
-            {modalidade.niveis.map((nivel: string, index: number) => (
-              <Link
-                key={index}
-                href={`/modalidades/${modalidade.slug}/${nivel}`}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-blue-700 transition-all"
-              >
-                {nivel}
-              </Link>
-            ))}
-          </div>
+        {/* Nota obrigatória de sócio */}
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-8">
+          <p className="font-semibold">É necessário ser sócio para praticar qualquer modalidade no GCO.</p>
         </div>
 
-  {/* ...apenas cabeçalho e escolha de escalão... */}
+        {/* Tabs para escalões */}
+        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Escalões</h2>
+          <TabsEscaloes escalas={modalidade.niveis} modalidade={modalidade} />
+          {modalidade.slug === "patinagem-artistica" && (
+            <div className="mt-4 text-sm text-blue-700">
+              <strong>Nota:</strong> A época da patinagem é de <span className="font-bold">janeiro a dezembro</span>.
+            </div>
+          )}
+        </div>
+  {/* ...apenas cabeçalho... */}
       </div>
     </main>
   );

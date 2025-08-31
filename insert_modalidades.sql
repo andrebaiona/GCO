@@ -1,13 +1,13 @@
 -- ========================================
 -- INSERIR MODALIDADES
 -- ========================================
-INSERT INTO modalidades (id, nome, slug, icone, descricao, ativo, categoria, idade_minima)
+INSERT INTO modalidades (id, nome, slug, icone, descricao, ativo, categoria, idade_minima, idade_maxima)
 VALUES
-(1, 'Andebol', 'andebol', '/icones-modalidades/andebol.png', 'Equipas competitivas em várias categorias etárias.', 1, 'Desporto Coletivo', 6),
-(2, 'Ginástica', 'ginastica', '/icones-modalidades/ginastica.png', 'Atividade física que promove a flexibilidade, coordenação e disciplina.', 1, 'Individual', 4),
-(3, 'Patinagem Artística', 'patinagem-artistica', '/icones-modalidades/patinagem.png', 'Desporto artístico que combina técnica, dança e expressão corporal.', 1, 'Individual', 5),
-(4, 'Xadrez', 'xadrez', '/icones-modalidades/xadrez.png', 'Jogo de estratégia que desenvolve raciocínio lógico e concentração.', 1, 'Intelectual', 6),
-(5, 'Hóquei em Patins', 'hoquei-em-patins', '/icones-modalidades/hoquei.png', 'Desporto coletivo rápido e competitivo praticado em patins.', 1, 'Coletiva', 6);
+(1, 'Andebol', 'andebol', '/icones-modalidades/andebol.png', 'Equipas competitivas em várias categorias etárias.', 1, 'Desporto Coletivo', 6, NULL),
+(2, 'Ginástica', 'ginastica', '/icones-modalidades/ginastica.png', 'Atividade física que promove a flexibilidade, coordenação e disciplina.', 1, 'Individual', 4, NULL),
+(3, 'Patinagem Artística', 'patinagem-artistica', '/icones-modalidades/patinagem.png', 'Desporto artístico que combina técnica, dança e expressão corporal.', 1, 'Individual', 5, NULL),
+(4, 'Xadrez', 'xadrez', '/icones-modalidades/xadrez.png', 'Jogo de estratégia que desenvolve raciocínio lógico e concentração.', 1, 'Intelectual', 6, NULL),
+(5, 'Hóquei em Patins', 'hoquei-em-patins', '/icones-modalidades/hoquei.png', 'Desporto coletivo rápido e competitivo praticado em patins.', 1, 'Coletiva', 6, NULL);
 
 -- ========================================
 -- INSERIR PREÇOS
@@ -19,79 +19,6 @@ VALUES
 (3, 45, 80, 140),
 (4, 25, 35, NULL);
 
--- ========================================
--- INSERIR HORÁRIOS
--- ========================================
-INSERT INTO horarios (modalidade_id, dia, inicio, fim, nivel, grupo)
-VALUES
--- Andebol
-(1, 'Segunda-feira', '17:30', '19:00', 'Iniciação', 'Minis (6-8 anos)'),
-(1, 'Quarta-feira', '17:30', '19:00', 'Iniciação', 'Minis (6-8 anos)'),
-(1, 'Terça-feira', '18:30', '20:00', 'Formação', 'Infantis (9-11 anos)'),
-(1, 'Quinta-feira', '18:30', '20:00', 'Formação', 'Infantis (9-11 anos)'),
-(1, 'Segunda-feira', '19:00', '21:00', 'Competição', 'Iniciados (12-14 anos)'),
-(1, 'Quarta-feira', '19:00', '21:00', 'Competição', 'Iniciados (12-14 anos)'),
-(1, 'Sexta-feira', '19:00', '21:00', 'Competição', 'Iniciados (12-14 anos)'),
-(1, 'Terça-feira', '19:30', '21:30', 'Competição', 'Juvenis Femininos (15-17 anos)'),
-(1, 'Quinta-feira', '19:30', '21:30', 'Competição', 'Juvenis Femininos (15-17 anos)'),
-(1, 'Sábado', '09:30', '11:30', 'Competição', 'Juvenis Femininos (15-17 anos)'),
-(1, 'Terça-feira', '20:00', '22:00', 'Alto Rendimento', 'Juvenis/Juniores Masculinos (15+ anos)'),
-(1, 'Quinta-feira', '20:00', '22:00', 'Alto Rendimento', 'Juvenis/Juniores Masculinos (15+ anos)'),
-(1, 'Sábado', '10:00', '12:00', 'Alto Rendimento', 'Juvenis/Juniores Masculinos (15+ anos)'),
--- Ginástica
-(2, 'Segunda-feira', '16:30', '17:30', 'Baby Gym', '3-5 anos'),
-(2, 'Quarta-feira', '16:30', '17:30', 'Baby Gym', '3-5 anos'),
-(2, 'Sexta-feira', '16:30', '17:30', 'Baby Gym', '3-5 anos'),
-(2, 'Terça-feira', '17:30', '19:00', 'Iniciação', '6-8 anos'),
-(2, 'Quinta-feira', '17:30', '19:00', 'Iniciação', '6-8 anos'),
-(2, 'Segunda-feira', '18:00', '20:00', 'Elementar', '9-12 anos'),
-(2, 'Quarta-feira', '18:00', '20:00', 'Elementar', '9-12 anos'),
-(2, 'Sexta-feira', '17:30', '19:30', 'Elementar', '9-12 anos'),
-(2, 'Terça-feira', '19:00', '21:00', 'Avançado', '13+ anos'),
-(2, 'Quinta-feira', '19:00', '21:00', 'Avançado', '13+ anos'),
-(2, 'Sábado', '09:00', '12:00', 'Competição', 'Selecionados'),
--- Patinagem Artística
-(3, 'Terça-feira', '16:45', '17:45', 'Iniciação', '4-6 anos'),
-(3, 'Quinta-feira', '16:45', '17:45', 'Iniciação', '4-6 anos'),
-(3, 'Segunda-feira', '17:45', '19:15', 'Elementar', '7-10 anos'),
-(3, 'Quarta-feira', '17:45', '19:15', 'Elementar', '7-10 anos'),
-(3, 'Terça-feira', '18:45', '20:45', 'Avançado', '11+ anos'),
-(3, 'Quinta-feira', '18:45', '20:45', 'Avançado', '11+ anos'),
-(3, 'Sábado', '09:30', '12:30', 'Competição', 'Todos os níveis'),
--- Xadrez
-(4, 'Quarta-feira', '17:00', '18:00', 'Iniciação', '5-8 anos'),
-(4, 'Sábado', '09:30', '10:30', 'Iniciação', '5-8 anos'),
-(4, 'Quarta-feira', '18:00', '19:30', 'Intermédio', '9-14 anos'),
-(4, 'Sábado', '10:30', '12:00', 'Intermédio', '9-14 anos'),
-(4, 'Quinta-feira', '18:30', '20:30', 'Avançado', '15+ anos'),
-(4, 'Sábado', '14:00', '17:00', 'Competição', 'Todos os níveis');
--- ========================================
--- INSERIR NÍVEIS
--- ========================================
-INSERT INTO niveis (modalidade_id, descricao)
-VALUES
-(1, 'Iniciação'), (1, 'Avançado'),
-(2, 'Base'), (2, 'Intermédio'),
-(3, 'Iniciação'), (3, 'Avançado'),
-(4, 'Todos os níveis'),
-(5, 'Iniciação'), (5, 'Avançado');
-
---=============================================================================
--- INSERIR EQUIPAMENTO
---=============================================================================
-
-INSERT INTO equipamento (modalidade_id, nome) VALUES
-(1, 'Equipamento desportivo'),
-(1, 'Sapatilhas adequadas'),
-(1, 'Proteções (opcional)'),
-(2, 'Fato de ginástica'),
-(2, 'Sapatilhas de ginástica'),
-(2, 'Proteções para pulsos (opcional)'),
-(3, 'Patins artísticos'),
-(3, 'Equipamento de proteção'),
-(3, 'Roupa adequada'),
-(3, 'Capacete (iniciação)'),
-(4, 'Material fornecido pelo clube');
 
 -- ========================================
 -- INSERIR COMPETIÇÕES
@@ -128,6 +55,48 @@ VALUES
 (3, 'Ana Ferreira', '914567890', 'ana.ferreira@gco.pt'),
 (4, 'Pedro Santos', '915678901', 'pedro.santos@gco.pt'),
 (5, 'Rui Almeida', '916789012', 'rui.almeida@gco.pt');
+
+-- Escalões Andebol
+INSERT INTO escalao (modalidade_id, nome, idade_minima, idade_maxima, descricao, mensalidade) VALUES
+(1, 'Manitas/Bâmbis/Minis', 7, 12, 'Manitas/Bâmbis/Minis (nasc. 2013-2016)', 20.00),
+(1, 'Sub-14', 13, 14, 'Sub-14 (Infantis Masc. e Fem.) (nasc. 2011-2012)', 30.00),
+(1, 'Sub-16', 15, 16, 'Sub-16 (Iniciados Masc. e Fem.) (nasc. 2009-2010)', 30.00),
+(1, 'Sub-18', 17, 18, 'Sub-18 (Juvenis) (nasc. 2006-2007)', 30.00),
+(1, 'Sub-20', 19, 20, 'Sub-20 (Juniores) (nasc. 2005-2006)', 30.00);
+
+-- Escalões Ginástica
+INSERT INTO escalao (modalidade_id, nome, idade_minima, idade_maxima, descricao, mensalidade) VALUES
+(2, 'Infantil I', 3, 6, 'Infantil I (3-6 anos)', 30.00),
+(2, 'Formativa I', 6, 9, 'Formativa I (6-9 anos)', 30.00),
+(2, 'Formativa II', 6, 9, 'Formativa II (6-9 anos)', 30.00),
+(2, 'Pré-Competição', 9, NULL, 'Pré-Competição (+9 anos)', 45.00),
+(2, 'Competição', NULL, NULL, 'Competição', 55.00);
+
+-- Escalões Patinagem Artística
+INSERT INTO escalao (modalidade_id, nome, idade_minima, idade_maxima, descricao, mensalidade) VALUES
+(3, 'Minis', 4, 6, 'Minis (4-6 anos, 3x/semana)', 37.50),
+(3, 'Iniciação', 6, NULL, 'Iniciação (+6 anos, 3x/semana)', 37.50),
+(3, 'Pré-Competição 4x', NULL, NULL, 'Pré-Competição (4x/semana)', 42.50),
+(3, 'Pré-Competição 6x', NULL, NULL, 'Pré-Competição (6x/semana)', 47.50),
+(3, 'Competição 5x', NULL, NULL, 'Competição (5x/semana)', 45.00),
+(3, 'Competição 6x', NULL, NULL, 'Competição (6x/semana)', 47.50);
+
+-- Escalões Xadrez (mensalidade gratuita)
+INSERT INTO escalao (modalidade_id, nome, idade_minima, idade_maxima, descricao, mensalidade) VALUES
+(4, 'Iniciação', 5, 8, 'Iniciação (5-8 anos)', 0.00),
+(4, 'Intermédio', 9, 14, 'Intermédio (9-14 anos)', 0.00),
+(4, 'Avançado', 15, NULL, 'Avançado (15+ anos)', 0.00),
+(4, 'Competição', NULL, NULL, 'Competição', 0.00);
+
+-- Escalões Hóquei em Patins (sem preços)
+INSERT INTO escalao (modalidade_id, nome, idade_minima, idade_maxima, descricao, mensalidade) VALUES
+(5, 'Bambis', NULL, NULL, 'Bambis', NULL),
+(5, 'Benjamins', NULL, NULL, 'Benjamins', NULL),
+(5, 'Escolares', NULL, NULL, 'Escolares', NULL),
+(5, 'Sub-13', NULL, NULL, 'Sub-13', NULL),
+(5, 'Sub-15', NULL, NULL, 'Sub-15', NULL),
+(5, 'Sub-17', NULL, NULL, 'Sub-17', NULL),
+(5, 'Sub-20', NULL, NULL, 'Sub-20', NULL);
 
 
 

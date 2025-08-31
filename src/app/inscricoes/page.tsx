@@ -1,9 +1,10 @@
 
-import { modalidades } from "@/data/modalidades";
+import { fetchAllModalidades } from "@/data/modalidades-db";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function InscricoesPage() {
+export default async function InscricoesPage() {
+  const modalidades = await fetchAllModalidades();
   return (
     <div className="py-12 bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,7 +59,6 @@ export default function InscricoesPage() {
                     Ver Detalhes
                   </Link>
                 </div>
-                
                 {!modalidade.ativo && (
                   <div className="mt-3 text-sm text-gray-500 bg-gray-50 p-3 rounded-md">
                     <p>

@@ -1,88 +1,53 @@
+-- Tabela de patrocinadores
+CREATE TABLE patrocinadores (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  logo VARCHAR(255), -- caminho para imagem
+  url VARCHAR(255)   -- link do patrocinador
+);
 
-CREATE DATABASE IF NOT EXISTS gco_dev;
-USE gco_dev;
-
--- ------------------------------------------------------------------------------------------------------
+-- Tabela de modalidades
 CREATE TABLE modalidades (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
   slug VARCHAR(100) NOT NULL UNIQUE,
-  icone VARCHAR(50),
+  icone VARCHAR(255),
   descricao TEXT,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
   categoria VARCHAR(100),
-  idade_minima INT NOT NULL,
+  idade_minima INT,
   idade_maxima INT
 );
 
-
-CREATE TABLE horarios (
+-- Tabela de escalões
+CREATE TABLE escalao (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  modalidade_id INT,
-  dia VARCHAR(20),
-  inicio TIME,
-  fim TIME,
-  nivel VARCHAR(50),
-  grupo VARCHAR(50),
+  modalidade_id INT NOT NULL,
+  nome VARCHAR(100) NOT NULL,
+  idade_minima INT,
+  idade_maxima INT,
+  descricao TEXT,
+  mensalidade DECIMAL(10,2), -- preço específico por escalão
   FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE
 );
 
-CREATE TABLE niveis (
+-- Tabela de preços por escalão
+CREATE TABLE preco_escalao (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  modalidade_id INT,
-  descricao VARCHAR(100),
+  modalidade_id INT NOT NULL,
+  escalao VARCHAR(100) NOT NULL,
+  tipo VARCHAR(30), -- 'mensalidade', 'inscricao', etc.
+  valor DECIMAL(10,2) NOT NULL,
+  observacoes TEXT,
   FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE
 );
 
-CREATE TABLE equipamento (
+-- Tabela de notícias
+CREATE TABLE noticias (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  modalidade_id INT,
-  nome TEXT,
-  FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE
-);
-
-CREATE TABLE competicoes (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  modalidade_id INT,
-  nome VARCHAR(100),
-  FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE
-);
-
-CREATE TABLE detalhes_modalidade (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  modalidade_id INT,
-  introducao TEXT,
-  metodologia TEXT,
-  avaliacao TEXT,
-  progressao TEXT,
-  FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE
-);
-
-CREATE TABLE contacto_modalidade (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  modalidade_id INT,
-  responsavel VARCHAR(100),
-  telefone VARCHAR(20),
-  email VARCHAR(100),
-  FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS preco (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    modalidade_id INT NOT NULL,
-    mensalidade DECIMAL(10,2) NOT NULL,   -- 'Mensalidade', 'Inscrição', 'Equipamento'
-    inscricao DECIMAL(10,2) NOT NULL,
-    equipamento DECIMAL(10,2) 
-    FOREIGN KEY (modalidade_id) REFERENCES modalidades(id) ON DELETE CASCADE
-);
-
--- ----------------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS contacto (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    assunto TEXT NOT NULL,
-    mensagem TEXT NOT NULL,
-    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  titulo VARCHAR(200) NOT NULL,
+  conteudo TEXT NOT NULL,
+  imagem VARCHAR(255),
+  data_publicacao DATE,
+  autor VARCHAR(100)
 );

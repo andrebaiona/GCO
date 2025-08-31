@@ -38,12 +38,22 @@ export async function fetchModalidadeBySlug(slug: string) {
   if (!modalidade) return null;
 
   // Cria um novo objeto, sem modificar o original
+  // Serializa os campos Decimal para number
+  let preco = null;
+  if (modalidade.preco && modalidade.preco.length > 0) {
+    const p = modalidade.preco[0];
+    preco = {
+      mensalidade: Number(p.mensalidade),
+      inscricao: Number(p.inscricao),
+      equipamento: p.equipamento !== null ? Number(p.equipamento) : null,
+    };
+  }
   return {
     ...modalidade,
     niveis: modalidade.niveis.map((n: { descricao: any; }) => n.descricao),
     equipamento: modalidade.equipamento.map((e: { nome: any; }) => e.nome),
     competicoes: modalidade.competicoes.map((c: { nome: any; }) => c.nome),
     contacto: modalidade.contacto_modalidade[0] || {},
-    preco: modalidade.preco, // Mantém como array, como vem do Prisma
+    preco,
   };
 }
