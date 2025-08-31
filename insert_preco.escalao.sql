@@ -1,6 +1,6 @@
--- Preços Ginástica
+    -- Preços Ginástica
 INSERT INTO preco_escalao (modalidade_id, escalao, tipo, valor, observacoes) VALUES
-(2, 'Infantil I', 'mensalidade', 30.00, 'Ou 300 €/ano'),
+(2, 'Infantil', 'mensalidade', 30.00, 'Ou 300 €/ano'),
 (2, 'Formativa I', 'mensalidade', 30.00, 'Ou 300 €/ano'),
 (2, 'Formativa II', 'mensalidade', 30.00, 'Ou 300 €/ano'),
 (2, 'Pré-Competição', 'mensalidade', 45.00, 'Ou 155 €/trimestre ou 435 €/ano'),
@@ -8,7 +8,7 @@ INSERT INTO preco_escalao (modalidade_id, escalao, tipo, valor, observacoes) VAL
 (2, 'Todos', 'inscricao', 35.00, NULL),
 (2, 'Todos', 'seguro', 30.00, NULL);
 
--- Preços Patinagem Artística
+    -- Preços Patinagem Artística
 INSERT INTO preco_escalao (modalidade_id, escalao, tipo, valor, observacoes) VALUES
 (3, 'Minis', 'mensalidade', 37.50, '3x/semana'),
 (3, 'Iniciação', 'mensalidade', 37.50, '3x/semana'),
@@ -19,7 +19,7 @@ INSERT INTO preco_escalao (modalidade_id, escalao, tipo, valor, observacoes) VAL
 (3, 'Todos', 'inscricao', 50.00, NULL),
 (3, 'Todos', 'seguro', 25.00, 'Seguro anual');
 
--- Preços Andebol
+    -- Preços Andebol
 INSERT INTO preco_escalao (modalidade_id, escalao, tipo, valor, observacoes) VALUES
 (1, 'Manitas/Bâmbis/Minis', 'mensalidade', 20.00, NULL),
 (1, 'Sub-14', 'mensalidade', 30.00, NULL),
@@ -29,6 +29,6 @@ INSERT INTO preco_escalao (modalidade_id, escalao, tipo, valor, observacoes) VAL
 (1, 'Todos', 'inscricao', 50.00, NULL),
 (1, 'Todos', 'seguro', 25.00, NULL);
 
--- Preços Xadrez
+    -- Preços Xadrez
 INSERT INTO preco_escalao (modalidade_id, escalao, tipo, valor, observacoes) VALUES
-(4, 'Todos', 'mensalidade', 0.00, 'Gratuito');
+(4, 'Todos', 'mensalidade', 0.00, 'Gratuito');  

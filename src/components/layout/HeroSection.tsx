@@ -1,6 +1,5 @@
-import { calcularIdadeClube } from "@/utils/idadeClube";
-
 "use client";
+import { calcularIdadeClube } from "@/utils/idadeClube";
 import { useEffect, useState } from "react";
 
 const heroSlides = [
@@ -8,7 +7,7 @@ const heroSlides = [
     src: "/GCO-LOGO-noBG.png",
     alt: "Ginásio Clube de Odivelas",
     title: "Ginásio Clube de Odivelas",
-    subtitle: "46 anos de tradição desportiva e cultural",
+    subtitle: "47 anos de tradição desportiva e cultural",
     description:
       "Com sede em Odivelas, o clube dedica-se a promover a prática de diversas modalidades desportivas, como a Ginástica, o Andebol, o Hóquei Patins, a Patinagem Artística e Xadrez.",
     buttons: [
@@ -27,7 +26,7 @@ const heroSlides = [
     ],
   },
   {
-    src: "/Captura de ecrã 2025-07-24 195952.png",
+    src: "/Screenshot2025-09-01at00.45.10.png",
     alt: "Última Notícia",
     title: "Última Notícia",
     subtitle: "Apurados para o Mundial de Trampolins 2025",
@@ -43,8 +42,6 @@ const heroSlides = [
     ],
   },
   {
-    src: "/images.png",
-    alt: "Inscrições",
     title: "Inscrições Abertas",
     subtitle: "Junte-se à família GCO!",
     description:
@@ -52,7 +49,7 @@ const heroSlides = [
     buttons: [
       {
         href: "/inscricoes",
-        label: "Inscreva-se já",
+        label: "Ver Detalhes",
         className:
           "bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-bold text-lg hover:bg-yellow-300 transition-colors",
       },
@@ -78,7 +75,6 @@ export default function HeroSection() {
   }, []);
 
   const current = heroSlides[slide];
-  // Slide de notícia (slide 1)
   const isNoticia = slide === 1;
 
   return (
@@ -90,13 +86,43 @@ export default function HeroSection() {
         >
           {isNoticia ? (
             <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16">
-              <div className="flex-shrink-0 w-full md:w-1/2 flex justify-center">
+              <div className="bg-white/10 rounded-xl shadow-lg w-[320px] h-[340px] md:w-[420px] md:h-[440px] flex items-center justify-center">
                 <img
                   src={current.src}
                   alt={current.alt}
-                  className="object-cover rounded-xl shadow-lg w-[320px] h-[320px] md:w-[400px] md:h-[400px]"
+                  className="object-cover rounded-xl shadow-lg w-full h-full"
                   style={{ maxWidth: "100%" }}
                 />
+              </div>
+              <div className="w-full md:w-1/2 text-left">
+                <h1 className="text-4xl md:text-6xl font-bold mb-4">
+                  {current.title}
+                </h1>
+                <p className="text-xl md:text-2xl mb-8 text-blue-100">
+                  {current.subtitle}
+                </p>
+                <p className="text-lg mb-8 max-w-3xl text-blue-50">
+                  {current.description}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {current.buttons.map((btn, idx) => (
+                    <a key={idx} href={btn.href} className={btn.className}>
+                      {btn.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : slide === 2 ? (
+            <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16 min-h-[400px]">
+              <div className="flex-shrink-0 w-full md:w-1/2 flex justify-center items-center">
+                <div className="bg-white/10 rounded-xl shadow-lg w-[280px] h-[300px] md:w-[360px] md:h-[440px] flex items-center justify-center">
+                  <img
+                    src="/530131865_18073306919003286_1218223041355361627_n.jpg"
+                    alt="Inscrições GCO"
+                    className="object-cover rounded-xl shadow-lg w-full h-full"
+                  />
+                </div>
               </div>
               <div className="w-full md:w-1/2 text-left">
                 <h1 className="text-4xl md:text-6xl font-bold mb-4">
