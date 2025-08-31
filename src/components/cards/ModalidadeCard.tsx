@@ -1,5 +1,5 @@
 
-import { Modalidade } from "@/data/modalidades";
+import { Modalidade } from "@/data/modalidades-db";
 import Link from "next/link";
 import Image from "next/image";
 

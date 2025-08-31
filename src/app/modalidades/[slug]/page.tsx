@@ -1,7 +1,9 @@
-import { fetchModalidadeBySlug, fetchAllModalidadeSlugs } from "@/data/modalidades-db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { fetchModalidadeBySlug } from "@/data/modalidades-db";
+import { fetchAllModalidadeSlugs } from "@/data/modalidades-db";
+import TabsEscaloes from "@/components/TabsEscaloes";
 
 
 export default async function ModalidadePage(props:any) {
@@ -23,7 +25,6 @@ export default async function ModalidadePage(props:any) {
           </div>
         </nav>
 
-        {/* Header Section */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-8 text-white relative">
             <div className="absolute inset-0 bg-black/10"></div>
@@ -33,9 +34,9 @@ export default async function ModalidadePage(props:any) {
                   className="bg-white rounded-xl mr-6 filter drop-shadow-lg flex items-center justify-center"
                   style={{ width: 100, height: 100 }}
                 >
-                  {modalidade.icone?.startsWith("/") ? (
+                  {modalidade.icone && modalidade.icone.startsWith("/") ? (
                     <Image
-                      src={modalidade.icone}
+                      src={modalidade.icone || "/default.png"}
                       alt={modalidade.nome}
                       width={150}
                       height={80}
@@ -67,239 +68,28 @@ export default async function ModalidadePage(props:any) {
           </div>
         </div>
 
-        {modalidade.ativo ? (
-          <>
-            {/* Quick Info Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                    <span className="text-2xl">💰</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">Preços</h3>
-                    <p className="text-sm text-gray-600">Valores mensais</p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Mensalidade:</span>
-                    <span className="font-semibold text-black">
-                      {modalidade.preco?.[0]?.mensalidade != null ? `${modalidade.preco[0].mensalidade}€` : "—"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Inscrição:</span>
-                    <span className="font-semibold text-black">
-                      {modalidade.preco?.[0]?.inscricao != null ? `${modalidade.preco[0].inscricao}€` : "—"}
-                    </span>
-                  </div>
-                  {modalidade.preco?.[0]?.equipamento != null && (
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Equipamento:</span>
-                      <span className="font-semibold text-black">{modalidade.preco[0].equipamento?.toString()}€</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+        {/* Nota obrigatória de sócio */}
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-8">
+          <p className="font-semibold">É necessário ser sócio para praticar qualquer modalidade no GCO.</p>
+        </div>
 
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                    <span className="text-2xl">📅</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900">Horários</h3>
-                    <p className="text-sm text-gray-600 text-black">{modalidade.horarios?.length ?? 0} sessões/semana</p>
-                  </div>
-                </div>
-                <div className="text-sm text-gray-600">
-                  <p>Vários horários disponíveis</p>
-                  <p>Ver tabela completa abaixo</p>
-                </div>
-              </div>
+        {/* Tabs para escalões */}
+        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Escalões</h2>
+          <TabsEscaloes escalas={modalidade.niveis} modalidade={modalidade} />
+          {modalidade.slug === "patinagem-artistica" && (
+            <div className="mt-4 text-sm text-blue-700">
+              <strong>Nota:</strong> A época da patinagem é de <span className="font-bold">janeiro a dezembro</span>.
             </div>
-
-            {/* Left Column */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="space-y-8">
-                {/* Sobre a Modalidade */}
-                <div className="bg-white rounded-xl shadow-md p-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Sobre a Modalidade</h2>
-                  <p className="text-gray-700 leading-relaxed mb-4">
-                    {modalidade.detalhes_modalidade?.[0]?.introducao ?? ""}
-                  </p>
-                </div>
-
-                {/* Níveis */}
-                <div className="bg-white rounded-xl shadow-md p-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Níveis Disponíveis</h2>
-                  <div className="space-y-3">
-                    {modalidade.niveis?.map((nivel, index) => (
-                      <div key={index}>{nivel || "—"}</div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Competições */}
-                {modalidade.competicoes?.length > 0 && (
-                  <div className="bg-white rounded-xl shadow-md p-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Competições</h2>
-                    <div className="space-y-2">
-                      {modalidade.competicoes.map((c, i) => (
-                        <div key={i} className="flex items-center">
-                          <span className="text-yellow-500 mr-2">🏆</span>
-                          <span className="text-gray-700 text-sm">{c || "—"}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Equipamento */}
-                <div className="bg-white rounded-xl shadow-md p-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Equipamento Necessário</h2>
-                  <div className="space-y-2">
-                    {modalidade.equipamento?.map((item, index) => (
-                      <div key={index} className="flex items-center">
-                        <span className="text-blue-500 mr-2">•</span>
-                        <span className="text-gray-700 text-sm">{item || "—"}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Metodologia */}
-                <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Metodologia</h2>
-                  <p className="text-gray-700 leading-relaxed">
-                    {modalidade.detalhes_modalidade?.[0]?.metodologia ?? ""}
-                  </p>
-                </div>
-
-                {/* Avaliação e Progressão */}
-                <div className="bg-white rounded-xl shadow-md p-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Avaliação e Progressão</h2>
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Avaliação:</h3>
-                      <p className="text-gray-700 text-sm">{modalidade.detalhes_modalidade?.[0]?.avaliacao ?? ""}</p>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 mb-2">Progressão:</h3>
-                      <p className="text-gray-700 text-sm">{modalidade.detalhes_modalidade?.[0]?.progressao ?? ""}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column */}
-              <div className="space-y-8">
-                {/* Horários */}
-                <div className="bg-white rounded-xl shadow-md p-6">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Horários</h2>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b">
-                          <th className="text-left py-2 font-semibold text-black">Dia</th>
-                          <th className="text-left py-2 font-semibold text-black">Horário</th>
-                          <th className="text-left py-2 font-semibold text-black">Nível</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {modalidade.horarios?.map((h, i) => (
-                          <tr key={i} className="border-b border-gray-100">
-                            <td className="py-2 text-gray-900">{h.dia ?? "--"}</td>
-                            <td className="py-2 text-gray-700">
-                              {h.inicio && h.fim
-                                ? `${new Date(h.inicio).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })} - ${new Date(h.fim).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}`
-                                : '--'}
-                            </td>
-                            <td className="py-2">
-                              <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs">{h.nivel ?? ""}</span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Contacto e Inscrição */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-lg p-8 mt-8 text-white">
-              <div className="text-center mb-6">
-                <h2 className="text-3xl font-bold mb-2">Pronto para começar?</h2>
-                <p className="text-blue-100">Junte-se a nós e descubra o seu potencial!</p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-xl font-bold mb-4">Informações de Contacto</h3>
-                  <div className="space-y-2">
-                    <p><strong>Responsável:</strong> {modalidade.contacto_modalidade?.[0]?.responsavel ?? "—"}</p>
-                    {modalidade.contacto_modalidade?.[0]?.telefone && (
-                      <p><strong>Telefone:</strong> {modalidade.contacto_modalidade[0].telefone}</p>
-                    )}
-                    {modalidade.contacto_modalidade?.[0]?.email && (
-                      <p><strong>Email:</strong> {modalidade.contacto_modalidade[0].email}</p>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="text-center md:text-right">
-                  <Link
-                    href="/inscricoes"
-                    className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-lg"
-                  >
-                    Inscrever-me Agora
-                  </Link>
-                  <p className="text-sm text-blue-100 mt-2">Processo de inscrição simples e rápido</p>
-                </div>
-              </div>
-            </div>
-          </>
-        ) : (
-          /* Modalidade Suspensa */
-          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-            <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">⚠️</span>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Modalidade Temporariamente Suspensa</h2>
-            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Esta modalidade encontra-se temporariamente suspensa devido a questões regulamentares. 
-              Estamos a trabalhar para retomar as atividades o mais breve possível.
-            </p>
-            <div className="bg-blue-50 p-6 rounded-lg mb-6">
-              <h3 className="font-bold text-blue-900 mb-2">Interessado nesta modalidade?</h3>
-              <p className="text-blue-700 mb-4">
-                Pode registar o seu interesse e será contactado assim que as atividades forem retomadas.
-              </p>
-              <Link
-                href="/contactos"
-                className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Registar Interesse
-              </Link>
-            </div>
-            <div className="text-sm text-gray-500">
-              <p><strong>Contacto:</strong> {modalidade.contacto_modalidade?.[0]?.responsavel ?? "—"}</p>
-              {modalidade.contacto_modalidade?.[0]?.email && (
-                <p><strong>Email:</strong> {modalidade.contacto_modalidade[0].email}</p>
-              )}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
+  {/* ...apenas cabeçalho... */}
       </div>
     </main>
   );
 }
 
 export async function generateStaticParams() {
-  const modalidades = await fetchAllModalidadeSlugs();
-  return modalidades.map((modalidade) => ({
-    slug: modalidade.slug,
-  }));
+  const slugs = await fetchAllModalidadeSlugs();
+  return slugs.map((modalidade: { slug: string }) => ({ slug: modalidade.slug }));
 }
