@@ -1,7 +1,7 @@
 "use client";
 import { calcularIdadeClube } from "@/utils/idadeClube";
 import { useEffect, useState } from "react";
-// Removido: não usar Prisma no client
+import { fetchNoticias } from "@/data/noticias-db";
 
 const heroSlides = [
   {
@@ -51,12 +51,13 @@ export default function HeroSection() {
   const [slides, setSlides] = useState(heroSlides);
 
   useEffect(() => {
-    fetch("/api/noticias?limit=1&order=desc")
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          const noticia = data[0];
-          setSlides(slides => {
+    const carregarNoticias = async () => {
+      try {
+        const noticias = await fetchNoticias({ limit: 1, order: "desc" });
+
+        if (Array.isArray(noticias) && noticias.length > 0) {
+          const noticia = noticias[0];
+          setSlides((slides) => {
             const updated = [...slides];
             updated[1] = {
               src: noticia.imagem || "/Screenshot2025-09-01at00.45.10.png",
@@ -76,7 +77,12 @@ export default function HeroSection() {
             return updated;
           });
         }
-      });
+      } catch (error) {
+        console.error("Erro a carregar notícias:", error);
+      }
+    };
+
+    carregarNoticias();
   }, []);
 
   useEffect(() => {
@@ -98,16 +104,18 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-black opacity-20"></div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div
-          className={`transition-all duration-700 ${animating ? 'opacity-0 translate-x-10' : 'opacity-100 translate-x-0'}`}
+          className={`transition-all duration-700 ${
+            animating ? "opacity-0 translate-x-10" : "opacity-100 translate-x-0"
+          }`}
         >
           {isNoticia ? (
+            // slide da notícia
             <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16">
               <div className="bg-white/10 rounded-xl shadow-lg w-[320px] h-[340px] md:w-[420px] md:h-[440px] flex items-center justify-center">
                 <img
                   src={current.src}
                   alt={current.alt}
                   className="object-cover rounded-xl shadow-lg w-full h-full"
-                  style={{ maxWidth: "100%" }}
                 />
               </div>
               <div className="w-full md:w-1/2 text-left">
@@ -130,6 +138,7 @@ export default function HeroSection() {
               </div>
             </div>
           ) : slide === 2 ? (
+            // slide das inscrições
             <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16 min-h-[400px]">
               <div className="flex-shrink-0 w-full md:w-1/2 flex justify-center items-center">
                 <div className="bg-white/10 rounded-xl shadow-lg w-[280px] h-[300px] md:w-[360px] md:h-[440px] flex items-center justify-center">
@@ -160,6 +169,7 @@ export default function HeroSection() {
               </div>
             </div>
           ) : (
+            // slide principal
             <div className="text-center">
               <div className="flex justify-center mb-6">
                 <img
