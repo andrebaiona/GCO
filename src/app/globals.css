@@ -204,22 +204,28 @@ body {
     animation-timing-function: linear;
   }
 
-  /* Animação para o carrossel de patrocinadores */
+  .sponsors-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+  }
+
+  .sponsors-track {
+    display: flex;
+    width: max-content;
+    animation: scroll 100s linear infinite;
+  }
+
+  .sponsors-track:hover {
+    animation-play-state: paused;
+  }
+
   @keyframes scroll {
     0% {
       transform: translateX(0);
     }
     100% {
-      transform: translateX(-33.333%);
+      transform: translateX(-50%);
     }
-  }
-
-  .animate-scroll {
-    animation: scroll 40s linear infinite;
-    will-change: transform;
-  }
-
-  .animate-scroll:hover {
-    animation-play-state: paused;
   }
 }
