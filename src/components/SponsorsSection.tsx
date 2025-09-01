@@ -18,14 +18,14 @@ const SponsorsSection = () => {
     { id: 4, name: 'Lord Of Light', logo: '/sponsors_img/LL-LORD-OF-LIGHT.png', website: 'https://lordoflight.pt/' },
     { id: 5, name: 'Luís Almeida', logo: '/sponsors_img/LuisAlmeida.png', website: 'https://www.facebook.com/LuisAlmeidaconsultorimobiliario' },
     { id: 6, name: 'António Paixão', logo: '/sponsors_img/Antonio_Paixao.jpg', website: '#' },
-    { id: 7, name: 'AutoFornence', logo: '/sponsors_img/AutoFornence.jpeg', website: '#' },
+    { id: 7, name: 'AutoFornence', logo: '/sponsors_img/AutoFornence.jpeg', website: 'https://www.facebook.com/people/A-Oficina-Auto-Fornence/100063656738968/' },
     { id: 8, name: 'CED', logo: '/sponsors_img/CED.bmp', website: '#' },
-    { id: 9, name: 'Decor Gesso', logo: '/sponsors_img/DecorGesso.png', website: '#' },
-    { id: 10, name: 'D Dinis', logo: '/sponsors_img/El Rei D Dinis.jpeg', website: '#' },
-    { id: 11, name: 'Farmácia Gonçalves', logo: '/sponsors_img/Farmacia Goncalves.jpg', website: '#' },
+    { id: 9, name: 'Decor Gesso', logo: '/sponsors_img/DecorGesso.png', website: 'https://www.facebook.com/people/Decorgesso-Lda/100009899102416/' },
+    { id: 10, name: 'D Dinis', logo: '/sponsors_img/El Rei D Dinis.jpeg', website: 'https://elreiddinis.pt/' },
+    { id: 11, name: 'Farmácia Gonçalves', logo: '/sponsors_img/Farmacia Goncalves.jpg', website: 'https://www.farmaciagoncalves.com.pt/' },
     { id: 12, name: 'Favorita 2', logo: '/sponsors_img/favorita2.png', website: '#' },
-    { id: 13, name: 'Lara Coffee', logo: '/sponsors_img/Lara Coffee.jpeg', website: '#' },
-    { id: 14, name: 'D Dinis', logo: '/sponsors_img/Simplefy.jpg', website: '#' }
+    { id: 13, name: 'Lara Coffee', logo: '/sponsors_img/Lara Coffee.jpeg', website: 'https://www.facebook.com/gerallaracoffee/' },
+    { id: 14, name: 'Simplefy', logo: '/sponsors_img/Simplefy.jpg', website: 'https://www.simplefy.pt/pt' }
   ];
 
   // duplicamos só uma vez para criar efeito infinito
