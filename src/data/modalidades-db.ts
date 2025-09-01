@@ -9,6 +9,7 @@ export async function fetchEscalaoInfo(modalidadeSlug: string, escalaoNome: stri
   if (!modalidade) return null;
   const escalao = modalidade.escalao.find((esc: any) => esc.nome.toLowerCase() === escalaoNome.toLowerCase());
   if (!escalao) return null;
+  // Filtra preços por tipo e escalão
   const mensalidade = modalidade.preco_escalao.find((p: any) => p.escalao.toLowerCase() === escalaoNome.toLowerCase() && p.tipo.toLowerCase() === "mensalidade");
   const inscricao = modalidade.preco_escalao.find((p: any) => p.escalao.toLowerCase() === escalaoNome.toLowerCase() && (p.tipo.toLowerCase() === "inscrição" || p.tipo.toLowerCase() === "inscricao"));
   return {
@@ -56,24 +57,15 @@ export async function fetchModalidadeBySlug(slug: string) {
 
   if (!modalidade) return null;
 
-  // Para cada escalão, associar os preços correspondentes
-  const escalaoComPrecos = modalidade.escalao.map((esc: any) => {
-    const precos = modalidade.preco_escalao.filter((preco: any) =>
-      preco.escalao.toLowerCase() === esc.nome.toLowerCase() && preco.modalidade_id === esc.modalidade_id
-    );
-    return {
-      ...esc,
-      mensalidade: esc.mensalidade ? Number(esc.mensalidade) : null,
-      preco_escalaos: precos.map((preco: any) => ({
-        tipo: preco.tipo,
-        valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor),
-        observacoes: preco.observacoes ?? null,
-      })),
-    };
-  });
-
   return {
     ...modalidade,
-    escalao: escalaoComPrecos,
+    escalao: modalidade.escalao?.map((esc: any) => ({
+      ...esc,
+      mensalidade: esc.mensalidade ? Number(esc.mensalidade) : null,
+    })) || [],
+    preco_escalao: modalidade.preco_escalao?.map((preco: any) => ({
+      ...preco,
+      valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor)
+    })) || [],
   };
 }

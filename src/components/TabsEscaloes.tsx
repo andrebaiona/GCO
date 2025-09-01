@@ -28,7 +28,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
 
   return (
     <div>
-      {/* Tabs in two rows if more than 5 */}
       <div className="mb-6">
         <div className="flex border-b border-gray-300">
           {escaloes.slice(0, 5).map((esc, idx) => (

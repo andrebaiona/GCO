@@ -13,6 +13,7 @@ export default async function ModalidadePage(props:any) {
 
   if (!modalidade) notFound();
 
+  // Extrai os escalões
   const escalas = modalidade.escalao || [];
   return (
     <main className="min-h-screen bg-gray-50 py-12">
