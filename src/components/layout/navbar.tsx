@@ -61,7 +61,7 @@ const Navbar = () => {
                 <h1 className="text-xl font-bold text-white">
                   Ginásio Clube de Odivelas
                 </h1>
-                <p className="text-sm text-gray-200">Desporto e Cultura</p>
+                <p className="text-sm text-gray-200">Instituição de Utilidade Pública</p>
               </div>
             </Link>
           </div>
