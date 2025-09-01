@@ -13,11 +13,16 @@ interface Sponsor {
 const SponsorsSection = () => {
   const sponsors: Sponsor[] = [
     
-    { id: 1, name: 'AGP Auto', logo: '/images (1).png', website: 'https://agpauto.pt/?doing_wp_cron=1753376086.5354089736938476562500' },
-    { id: 2, name: 'Contas Soltas', logo: '/logo-net-empregos.jpg', website: 'https://www.facebook.com/p/Contas-Soltas-100057547206888/' },
-    { id: 3, name: 'Janellux', logo: '/images.png', website: 'https://www.facebook.com/p/Janellux-Lda-100036607254417/' },
-    { id: 4, name: 'Lord Of Light', logo: '/LL-LORD-OF-LIGHT.png', website: 'https://lordoflight.pt/' },
-    { id: 5, name: 'Luís Almeida', logo: '/464827826_1118815626910352_2442819469883028132_n-removebg-preview (2).png', website: 'https://www.facebook.com/LuisAlmeidaconsultorimobiliario' },
+    { id: 1, name: 'AGP Auto', logo: '/sponsors_img/images (1).png', website: 'https://agpauto.pt/?doing_wp_cron=1753376086.5354089736938476562500' },
+    { id: 2, name: 'Contas Soltas', logo: '/sponsors_img/logo-net-empregos.jpg', website: 'https://www.facebook.com/p/Contas-Soltas-100057547206888/' },
+    { id: 3, name: 'Janellux', logo: '/sponsors_img/images.png', website: 'https://www.facebook.com/p/Janellux-Lda-100036607254417/' },
+    { id: 4, name: 'Lord Of Light', logo: '/sponsors_img/LL-LORD-OF-LIGHT.png', website: 'https://lordoflight.pt/' },
+    { id: 5, name: 'Luís Almeida', logo: '/sponsors_img/LuisAlmeida.png', website: 'https://www.facebook.com/LuisAlmeidaconsultorimobiliario' },
+    { id: 6, name: 'António Paixão', logo: '/sponsors_img/Antonio_Paixao.jpg', website: '#'},
+    { id: 7, name: 'AutoFornence', logo: '/sponsors_img/AutoFornence.jpeg', website: '#'},
+    { id: 8, name: 'CED', logo: '/sponsors_img/CED.bmp', website: '#'},
+    { id: 9, name: 'Decor Gesso', logo: '/sponsors_img/DecorGesso.png', website: '#'},
+    { id: 10, name: 'António Paixão', logo: '/sponsors_img/Antonio_Paixao.jpg', website: '#'}
   ];
 
   const allSponsors = [...sponsors, ...sponsors, ...sponsors];
