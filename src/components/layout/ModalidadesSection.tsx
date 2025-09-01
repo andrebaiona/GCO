@@ -19,13 +19,13 @@ export default async function ModalidadesSection() {
             Oferecemos uma variedade de modalidades desportivas para todas as idades e níveis de experiência
           </p>
         </div>
-  <div className="flex gap-8 overflow-x-auto pb-4 justify-center items-center">
-          {modalidades.map((modalidade, index) => (
-            <div className="min-w-[16rem] flex-shrink-0">
-              <ModalidadeCard key={index} modalidade={modalidade} />
-            </div>
-          ))}
-        </div>
+          <div className="flex gap-8 flex-row flex-wrap justify-center items-center">
+            {modalidades.map((modalidade, index) => (
+              <div className="">
+                <ModalidadeCard key={index} modalidade={modalidade} />
+              </div>
+            ))}
+          </div>
       </div>
     </section>
   );

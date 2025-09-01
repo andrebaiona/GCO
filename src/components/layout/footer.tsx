@@ -58,9 +58,9 @@ const Footer = () => {
             </p>
             
             <div className="flex space-x-4">
-              {linksSociais.map((social) => (
+              {linksSociais.map((social, idx) => (
                   <a
-                  key={social.name}
+                  key={social.name + '-' + idx}
                   href={social.href}
                   className="text-gray-400 hover:text-yellow-400 transition-colors"
                   aria-label={social.name}
@@ -76,8 +76,8 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Modalidades</h3>
             <ul className="space-y-2">
-              {modalidades.slice(0, 5).map((modalidade) => (
-                <li key={modalidade.name}>
+              {modalidades.slice(0, 5).map((modalidade, idx) => (
+                <li key={modalidade.name + '-' + idx}>
                   <Link
                     href={modalidade.href}
                     className="text-gray-300 hover:text-yellow-400 text-sm transition-colors"

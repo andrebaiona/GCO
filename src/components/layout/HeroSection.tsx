@@ -7,7 +7,7 @@ const heroSlides = [
     src: "/GCO-LOGO-noBG.png",
     alt: "Ginásio Clube de Odivelas",
     title: "Ginásio Clube de Odivelas",
-    subtitle: ` ${idade} anos de tradição desportiva e cultural`,
+    subtitle: ` 47 anos de tradição desportiva e cultural`,
     description:
       "Com sede em Odivelas, o clube dedica-se a promover a prática de diversas modalidades desportivas, como a Ginástica, o Andebol, o Hóquei Patins, a Patinagem Artística e Xadrez.",
     buttons: [
