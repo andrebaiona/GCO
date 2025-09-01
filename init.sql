@@ -14,9 +14,7 @@ CREATE TABLE modalidades (
   icone VARCHAR(255),
   descricao TEXT,
   ativo BOOLEAN NOT NULL DEFAULT TRUE,
-  categoria VARCHAR(100),
-  idade_minima INT,
-  idade_maxima INT
+  categoria VARCHAR(100)
 );
 
 -- Tabela de escalões

@@ -3,6 +3,7 @@ import ModalidadeCard from "@/components/cards/ModalidadeCard";
 
 export default async function ModalidadesPage() {
   const modalidades = await fetchAllModalidades();
+
   return (
     <main className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
