@@ -12,14 +12,14 @@ export default function ModalidadeCard({ modalidade }: ModalidadeCardProps) {
   
   return (
     <div
-      className={`rounded-xl p-6 hover:shadow-lg transition-all duration-300 border relative ${
+      className={`rounded-xl p-6 hover:shadow-lg transition-all duration-300 border relative flex flex-col items-center justify-center aspect-square w-64 h-64 mx-auto ${
         ativo 
           ? 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:-translate-y-2' 
           : 'bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300 opacity-75'
       }`}
     >
       {!ativo && (
-        <div className="absolute top-4 right-4 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+        <div className="absolute top-4 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
           ATUALMENTE SEM ATIVIDADE
         </div>
       )}
@@ -38,17 +38,13 @@ export default function ModalidadeCard({ modalidade }: ModalidadeCardProps) {
           <span className="text-4xl">{icone}</span>
         )}
       </div>
-      <h3 className={`text-xl font-bold mb-2 ${
+      <h3 className={`text-xl font-bold mb-2 text-center ${
         ativo ? 'text-blue-900' : 'text-gray-600'
       }`}>
         {nome}
       </h3>
-      <p className={`mb-4 ${
-        ativo ? 'text-gray-700' : 'text-gray-500'
-      }`}>
-        {descricao}
-      </p>
-      <div className="flex justify-between items-center">
+      
+      <div className="flex justify-center items-center w-full">
         <Link
           href={`/modalidades/${slug}`}
           className={`font-semibold transition-colors ${
@@ -60,11 +56,6 @@ export default function ModalidadeCard({ modalidade }: ModalidadeCardProps) {
           Saiba mais →
         </Link>
         
-        {!ativo && (
-          <span className="text-gray-500 font-semibold text-sm">
-            Modalidade sem atividade
-          </span>
-        )}
       </div>
     </div>
   );

@@ -65,7 +65,6 @@ export default function SerSocioPage() {
                 Este espaço é dedicado aos Sócios do GCO e tem como objectivo sintetizar um conjunto de informações relevantes a todos os afiliados no Clube.
               </p>
               <p>
-                Aqui estará disponível informação útil sobre as modalidades desportivas do Clube, as vantagens de ser sócio, parcerias e descontos, formulários de inscrição entre outros conteúdos que permitam aos Sócios beneficiar do melhor que o GCO tem a oferecer aos seus associados.
               </p>
               <h2 className="text-xl font-bold text-gray-900 mb-4">Valores</h2>
               <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
@@ -75,25 +74,7 @@ export default function SerSocioPage() {
               </div>
             </div>
 
-             <AccordionSection title="Vantagens de Ser Sócio">   {/* Falta preencher com as vantagens e parcerias */}
-              <p>
-                A preencher
-              </p>
-              <p className="mt-2">
-                Exemplo de texto 
-                <a href="mailto:geral@gcodivelas.pt" className="text-blue-600 hover:underline ml-1">123456789</a>.
-              </p>
-
-              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
-                Exemplo de texto aqui também 
-              </div>
-
-                <AccordionSection title="Parcerias e Descontos">
-                    <p>Parcerias e Descontos</p>
-                </AccordionSection>
-
-              
-            </AccordionSection>
+             
 
             <AccordionSection title="Inscrição de Menores">
               <p>

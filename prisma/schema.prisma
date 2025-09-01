@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -8,76 +7,55 @@ datasource db {
   url      = env("DATABASE_URL_2")
 }
 
-model competicoes {
-  id            Int          @id @default(autoincrement())
-  modalidade_id Int?
-  nome          String?      @db.VarChar(100)
-  modalidades   modalidades? @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model contacto {
-  id       Int       @id @default(autoincrement())
-  nome     String    @db.VarChar(255)
-  email    String    @db.VarChar(255)
-  assunto  String
-  mensagem String
-  data     DateTime? @default(now()) @db.Timestamp(6)
-}
-
-model contacto_modalidade {
-  id            Int          @id @default(autoincrement())
-  modalidade_id Int?
-  responsavel   String?      @db.VarChar(100)
-  telefone      String?      @db.VarChar(20)
-  email         String?      @db.VarChar(100)
-  modalidades   modalidades? @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model detalhes_modalidade {
-  id            Int          @id @default(autoincrement())
-  modalidade_id Int?
-  introducao    String?
-  metodologia   String?
-  avaliacao     String?
-  progressao    String?
-  modalidades   modalidades? @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model equipamento {
-  id            Int          @id @default(autoincrement())
-  modalidade_id Int?
-  nome          String?
-  modalidades   modalidades? @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model horarios {
-  id            Int          @id @default(autoincrement())
-  modalidade_id Int?
-  dia           String?      @db.VarChar(20)
-  inicio        DateTime?    @db.Time(6)
-  fim           DateTime?    @db.Time(6)
-  nivel         String?      @db.VarChar(50)
-  grupo         String?      @db.VarChar(50)
-  modalidades   modalidades? @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model patrocinadores {
+  id    Int    @id @default(autoincrement())
+  nome String @db.VarChar(100)
+  logo String?
+  url  String?
 }
 
 model modalidades {
-  id                  Int                   @id @default(autoincrement())
-  nome                String                @db.VarChar(100)
-  slug                String                @unique @db.VarChar(100)
-  icone               String?               @db.VarChar(50)
-  descricao           String?
-  ativo               Boolean               @default(true)
-  categoria           String?               @db.VarChar(100)
-  idade_minima        Int
-  idade_maxima        Int?
-  competicoes         competicoes[]
-  contacto_modalidade contacto_modalidade[]
-  detalhes_modalidade detalhes_modalidade[]
-  equipamento         equipamento[]
-  horarios            horarios[]
-  niveis              niveis[]
-  preco               preco[]
+  id        Int    @id @default(autoincrement())
+  nome      String @db.VarChar(100)
+  slug      String @unique @db.VarChar(100)
+  icone     String?
+  descricao String?
+  ativo     Boolean @default(true)
+  categoria String?
+  escalao   escalao[]
+  preco_escalao preco_escalao[]
+  niveis niveis[]
+  preco preco[]
+}
+
+model escalao {
+  id            Int    @id @default(autoincrement())
+  modalidade_id Int
+  nome          String @db.VarChar(100)
+  idade_minima  Int?
+  idade_maxima  Int?
+  descricao     String?
+  mensalidade   Decimal?
+  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade)
+}
+
+model preco_escalao {
+  id            Int    @id @default(autoincrement())
+  modalidade_id Int
+  escalao       String @db.VarChar(100)
+  tipo          String @db.VarChar(30)
+  valor         Decimal
+  observacoes   String?
+  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade)
+}
+
+model noticias {
+  id              Int    @id @default(autoincrement())
+  titulo          String @db.VarChar(200)
+  conteudo        String
+  imagem          String?
+  data_publicacao DateTime?
+  autor           String?
 }
 
 model niveis {

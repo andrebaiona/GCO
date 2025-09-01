@@ -1,3 +1,28 @@
+export async function fetchEscalaoInfo(modalidadeSlug: string, escalaoNome: string) {
+  const modalidade = await prisma.modalidades.findUnique({
+    where: { slug: modalidadeSlug },
+    include: {
+      escalao: true,
+      preco_escalao: true,
+    },
+  });
+  if (!modalidade) return null;
+  const escalao = modalidade.escalao.find((esc: any) => esc.nome.toLowerCase() === escalaoNome.toLowerCase());
+  if (!escalao) return null;
+  // Filtra preços por tipo e escalão
+  const mensalidade = modalidade.preco_escalao.find((p: any) => p.escalao.toLowerCase() === escalaoNome.toLowerCase() && p.tipo.toLowerCase() === "mensalidade");
+  const inscricao = modalidade.preco_escalao.find((p: any) => p.escalao.toLowerCase() === escalaoNome.toLowerCase() && (p.tipo.toLowerCase() === "inscrição" || p.tipo.toLowerCase() === "inscricao"));
+  return {
+    nome: escalao.nome,
+    descricao: escalao.descricao,
+    idade_minima: escalao.idade_minima,
+    idade_maxima: escalao.idade_maxima,
+    mensalidade: mensalidade ? Number(mensalidade.valor) : null,
+    inscricao: inscricao ? Number(inscricao.valor) : null,
+    obs_mensalidade: mensalidade?.observacoes ?? null,
+    obs_inscricao: inscricao?.observacoes ?? null,
+  };
+}
 import prisma from "@/lib/prisma";
 
 export type Modalidade = {
@@ -25,35 +50,22 @@ export async function fetchModalidadeBySlug(slug: string) {
   const modalidade = await prisma.modalidades.findUnique({
     where: { slug },
     include: {
-      detalhes_modalidade: true,
-      niveis: { select: { descricao: true } },
-      equipamento: { select: { nome: true } },
-      competicoes: { select: { nome: true } },
-      horarios: true,
-      contacto_modalidade: true,
-      preco: true, // Inclui logo o array de preços
+      escalao: true,
+      preco_escalao: true,
     },
   });
 
   if (!modalidade) return null;
 
-  // Cria um novo objeto, sem modificar o original
-  // Serializa os campos Decimal para number
-  let preco = null;
-  if (modalidade.preco && modalidade.preco.length > 0) {
-    const p = modalidade.preco[0];
-    preco = {
-      mensalidade: Number(p.mensalidade),
-      inscricao: Number(p.inscricao),
-      equipamento: p.equipamento !== null ? Number(p.equipamento) : null,
-    };
-  }
   return {
     ...modalidade,
-    niveis: modalidade.niveis.map((n: { descricao: string | null }) => n.descricao ?? ''),
-    equipamento: modalidade.equipamento.map((e: { nome: string | null }) => e.nome ?? ''),
-    competicoes: modalidade.competicoes.map((c: { nome: string | null }) => c.nome ?? ''),
-    contacto: modalidade.contacto_modalidade[0] || {},
-    preco,
+    escalao: modalidade.escalao?.map((esc: any) => ({
+      ...esc,
+      mensalidade: esc.mensalidade ? Number(esc.mensalidade) : null,
+    })) || [],
+    preco_escalao: modalidade.preco_escalao?.map((preco: any) => ({
+      ...preco,
+      valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor)
+    })) || [],
   };
 }
