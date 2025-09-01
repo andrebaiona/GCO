@@ -22,7 +22,11 @@ const SponsorsSection = () => {
     { id: 7, name: 'AutoFornence', logo: '/sponsors_img/AutoFornence.jpeg', website: '#'},
     { id: 8, name: 'CED', logo: '/sponsors_img/CED.bmp', website: '#'},
     { id: 9, name: 'Decor Gesso', logo: '/sponsors_img/DecorGesso.png', website: '#'},
-    { id: 10, name: 'António Paixão', logo: '/sponsors_img/Antonio_Paixao.jpg', website: '#'}
+    { id: 10, name: 'D Dinis', logo: '/sponsors_img/El Rei D Dinis.jpeg', website: '#'},
+    { id: 11, name: 'Farmácia Gonçalves', logo: '/sponsors_img/Farmacia Goncalves.jpg', website: '#'},
+    { id: 12, name: 'Favorita 2', logo: '/sponsors_img/favorita2.png', website: '#'},
+    { id: 13, name: 'Lara Coffee', logo: '/sponsors_img/Lara Coffee.jpeg', website: '#'},
+    { id: 14, name: 'D Dinis', logo: '/sponsors_img/Simplefy.jpg', website: '#'}
   ];
 
   const allSponsors = [...sponsors, ...sponsors, ...sponsors];
