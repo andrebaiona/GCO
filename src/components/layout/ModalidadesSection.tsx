@@ -21,8 +21,8 @@ export default async function ModalidadesSection() {
         </div>
           <div className="flex gap-8 flex-row flex-wrap justify-center items-center">
             {modalidades.map((modalidade, index) => (
-              <div className="">
-                <ModalidadeCard key={index} modalidade={modalidade} />
+              <div key={modalidade.id ?? index} className="">
+                <ModalidadeCard key={modalidade.id ?? index} modalidade={modalidade} />
               </div>
             ))}
           </div>

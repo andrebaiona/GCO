@@ -1,13 +1,14 @@
 "use client";
 import { calcularIdadeClube } from "@/utils/idadeClube";
 import { useEffect, useState } from "react";
+// Removido: não usar Prisma no client
 
 const heroSlides = [
   {
     src: "/GCO-LOGO-noBG.png",
     alt: "Ginásio Clube de Odivelas",
     title: "Ginásio Clube de Odivelas",
-    subtitle: ` 47what anos de tradição desportiva e cultural`,
+    subtitle: ` 47 anos de tradição desportiva e cultural`,
     description:
       "Com sede em Odivelas, o clube dedica-se a promover a prática de diversas modalidades desportivas, como a Ginástica, o Andebol, o Hóquei Patins, a Patinagem Artística e Xadrez.",
     buttons: [
@@ -25,22 +26,7 @@ const heroSlides = [
       },
     ],
   },
-  {
-    src: "/Screenshot2025-09-01at00.45.10.png",
-    alt: "Última Notícia",
-    title: "Última Notícia",
-    subtitle: "Apurados para o Mundial de Trampolins 2025",
-    description:
-      "Os nossos ginastas Matilde Louro e Miguel Matias estão apurados para o Campeonato do Mundo por Grupos de Idades!",
-    buttons: [
-      {
-        href: "/noticias/taca-inatel-andebol-2025",
-        label: "Ver Notícia",
-        className:
-          "bg-blue-400 text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-blue-300 transition-colors",
-      },
-    ],
-  },
+  
   {
     title: "Inscrições Abertas",
     subtitle: "Junte-se à família GCO!",
@@ -60,21 +46,51 @@ const heroSlides = [
 export default function HeroSection() {
 
   const idade = calcularIdadeClube(new Date(1978, 4, 5));
-  
   const [slide, setSlide] = useState(0);
   const [animating, setAnimating] = useState(false);
+  const [slides, setSlides] = useState(heroSlides);
+
+  useEffect(() => {
+    fetch("/api/noticias?limit=1&order=desc")
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const noticia = data[0];
+          setSlides(slides => {
+            const updated = [...slides];
+            updated[1] = {
+              src: noticia.imagem || "/Screenshot2025-09-01at00.45.10.png",
+              alt: "Última Notícia",
+              title: "Última Notícia",
+              subtitle: noticia.titulo,
+              description: noticia.resumo,
+              buttons: [
+                {
+                  href: `/noticias/${noticia.id}`,
+                  label: "Ver Notícia",
+                  className:
+                    "bg-blue-400 text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-blue-300 transition-colors",
+                },
+              ],
+            };
+            return updated;
+          });
+        }
+      });
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimating(true);
       setTimeout(() => {
-        setSlide((prev) => (prev + 1) % heroSlides.length);
+        setSlide((prev) => (prev + 1) % slides.length);
         setAnimating(false);
       }, 600); // duração da animação
     }, 8000);
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]);
 
-  const current = heroSlides[slide];
+  const current = slides[slide];
   const isNoticia = slide === 1;
 
   return (

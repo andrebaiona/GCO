@@ -1,16 +1,11 @@
-import { noticias } from "@/data/noticias";
+import { Noticia, fetchNoticias } from "@/data/noticias-db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-interface NoticiaPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
-
-export default async function NoticiaPage({ params }: NoticiaPageProps) {
+export default async function NoticiaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const noticiaId = parseInt(id);
+  const noticias = await fetchNoticias();
   const noticia = noticias.find(n => n.id === noticiaId);
 
   if (!noticia) {
@@ -61,6 +56,11 @@ export default async function NoticiaPage({ params }: NoticiaPageProps) {
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               {noticia.titulo}
             </h1>
+            <div className="mb-4">
+              <span className="bg-blue-800 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                {noticia.categoria && noticia.categoria.trim() !== "" ? noticia.categoria : "Sem categoria"}
+              </span>
+            </div>
 
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-700 text-lg leading-relaxed mb-6">
@@ -71,7 +71,7 @@ export default async function NoticiaPage({ params }: NoticiaPageProps) {
               {noticia.descricao && (
                 <div className="space-y-4 text-black">
                   {noticia.descricao.split('\n\n').map((paragrafo, index) => (
-                    <p key={index} className="whitespace-pre-line">
+                    <p key={paragrafo.slice(0,10) + index} className="whitespace-pre-line">
                       {paragrafo}
                     </p>
                   ))}
@@ -100,6 +100,7 @@ export default async function NoticiaPage({ params }: NoticiaPageProps) {
 
 // Gerar páginas estáticas para todas as notícias
 export async function generateStaticParams() {
+  const noticias = await fetchNoticias();
   return noticias.map((noticia) => ({
     id: noticia.id.toString(),
   }));
