@@ -1,7 +1,8 @@
-import { noticias } from "@/data/noticias";
+import { Noticia, fetchNoticias } from "@/data/noticias-db";
 import NoticiaCard from "@/components/cards/NoticiaCard";
 
-export default function NoticiasPage() {
+export default async function NoticiasPage() {
+  const noticias = await fetchNoticias();
   return (
     <main className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,7 +16,7 @@ export default function NoticiasPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {noticias.map((noticia) => (
+          {noticias.map((noticia: Noticia) => (
             <NoticiaCard key={noticia.id} noticia={noticia} />
           ))}
         </div>

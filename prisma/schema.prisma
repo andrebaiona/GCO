@@ -8,68 +8,52 @@ datasource db {
 }
 
 model patrocinadores {
-  id    Int    @id @default(autoincrement())
-  nome String @db.VarChar(100)
-  logo String?
-  url  String?
+  id   Int     @id @default(autoincrement())
+  nome String  @db.VarChar(100)
+  logo String? @db.VarChar(255)
+  url  String? @db.VarChar(255)
 }
 
 model modalidades {
-  id        Int    @id @default(autoincrement())
-  nome      String @db.VarChar(100)
-  slug      String @unique @db.VarChar(100)
-  icone     String?
-  descricao String?
-  ativo     Boolean @default(true)
-  categoria String?
-  escalao   escalao[]
+  id            Int             @id @default(autoincrement())
+  nome          String          @db.VarChar(100)
+  slug          String          @unique @db.VarChar(100)
+  icone         String?         @db.VarChar(255)
+  descricao     String?
+  ativo         Boolean         @default(true)
+  categoria     String?         @db.VarChar(100)
+  escalao       escalao[]
   preco_escalao preco_escalao[]
-  niveis niveis[]
-  preco preco[]
 }
 
 model escalao {
-  id            Int    @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   modalidade_id Int
-  nome          String @db.VarChar(100)
+  nome          String      @db.VarChar(100)
   idade_minima  Int?
   idade_maxima  Int?
   descricao     String?
-  mensalidade   Decimal?
-  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade)
+  mensalidade   Decimal?    @db.Decimal(10, 2)
+  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model preco_escalao {
-  id            Int    @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   modalidade_id Int
-  escalao       String @db.VarChar(100)
-  tipo          String @db.VarChar(30)
-  valor         Decimal
+  escalao       String      @db.VarChar(100)
+  tipo          String?     @db.VarChar(30)
+  valor         Decimal     @db.Decimal(10, 2)
   observacoes   String?
-  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade)
+  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model noticias {
-  id              Int    @id @default(autoincrement())
-  titulo          String @db.VarChar(200)
+  id              Int       @id @default(autoincrement())
+  titulo          String    @db.VarChar(200)
   conteudo        String
-  imagem          String?
-  data_publicacao DateTime?
-  autor           String?
-}
-
-model niveis {
-  id            Int          @id @default(autoincrement())
-  modalidade_id Int?
-  descricao     String?      @db.VarChar(100)
-  modalidades   modalidades? @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model preco {
-  id            Int         @id @default(autoincrement())
-  modalidade_id Int
-  mensalidade   Decimal     @db.Decimal(10, 2)
-  inscricao     Decimal     @db.Decimal(10, 2)
-  equipamento   Decimal?    @db.Decimal(10, 2)
-  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  imagem          String?   @db.VarChar(255)
+  data_publicacao DateTime? @db.Date
+  autor           String?   @db.VarChar(100)
+  categoria       String
+  descricao       String?
 }

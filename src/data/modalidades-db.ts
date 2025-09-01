@@ -7,6 +7,7 @@ export async function fetchEscalaoInfo(modalidadeSlug: string, escalaoNome: stri
     },
   });
   if (!modalidade) return null;
+  console.log('preco_escalao:', modalidade.preco_escalao);
   const escalao = modalidade.escalao.find((esc: any) => esc.nome.toLowerCase() === escalaoNome.toLowerCase());
   if (!escalao) return null;
   // Filtra preços por tipo e escalão

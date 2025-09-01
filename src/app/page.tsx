@@ -17,7 +17,7 @@ export default function Home() {
           </h2>
           <p className="text-xl text-blue-800 mb-8 max-w-2xl mx-auto">
             Venha fazer parte da família GCO e desenvolva o seu potencial desportivo connosco
-          </p>a
+          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/inscricoes"

@@ -1,4 +1,4 @@
-import { Noticia } from "@/data/noticias";
+import { Noticia } from "@/data/noticias-db";
 import Link from "next/link";
 
 interface NoticiaCardProps {
@@ -7,8 +7,7 @@ interface NoticiaCardProps {
 }
 
 export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaCardProps) {
-  const { id, titulo, resumo, data, categoria, imagem } = noticia;
-  
+  const { id, titulo, resumo, descricao, data, categoria, imagem, autor } = noticia;
   return (
     <article
       className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
@@ -23,7 +22,7 @@ export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaC
         />
         <div className="absolute top-4 left-4">
           <span className="bg-blue-800 text-white px-3 py-1 rounded-full text-sm font-semibold">
-            {categoria}
+            {categoria && categoria.trim() !== "" ? categoria : "Sem categoria"}
           </span>
         </div>
       </div>
@@ -40,6 +39,11 @@ export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaC
         <p className="text-gray-600 mb-4 line-clamp-3">
           {resumo}
         </p>
+        {descricao && (
+          <p className="text-gray-500 mb-2 text-sm line-clamp-4">
+            {descricao}
+          </p>
+        )}
         <Link
           href={`/noticias/${id}`}
           className="inline-flex items-center text-blue-800 font-semibold hover:text-blue-600 transition-colors"
