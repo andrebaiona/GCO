@@ -12,6 +12,18 @@ export interface Noticia {
   autor?: string;
 }
 
+// Tipo baseado no modelo Prisma
+type NoticiasModel = {
+  id: number;
+  titulo: string;
+  conteudo: string;
+  imagem?: string | null;
+  data_publicacao?: Date | null;
+  autor?: string | null;
+  categoria: string;
+  descricao?: string | null;
+};
+
 // Buscar várias notícias
 export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
   const noticias = await prisma.noticias.findMany({
@@ -19,16 +31,16 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
     take: limit,
   });
 
-  return noticias.map((n) => ({
+  return noticias.map((n: NoticiasModel) => ({
     id: n.id,
     titulo: n.titulo,
     resumo: n.conteudo?.slice(0, 120) ?? "",
     descricao: n.conteudo,
     data: n.data_publicacao?.toISOString() ?? "",
-    categoria: n.categoria ?? "",
-    imagem: n.imagem,
+    categoria: n.categoria,
+    imagem: n.imagem ?? undefined,
     link: undefined,
-    autor: n.autor ?? "",
+    autor: n.autor ?? undefined,
   }));
 }
 
@@ -49,15 +61,15 @@ export async function fetchNoticiasByCategoria(
     take: limit,
   });
 
-  return noticias.map((n) => ({
+  return noticias.map((n: NoticiasModel) => ({
     id: n.id,
     titulo: n.titulo,
     resumo: n.conteudo?.slice(0, 120) ?? "",
     descricao: n.conteudo,
     data: n.data_publicacao?.toISOString() ?? "",
-    categoria: n.categoria ?? "",
-    imagem: n.imagem,
+    categoria: n.categoria,
+    imagem: n.imagem ?? undefined,
     link: undefined,
-    autor: n.autor ?? "",
+    autor: n.autor ?? undefined,
   }));
 }

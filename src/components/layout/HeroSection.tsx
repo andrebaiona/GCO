@@ -4,7 +4,14 @@ import HeroSectionSlider from "./HeroSectionSlider";
 
 export default async function HeroSection() {
   const idade = calcularIdadeClube(new Date(1978, 4, 5));
-  const noticias = await fetchNoticias({ limit: 1, order: "desc" });
+  const todasNoticias = await fetchNoticias();
+
+  // Ordena por data (mais recente primeiro) e pega só a primeira
+  const noticiasOrdenadas = todasNoticias
+    .filter(n => n.data && n.data.trim() !== "")
+    .sort((a, b) => (a.data < b.data ? 1 : -1));
+
+  const ultimaNoticia = noticiasOrdenadas[0] ?? null;
 
   const slides = [
     {
@@ -29,16 +36,16 @@ export default async function HeroSection() {
         },
       ],
     },
-    noticias.length > 0
+    ultimaNoticia
       ? {
-          src: noticias[0].imagem || "/fallback.png",
+          src: ultimaNoticia.imagem || "/fallback.png",
           alt: "Última Notícia",
           title: "Última Notícia",
-          subtitle: noticias[0].titulo,
-          description: noticias[0].resumo,
+          subtitle: ultimaNoticia.titulo,
+          description: ultimaNoticia.resumo,
           buttons: [
             {
-              href: `/noticias/${noticias[0].id}`,
+              href: `/noticias/${ultimaNoticia.id}`,
               label: "Ver Notícia",
               className:
                 "bg-blue-400 text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-blue-300 transition-colors",
@@ -66,6 +73,9 @@ export default async function HeroSection() {
             "bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-bold text-lg hover:bg-yellow-300 transition-colors",
         },
       ],
+      // imagem das inscrições fixa
+      src: "/530131865_18073306919003286_1218223041355361627_n.jpg",
+      alt: "Inscrições GCO",
     },
   ];
 
