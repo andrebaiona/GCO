@@ -312,7 +312,7 @@ export const modalidades: Modalidade[] = [
     nome: "Hóquei em Patins",
     slug: "hoquei-em-patins",
     icone: "/icones-modalidades/hoquei.png",
-    descricao: "Modalidade temporariamente suspensa devido ao não cumprimento de regulamentações",
+  descricao: "Modalidade atualmente sem atividade.",
     ativo: false,
     categoria: "Desporto Coletivo",
     idadeMinima: 6,
@@ -339,7 +339,7 @@ export const modalidades: Modalidade[] = [
       "/galeria/hoquei/equipamento.jpg"
     ],
     detalhes: {
-      introducao: "O hóquei em patins tem uma tradição importante no GCO, sendo uma modalidade que combina velocidade, técnica e espírito de equipa de forma única. Atualmente suspensa devido a questões regulamentares.",
+  introducao: "O hóquei em patins tem uma tradição importante no GCO, sendo uma modalidade que combina velocidade, técnica e espírito de equipa de forma única. Atualmente sem atividade.",
       objetivos: [
         "Retomar a atividade da modalidade",
         "Formar novos atletas na modalidade",

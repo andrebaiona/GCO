@@ -44,8 +44,8 @@ export default async function InscricoesPage() {
                       <h3 className="text-lg font-semibold text-gray-800">
                         {modalidade.nome}
                         {!modalidade.ativo && (
-                          <span className="ml-2 bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">
-                            SUSPENSA
+                          <span className="ml-2 bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full">
+                            Sem atividade
                           </span>
                         )}
                       </h3>
@@ -62,8 +62,7 @@ export default async function InscricoesPage() {
                 {!modalidade.ativo && (
                   <div className="mt-3 text-sm text-gray-500 bg-gray-50 p-3 rounded-md">
                     <p>
-                      <strong>Nota:</strong> Esta modalidade está temporariamente suspensa para novas atividades, 
-                      mas ainda aceitamos pré-inscrições para quando as atividades forem retomadas.
+                      <strong>Nota:</strong> Esta modalidade encontra-se atualmente <b>sem atividade</b>.
                     </p>
                   </div>
                 )}
@@ -77,82 +76,33 @@ export default async function InscricoesPage() {
             Processo de Inscrição
           </h2>
           
-          <div className="space-y-4">
-            <div className="bg-blue-50 p-4 rounded-md">
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">1. Pré-inscrição online</h3>
-              <p className="text-gray-700">
-                Complete o formulário de pré-inscrição selecionando a modalidade e horário de interesse. 
-                As inscrições estão abertas todo o ano, com início das atividades em setembro.
-              </p>
-            </div>
-            
-            <div className="bg-blue-50 p-4 rounded-md">
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">2. Contacto e esclarecimentos</h3>
-              <p className="text-gray-700">
-                Após a pré-inscrição, será contactado pelos nossos serviços para agendar uma reunião 
-                informativa e esclarecer todas as dúvidas sobre a modalidade escolhida.
-              </p>
-            </div>
-            
-            <div className="bg-blue-50 p-4 rounded-md">
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">3. Avaliação inicial (modalidades competitivas)</h3>
-              <p className="text-gray-700">
-                Para modalidades competitivas, será agendada uma avaliação inicial gratuita para 
-                determinar o nível e grupo mais adequado às capacidades do atleta.
-              </p>
-            </div>
-            
-            <div className="bg-blue-50 p-4 rounded-md">
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">4. Confirmação e pagamento</h3>
-              <p className="text-gray-700">
-                Após a avaliação e aceitação da vaga, proceda ao pagamento da taxa de inscrição 
-                e primeira mensalidade para formalizar a entrada no clube.
-              </p>
-            </div>
-            
-            <div className="bg-blue-50 p-4 rounded-md">
-              <h3 className="text-lg font-semibold text-blue-800 mb-2">5. Início das atividades</h3>
-              <p className="text-gray-700">
-                Após confirmação, poderá iniciar as atividades no horário escolhido. 
-                Serão fornecidas todas as informações sobre equipamentos e regulamentos.
-              </p>
-            </div>
-          </div>
-          
-          <div className="mt-8 bg-gray-50 p-4 rounded-md">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Documentos necessários:</h3>
-            <ul className="list-disc pl-5 space-y-1 text-gray-700">
-              <li>Cartão de cidadão ou bilhete de identidade</li>
-              <li>Comprovativo de morada</li>
-              <li>Fotografia tipo passe</li>
-              <li>Atestado médico (para competições)</li>
-              <li>Autorização dos encarregados de educação (menores)</li>
-            </ul>
-          </div>
-
-          <div className="mt-8 bg-green-50 p-4 rounded-md">
-            <h3 className="text-lg font-semibold text-green-800 mb-3">Preços para a época 2024/2025:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="font-medium text-green-700">Andebol:</p>
-                <p className="text-gray-700">Inscrição: 60€ | Mensalidade: 30€</p>
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-white p-6 rounded-xl shadow-md flex flex-col md:flex-row items-center gap-6">
+              <div className="flex flex-col items-center justify-center md:w-1/4">
+                <img src="/gco-logo.png" alt="GCO Logo" className="w-20 h-20 mb-2" />
+                <span className="text-blue-700 font-bold text-lg">Inscrição Presencial</span>
               </div>
-              <div>
-                <p className="font-medium text-green-700">Ginástica:</p>
-                <p className="text-gray-700">Inscrição: 70€ | Mensalidade: 40€</p>
-              </div>
-              <div>
-                <p className="font-medium text-green-700">Patinagem Artística:</p>
-                <p className="text-gray-700">Inscrição: 80€ | Mensalidade: 45€</p>
-              </div>
-              <div>
-                <p className="font-medium text-green-700">Xadrez:</p>
-                <p className="text-gray-700">Inscrição: 35€ | Mensalidade: 25€</p>
+              <div className="flex-1">
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <span className="bg-blue-200 text-blue-700 rounded-full flex items-center justify-center w-12 h-12 shadow font-bold text-xl select-none" style={{ minWidth: 48, minHeight: 48 }}>1</span>
+                    <span className="text-gray-800"><b>Dirija-se à secretaria do clube</b> para realizar a inscrição presencialmente.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="bg-blue-200 text-blue-700 rounded-full flex items-center justify-center w-12 h-12 shadow font-bold text-xl select-none" style={{ minWidth: 48, minHeight: 48 }}>2</span>
+                    <span className="text-gray-800">Para praticar qualquer modalidade, <b>é obrigatório ser sócio</b> do Ginásio Clube de Odivelas.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="bg-blue-200 text-blue-700 rounded-full flex items-center justify-center w-12 h-12 shadow font-bold text-xl select-none" style={{ minWidth: 48, minHeight: 48 }}>3</span>
+                    <span className="text-gray-800">No ato de inscrição, <b>apresente o Cartão de Cidadão</b>. A foto será retirada diretamente do cartão.</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="bg-blue-200 text-blue-700 rounded-full flex items-center justify-center w-12 h-12 shadow font-bold text-xl select-none" style={{ minWidth: 48, minHeight: 48 }}>4</span>
+                    <span className="text-gray-800">Para mais informações, <b>contacte-nos</b> ou visite o clube durante o horário de atendimento.</span>
+                  </li>
+                </ul>
               </div>
             </div>
-            <p className="text-xs text-gray-600 mt-2">
-              * Valores não incluem equipamentos. Desconto familiar de 10% a partir do 2º elemento.
-            </p>
           </div>
           
           <div className="mt-8 text-center">
