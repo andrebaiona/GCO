@@ -58,12 +58,47 @@ export async function fetchModalidadeBySlug(slug: string) {
 
   if (!modalidade) return null;
 
-  return {
-    ...modalidade,
-    escalao: modalidade.escalao?.map((esc: any) => ({
+  const escalaoComPrecos = modalidade.escalao?.map((esc: any) => {
+    // Preços específicos do escalão
+    const precosEscalao = modalidade.preco_escalao
+      ? modalidade.preco_escalao.filter((preco: any) => preco.escalao && preco.escalao.toLowerCase() === esc.nome.toLowerCase())
+        .map((preco: any) => ({
+          tipo: preco.tipo,
+          valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor),
+          observacoes: preco.observacoes ?? null
+        }))
+      : [];
+
+    // Preços globais do escalão 'Todos' (inscrição, seguro, renovação, etc)
+    const precosGlobais = modalidade.preco_escalao
+      ? modalidade.preco_escalao.filter((preco: any) => preco.escalao && preco.escalao.toLowerCase() === 'todos')
+        .map((preco: any) => ({
+          tipo: preco.tipo,
+          valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor),
+          observacoes: preco.observacoes ?? null
+        }))
+      : [];
+
+    // Junta os preços específicos e globais, sem duplicados de tipo
+    const tiposAdicionados = new Set<string>();
+    const precosFinal: { tipo?: string; valor?: number; observacoes?: string | null }[] = [];
+    [...precosEscalao, ...precosGlobais].forEach((preco) => {
+      if (preco.tipo && !tiposAdicionados.has(preco.tipo.toLowerCase())) {
+        precosFinal.push(preco);
+        tiposAdicionados.add(preco.tipo.toLowerCase());
+      }
+    });
+
+    return {
       ...esc,
       mensalidade: esc.mensalidade ? Number(esc.mensalidade) : null,
-    })) || [],
+      preco_escalao: precosFinal,
+    };
+  }) || [];
+
+  return {
+    ...modalidade,
+    escalao: escalaoComPrecos,
     preco_escalao: modalidade.preco_escalao?.map((preco: any) => ({
       ...preco,
       valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor)

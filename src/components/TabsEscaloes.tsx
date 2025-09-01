@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 
 type Escalao = {
@@ -24,13 +25,36 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
     );
   }
   const [activeTab, setActiveTab] = useState(0);
-  const escaloesToShow = escaloes;
+
+  // Função utilitária para mostrar info detalhada de inscrição, renovação e seguro
+  function getExtraInfo(precos: { tipo?: string; valor?: number; observacoes?: string | null }[]) {
+    const info: string[] = [];
+    const inscricao = precos.find((p) => p.tipo?.toLowerCase() === "inscrição" || p.tipo?.toLowerCase() === "inscricao");
+    if (inscricao) {
+      let msg = `Inscrição: ${inscricao.valor} €`;
+      if (inscricao.observacoes) msg += ` (${inscricao.observacoes})`;
+      info.push(msg);
+    }
+    const renovacao = precos.find((p) => p.tipo?.toLowerCase() === "renovação" || p.tipo?.toLowerCase() === "renovacao");
+    if (renovacao) {
+      let msg = `Renovação: ${renovacao.valor} €`;
+      if (renovacao.observacoes) msg += ` (${renovacao.observacoes})`;
+      info.push(msg);
+    }
+    const seguro = precos.find((p) => p.tipo?.toLowerCase() === "seguro");
+    if (seguro) {
+      let msg = `Seguro: ${seguro.valor} €`;
+      if (seguro.observacoes) msg += ` (${seguro.observacoes})`;
+      info.push(msg);
+    }
+    return info;
+  }
 
   return (
     <div>
       <div className="mb-6">
         <div className="flex border-b border-gray-300">
-          {escaloes.slice(0, 5).map((esc, idx) => (
+          {escaloes.slice(0, 3).map((esc, idx) => (
             <button
               key={esc.id}
               className={`flex-1 py-3 text-lg font-semibold transition-colors duration-150 ${activeTab === idx ? 'border-b-4 border-blue-600 text-blue-900 bg-white' : 'text-gray-500 bg-gray-100'} focus:outline-none`}
@@ -40,13 +64,13 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
             </button>
           ))}
         </div>
-        {escaloes.length > 5 && (
+        {escaloes.length > 3 && (
           <div className="flex border-b border-gray-300">
-            {escaloes.slice(5).map((esc, idx) => (
+            {escaloes.slice(3).map((esc, idx) => (
               <button
                 key={esc.id}
-                className={`flex-1 py-3 text-lg font-semibold transition-colors duration-150 ${activeTab === idx + 5 ? 'border-b-4 border-blue-600 text-blue-900 bg-white' : 'text-gray-500 bg-gray-100'} focus:outline-none`}
-                onClick={() => setActiveTab(idx + 5)}
+                className={`flex-1 py-3 text-lg font-semibold transition-colors duration-150 ${activeTab === idx + 3 ? 'border-b-4 border-blue-600 text-blue-900 bg-white' : 'text-gray-500 bg-gray-100'} focus:outline-none`}
+                onClick={() => setActiveTab(idx + 3)}
               >
                 {esc.nome}
               </button>
@@ -57,45 +81,89 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
       <div className="p-8 bg-white rounded-xl shadow flex flex-col items-center border border-blue-100">
         {(() => {
           const esc = escaloes[activeTab];
-          const mensalidade = esc.preco_escalaos?.find((p: any) => p.tipo.toLowerCase() === "mensalidade");
-          const inscricao = esc.preco_escalaos?.find((p: any) => p.tipo.toLowerCase() === "inscrição" || p.tipo.toLowerCase() === "inscricao");
-          const seguro = esc.preco_escalaos?.find((p: any) => p.tipo.toLowerCase() === "seguro" && p.escalao?.toLowerCase() === "todos");
+          const precos = esc.preco_escalao || [];
+          // Detecta se é página do Andebol
+          const isAndebol = typeof window !== 'undefined' && window.location.pathname.includes('/modalidades/andebol');
+          if (isAndebol) {
+            return (
+              <>
+                <h3 className="text-2xl font-bold mb-2 text-blue-900">{esc.nome}</h3>
+                {esc.descricao && (
+                  <p className="mb-2 text-gray-700 text-base text-center">{esc.descricao}</p>
+                )}
+                {/* Nenhum card de preço para Andebol */}
+              </>
+            );
+          }
+          // ...existing code para outros escalões...
+          // Mensalidades podem ser múltiplas (ex: feminino/masculino)
+          const mensalidades = precos.filter((p: any) => p.tipo?.toLowerCase() === "mensalidade");
+          const inscricao = precos.find((p: any) => p.tipo?.toLowerCase() === "inscrição" || p.tipo?.toLowerCase() === "inscricao");
+          const renovacao = precos.find((p: any) => p.tipo?.toLowerCase() === "renovação" || p.tipo?.toLowerCase() === "renovacao");
+          const seguro = precos.find((p: any) => p.tipo?.toLowerCase() === "seguro");
+          const extraInfo = getExtraInfo(precos);
+          const totalInscricaoSeguro = inscricao && seguro ? inscricao.valor + seguro.valor : null;
           return (
             <>
               <h3 className="text-2xl font-bold mb-2 text-blue-900">{esc.nome}</h3>
               {esc.descricao && (
                 <p className="mb-2 text-gray-700 text-base text-center">{esc.descricao}</p>
               )}
-              <div className="flex flex-row gap-6 w-full mt-4 justify-center">
-                {mensalidade && (
-                  <div className="flex-1 bg-blue-50 rounded-lg px-4 py-4 flex flex-col items-center border border-blue-200">
-                    <span className="text-base font-semibold text-blue-900 mb-1">Mensalidade</span>
-                    <span className="text-xl font-bold text-blue-800 mb-1">{mensalidade.valor} €</span>
-                    {mensalidade.observacoes && (
-                      <span className="text-xs text-blue-700 text-center mt-1">{mensalidade.observacoes}</span>
+              <div className="flex flex-row flex-wrap gap-6 justify-center items-center w-full mt-4">
+                {mensalidades.length > 0 && (
+                  <div className="w-[200px] h-[200px] bg-blue-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-blue-400">
+                    <span className="text-lg font-semibold text-blue-900 mb-2">Mensalidade</span>
+                    {mensalidades.length === 1 ? (
+                      <span className="text-2xl font-bold text-blue-800 mb-2">{mensalidades[0].valor} €</span>
+                    ) : (
+                      <div className="flex flex-col gap-2 items-center">
+                        <span className="text-base font-bold text-blue-800">
+                          Feminino: {mensalidades[0]?.valor ?? '-'} €
+                        </span>
+                        <span className="text-base font-bold text-blue-800">
+                          Masculino: {mensalidades[1]?.valor ?? '-'} €
+                        </span>
+                      </div>
+                    )}
+                    {/* Só mostra observação nos Seniores, e só a primeira */}
+                    {esc.nome.toLowerCase() === 'seniores' && mensalidades[0]?.observacoes && (
+                      <span className="text-xs text-blue-700 text-center mt-1">{mensalidades[0].observacoes}</span>
+                    )}
+                    {/* Nos Veteranos mostra que o preço é anual, sempre */}
+                    {esc.nome.toLowerCase() === 'veteranos' && (
+                      <span className="text-xs text-blue-700 text-center mt-1">Preço anual</span>
                     )}
                   </div>
                 )}
                 {inscricao && (
-                  <div className="flex-1 bg-yellow-50 rounded-lg px-4 py-4 flex flex-col items-center border border-yellow-200">
-                    <span className="text-base font-semibold text-yellow-900 mb-1">Inscrição</span>
-                    <span className="text-xl font-bold text-yellow-800 mb-1">{inscricao.valor} €</span>
+                  <div className="w-[200px] h-[200px] bg-yellow-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-yellow-400">
+                    <span className="text-lg font-semibold text-yellow-900 mb-2">Inscrição</span>
+                    <span className="text-2xl font-bold text-yellow-800 mb-2">{inscricao.valor} €</span>
                     {inscricao.observacoes && (
                       <span className="text-xs text-yellow-700 text-center mt-1">{inscricao.observacoes}</span>
                     )}
                   </div>
                 )}
+                {renovacao && (
+                  <div className="w-[200px] h-[200px] bg-purple-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-purple-400">
+                    <span className="text-lg font-semibold text-purple-900 mb-2">Renovação</span>
+                    <span className="text-2xl font-bold text-purple-800 mb-2">{renovacao.valor} €</span>
+                    {renovacao.observacoes && (
+                      <span className="text-xs text-purple-700 text-center mt-1">{renovacao.observacoes}</span>
+                    )}
+                  </div>
+                )}
                 {seguro && (
-                  <div className="flex-1 bg-green-50 rounded-lg px-4 py-4 flex flex-col items-center border border-green-200">
-                    <span className="text-base font-semibold text-green-900 mb-1">Seguro</span>
-                    <span className="text-xl font-bold text-green-800 mb-1">{seguro.valor} €</span>
+                  <div className="w-[200px] h-[200px] bg-green-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-green-400">
+                    <span className="text-lg font-semibold text-green-900 mb-2">Seguro</span>
+                    <span className="text-2xl font-bold text-green-800 mb-2">{seguro.valor} €</span>
                     {seguro.observacoes && (
                       <span className="text-xs text-green-700 text-center mt-1">{seguro.observacoes}</span>
                     )}
                   </div>
                 )}
               </div>
-              {(!esc.preco_escalaos || esc.preco_escalaos.length === 0) && (
+              {precos.length === 0 && (
                 <div className="mt-4 text-xs text-red-600 text-center">
                   <strong>Sem preços associados para este escalão!</strong>
                 </div>

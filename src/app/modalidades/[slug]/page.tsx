@@ -13,9 +13,9 @@ export default async function ModalidadePage(props:any) {
 
   if (!modalidade) notFound();
 
-  // Extrai os escalões
   const escalas = modalidade.escalao || [];
   return (
+    
     <main className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="mb-8">
@@ -55,7 +55,7 @@ export default async function ModalidadePage(props:any) {
                 </span>
               ) : (
                 <span className="bg-red-500 px-3 py-1 rounded-full text-white font-semibold shadow flex items-center">
-                  ⚠ Suspenso
+                  ⚠ Atualmente sem atividade
                 </span>
               )}
             </div>
@@ -68,15 +68,46 @@ export default async function ModalidadePage(props:any) {
           </p>
         </div>
 
-        <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
-          <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
-          <TabsEscaloes escaloes={modalidade.escalao} />
-          {modalidade.slug === "patinagem-artistica" && (
-            <div className="mt-4 text-sm text-blue-700">
-              <strong>Nota:</strong> A época da patinagem é de <span className="font-bold">janeiro a dezembro</span>.
+        {(modalidade.slug !== "xadrez" && modalidade.slug !== "andebol" && modalidade.slug !== "hoquei-em-patins") && (
+          <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
+            <TabsEscaloes escaloes={modalidade.escalao} />
+            {modalidade.slug === "patinagem-artistica" && (
+              <div className="mt-4 text-sm text-blue-700">
+                <strong>Nota:</strong> A época da patinagem é de <span className="font-bold">janeiro a dezembro</span>.
+              </div>
+            )}
+          </section>
+        )}
+        {modalidade.slug === "hoquei-em-patins" && (
+          <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
+            <ul className="w-full max-w-xl mx-auto flex flex-col gap-4">
+              {modalidade.escalao?.map((esc: any) => (
+                <li key={esc.id} className="bg-gray-100 rounded-xl px-6 py-4 text-xl font-semibold text-blue-900 shadow text-center">
+                  {esc.nome}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+        {modalidade.slug === "andebol" && (
+          <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
+            <div className="w-full flex justify-center mb-8">
+              <div className="w-full max-w-xl bg-orange-400 rounded-2xl flex items-center justify-center shadow-lg border-4 border-orange-600 py-8">
+                <span className="text-2xl font-extrabold text-white drop-shadow-lg">Preços por determinar</span>
+              </div>
             </div>
-          )}
-        </section>
+            <ul className="w-full max-w-xl mx-auto flex flex-col gap-4">
+              {modalidade.escalao?.map((esc: any) => (
+                <li key={esc.id} className="bg-gray-100 rounded-xl px-6 py-4 text-xl font-semibold text-blue-900 shadow text-center">
+                  {esc.nome}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </main>
   );

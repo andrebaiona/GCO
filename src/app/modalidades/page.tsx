@@ -3,6 +3,13 @@ import ModalidadeCard from "@/components/cards/ModalidadeCard";
 
 export default async function ModalidadesPage() {
   const modalidades = await fetchAllModalidades();
+  // Ordena alfabeticamente, exceto hoquei-em-patins que fica em último
+  const modalidadesOrdenadas = [
+    ...modalidades
+      .filter(m => m.slug !== "hoquei-em-patins")
+      .sort((a, b) => a.nome.localeCompare(b.nome)),
+    ...modalidades.filter(m => m.slug === "hoquei-em-patins")
+  ];
 
   return (
     <main className="min-h-screen bg-gray-50 py-12">
@@ -17,7 +24,7 @@ export default async function ModalidadesPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {modalidades.map((modalidade) => (
+          {modalidadesOrdenadas.map((modalidade) => (
             <ModalidadeCard key={modalidade.slug} modalidade={modalidade} />
           ))}
         </div>
