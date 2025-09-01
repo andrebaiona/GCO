@@ -127,9 +127,10 @@ export default function ContactosPage() {
               </div>
             </div>
           </div>
-          
+          {/*
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-blue-800 mb-4">Envie-nos uma Mensagem</h2>
+            
             
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
@@ -159,6 +160,7 @@ export default function ContactosPage() {
               </div>
             </form>
           </div>
+                      */}
         </div>
         
         <div className="mt-8 bg-white rounded-lg shadow-md p-6">
