@@ -181,21 +181,6 @@ const Footer = () => {
                 © {new Date().getFullYear()} Ginásio Clube de Odivelas. Todos os direitos reservados.
               </p>
             </div>
-            
-            <div className="mt-4 md:mt-0 flex justify-center md:justify-end space-x-6">
-              <Link
-                href="/privacidade"
-                className="text-gray-400 hover:text-yellow-400 text-sm transition-colors"
-              >
-                Política de Privacidade
-              </Link>
-              <Link
-                href="/termos"
-                className="text-gray-400 hover:text-yellow-400 text-sm transition-colors"
-              >
-                Termos de Uso
-              </Link>
-            </div>
           </div>
         </div>
       </div>
