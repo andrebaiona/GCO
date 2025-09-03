@@ -10,7 +10,6 @@ export async function fetchEscalaoInfo(modalidadeSlug: string, escalaoNome: stri
   console.log('preco_escalao:', modalidade.preco_escalao);
   const escalao = modalidade.escalao.find((esc: any) => esc.nome.toLowerCase() === escalaoNome.toLowerCase());
   if (!escalao) return null;
-  // Filtra preços por tipo e escalão
   const mensalidade = modalidade.preco_escalao.find((p: any) => p.escalao.toLowerCase() === escalaoNome.toLowerCase() && p.tipo.toLowerCase() === "mensalidade");
   const inscricao = modalidade.preco_escalao.find((p: any) => p.escalao.toLowerCase() === escalaoNome.toLowerCase() && (p.tipo.toLowerCase() === "inscrição" || p.tipo.toLowerCase() === "inscricao"));
   return {

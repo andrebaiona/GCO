@@ -73,38 +73,12 @@ const Navbar = () => {
             >
               Início
             </Link>
-
-            <div className="relative">
-              <button
-                onClick={() => toggleDropdown('modalidades')}
-                className="text-white hover:text-yellow-200 font-medium transition-colors flex items-center"
-              >
-                Modalidades
-                <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-
-              {activeDropdown === 'modalidades' && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
-                  {modalidades.map((modalidade) => (
-                    <Link
-                      key={modalidade.name}
-                      href={modalidade.href}
-                      className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 transition-colors"
-                      onClick={() => setActiveDropdown(null)}
-                    >
-                      {modalidade.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
+            <Link
+              href="/noticias"
+              className="text-white hover:text-yellow-200 font-medium transition-colors"
+            >
+              Notícias
+            </Link>
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('clube')}
@@ -119,7 +93,6 @@ const Navbar = () => {
                   />
                 </svg>
               </button>
-
               {activeDropdown === 'clube' && (
                 <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
                   {clube.map((item) => (
@@ -135,20 +108,41 @@ const Navbar = () => {
                 </div>
               )}
             </div>
-
+            <div className="relative">
+              <button
+                onClick={() => toggleDropdown('modalidades')}
+                className="text-white hover:text-yellow-200 font-medium transition-colors flex items-center"
+              >
+                Modalidades
+                <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+              {activeDropdown === 'modalidades' && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-50">
+                  {modalidades.map((modalidade) => (
+                    <Link
+                      key={modalidade.name}
+                      href={modalidade.href}
+                      className="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 transition-colors"
+                      onClick={() => setActiveDropdown(null)}
+                    >
+                      {modalidade.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
             <Link
               href="/horarios"
               className="text-white hover:text-yellow-200 font-medium transition-colors"
             >
               Horários
             </Link>
-            <Link
-              href="/noticias"
-              className="text-white hover:text-yellow-200 font-medium transition-colors"
-            >
-              Notícias
-            </Link>
-
             <Link
               href="/inscricoes"
               className="bg-blue-800 text-white px-6 py-2 rounded-full hover:bg-blue-900 transition-colors font-medium"
