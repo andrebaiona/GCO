@@ -68,7 +68,7 @@ export default async function ModalidadePage(props:any) {
           </p>
         </div>
 
-        {(modalidade.slug !== "xadrez" && modalidade.slug !== "andebol" && modalidade.slug !== "hoquei-em-patins") && (
+        {(modalidade.slug !== "xadrez" && modalidade.slug !== "hoquei-em-patins") && (
           <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
             <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
             <TabsEscaloes escaloes={modalidade.escalao} />
@@ -82,23 +82,6 @@ export default async function ModalidadePage(props:any) {
         {modalidade.slug === "hoquei-em-patins" && (
           <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
             <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
-            <ul className="w-full max-w-xl mx-auto flex flex-col gap-4">
-              {modalidade.escalao?.map((esc: any) => (
-                <li key={esc.id} className="bg-gray-100 rounded-xl px-6 py-4 text-xl font-semibold text-blue-900 shadow text-center">
-                  {esc.nome}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-        {modalidade.slug === "andebol" && (
-          <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
-            <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
-            <div className="w-full flex justify-center mb-8">
-              <div className="w-full max-w-xl bg-orange-400 rounded-2xl flex items-center justify-center shadow-lg border-4 border-orange-600 py-8">
-                <span className="text-2xl font-extrabold text-white drop-shadow-lg">Preços por determinar</span>
-              </div>
-            </div>
             <ul className="w-full max-w-xl mx-auto flex flex-col gap-4">
               {modalidade.escalao?.map((esc: any) => (
                 <li key={esc.id} className="bg-gray-100 rounded-xl px-6 py-4 text-xl font-semibold text-blue-900 shadow text-center">
