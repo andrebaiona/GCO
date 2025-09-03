@@ -19,7 +19,7 @@ export default function ModalidadeCard({ modalidade }: ModalidadeCardProps) {
       }`}
     >
       {!ativo && (
-        <div className="absolute top-4 right-3 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 text-gray-500 px-2 py-1 rounded-full text-xs font-bold text-center w-fit">
           ATUALMENTE SEM ATIVIDADE
         </div>
       )}
