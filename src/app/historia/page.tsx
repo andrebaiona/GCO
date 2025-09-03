@@ -79,7 +79,7 @@ Ainda assim, houve conquistas relevantes:
 • Destaques no andebol, ginástica e xadrez
 
 Perante a nova dimensão e prestígio alcançado, o nome original deixou de reflectir a realidade do clube. Assim, no dia 22 de maio de 1992, por escritura pública no 23º Cartório Notarial de Lisboa, passou a designar-se oficialmente Ginásio Clube de Odivelas.`,
-      image: '/gco_exterior.png',
+      image: '/2000_5f6603c1a6eae.jpg',
       emoji: '📆'
     },
     {
