@@ -132,13 +132,6 @@ export default function SerSocioPage() {
               >
                 Estatutos e Regulamento Geral Interno
               </Link>
-
-              <Link 
-                href="\files\pdf\condicoes-gerais-acesso-atividade-desportiva.pdf" 
-                className="text-l block w-full bg-blue-700 hover:bg-blue-800 text-white text-center py-3 rounded-lg font-semibold transition-colors"
-              >
-                Condições Gerais de Acesso à Atividade Desportiva
-              </Link>
               
               <AccordionSection title='Relatórios de Contas / Atividades'>
                 <div className='space-y-4'>
