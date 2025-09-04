@@ -147,3 +147,4 @@ export async function generateStaticParams() {
   const slugs = await fetchAllModalidadeSlugs();
   return slugs.map((modalidade: { slug: string }) => ({ slug: modalidade.slug }));
 }
+

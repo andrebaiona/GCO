@@ -25,10 +25,11 @@ const SponsorsSection = () => {
     { id: 11, name: 'Farmácia Gonçalves', logo: '/sponsors_img/Farmacia Goncalves.jpg', website: 'https://www.farmaciagoncalves.com.pt/' },
     { id: 12, name: 'Favorita 2', logo: '/sponsors_img/favorita2.png', website: '#' },
     { id: 13, name: 'Lara Coffee', logo: '/sponsors_img/Lara Coffee.jpeg', website: 'https://www.facebook.com/gerallaracoffee/' },
-    { id: 14, name: 'Simplefy', logo: '/sponsors_img/Simplefy.jpg', website: 'https://www.simplefy.pt/pt' }
+    { id: 14, name: 'Simplefy', logo: '/sponsors_img/Simplefy.jpg', website: 'https://www.simplefy.pt/pt' },
+    { id: 15, name: 'MFTN', logo: '/sponsors_img/mftn.jpg', website: '#' },
+    { id: 16, name: 'Simplefy', logo: '/sponsors_img/xd_logo-1-3129999812.png', website: 'https://www.xdsoftware.com/xdgc/unlimited.php' }
   ];
 
-  // duplicamos só uma vez para criar efeito infinito
   const allSponsors = [...sponsors, ...sponsors];
 
   return (
@@ -42,8 +43,6 @@ const SponsorsSection = () => {
             Agradecemos o apoio dos nossos patrocinadores
           </p>
         </div>
-
-        {/* Carrossel */}
         <div className="sponsors-wrapper overflow-hidden relative">
           <div className="sponsors-track flex animate-scroll">
             {allSponsors.map((sponsor, index) => (
@@ -69,8 +68,6 @@ const SponsorsSection = () => {
             ))}
           </div>
         </div>
-
-        {/* Gradientes laterais */}
         <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-blue-50 via-blue-100 to-transparent pointer-events-none z-10"></div>
         <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-blue-50 via-blue-100 to-transparent pointer-events-none z-10"></div>
 
