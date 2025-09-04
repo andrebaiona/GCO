@@ -38,7 +38,7 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
     titulo: n.titulo,
     resumo: n.resumo ?? "",
     conteudo: n.conteudo,
-    data: n.data_publicacao?.toISOString() ?? "",
+    data: n.data_publicacao?.toLocaleDateString() ?? "",
     categoria: n.categoria,
     imagem: n.imagem ? (n.imagem.startsWith('/') ? n.imagem : `/${n.imagem}`) : undefined,
     imagem_extra: n.imagem_extra ? (n.imagem_extra.startsWith('/') ? n.imagem_extra : `/${n.imagem_extra}`) : undefined,
