@@ -88,7 +88,7 @@ export default function SerSocioPage() {
               </p>
               <p className="mt-2">
                 Para maior comodidade, poderá realizar os pagamentos por transferência bancária, indicando no descritivo o número de sócio e o NIF. O comprovativo da operação deve ser enviado para o email:
-                <a href="mailto:geral@gcodivelas.pt" className="text-blue-600 hover:underline ml-1">geral@gcodivelas.pt</a>.
+                <a href="mailto:geral@gcodivelas.pt" className="text-blue-600 hover:underline ml-1">tranferencias@gcodivelas.pt</a>.
               </p>
 
               <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
