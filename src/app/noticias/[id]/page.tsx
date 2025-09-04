@@ -63,18 +63,35 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
             </div>
 
             <div className="prose prose-lg max-w-none">
-              <p className="text-gray-700 text-lg leading-relaxed mb-6">
-                {noticia.resumo}
-              </p>
-              
-              {/* Conteúdo expandido do ficheiro de dados */}
-              {noticia.descricao && (
-                <div className="space-y-4 text-black">
-                  {noticia.descricao.split('\n\n').map((paragrafo, index) => (
+              {noticia.resumo && typeof noticia.resumo === "string" && (
+                <div className="mb-6 text-gray-700 text-lg leading-relaxed">
+                  {noticia.resumo.split('\n\n').map((paragrafo, index) => (
                     <p key={paragrafo.slice(0,10) + index} className="whitespace-pre-line">
                       {paragrafo}
                     </p>
                   ))}
+                </div>
+              )}
+              {noticia.conteudo && (
+                <div className="space-y-4 text-black">
+                  {noticia.conteudo.split('\n\n').map((paragrafo, index) => (
+                    <p key={paragrafo.slice(0,10) + index} className="whitespace-pre-line">
+                      {paragrafo}
+                    </p>
+                  ))}
+                  {/* Se a última linha for uma imagem, mostrar também no final */}
+                  {(() => {
+                    const partes = noticia.conteudo.split('\n\n');
+                    const ultimaLinha = partes[partes.length - 1];
+                    const isImagem = ultimaLinha && /\.(jpg|jpeg|png|gif|svg)$/.test(ultimaLinha);
+                    return isImagem ? (
+                      <img src={ultimaLinha} alt="Imagem da notícia" style={{ marginTop: 16, maxWidth: '100%' }} />
+                    ) : null;
+                  })()}
+                  {/* Adiciona imagem_extra ao final, se existir */}
+                  {noticia.imagem_extra && (
+                    <img src={noticia.imagem_extra} alt="Imagem extra da notícia" style={{ marginTop: 16, maxWidth: '100%' }} />
+                  )}
                 </div>
               )}
             </div>

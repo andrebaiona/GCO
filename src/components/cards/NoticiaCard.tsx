@@ -7,7 +7,7 @@ interface NoticiaCardProps {
 }
 
 export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaCardProps) {
-  const { id, titulo, resumo, descricao, data, categoria, imagem, autor } = noticia;
+  const { id, titulo, resumo, conteudo, data, categoria, imagem, autor } = noticia;
   return (
     <article
       className={`bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
@@ -36,12 +36,9 @@ export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaC
         <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
           {titulo}
         </h3>
-        <p className="text-gray-600 mb-4 line-clamp-3">
-          {resumo}
-        </p>
-        {descricao && (
-          <p className="text-gray-500 mb-2 text-sm line-clamp-4">
-            {descricao}
+        {resumo && (
+          <p className="text-gray-600 mb-4 line-clamp-3">
+            {resumo}
           </p>
         )}
         <Link
@@ -57,3 +54,4 @@ export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaC
     </article>
   );
 }
+

@@ -52,8 +52,9 @@ model noticias {
   titulo          String    @db.VarChar(200)
   conteudo        String
   imagem          String?   @db.VarChar(255)
+  imagem_extra    String?   @db.VarChar(255)
   data_publicacao DateTime? @db.Date
   autor           String?   @db.VarChar(100)
   categoria       String
-  descricao       String?
+  resumo          String?
 }
