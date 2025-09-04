@@ -71,13 +71,60 @@ export default async function ModalidadePage(props:any) {
         {(modalidade.slug !== "xadrez" && modalidade.slug !== "hoquei-em-patins") && (
           <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
             <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
-            <TabsEscaloes escaloes={modalidade.escalao} />
+            <TabsEscaloes escaloes={modalidade.slug === "patinagem-artistica"
+              ? [...modalidade.escalao].sort((a, b) => {
+                  const ordem = [
+                    "iniciação",
+                    "minis",
+                    "pré-competição 4x",
+                    "pré-competição 6x",
+                    "competição 4x",
+                    "competição 6x"
+                  ];
+                  const idxA = ordem.findIndex(o => a.nome.toLowerCase().includes(o));
+                  const idxB = ordem.findIndex(o => b.nome.toLowerCase().includes(o));
+                  if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                  if (idxA !== -1) return -1;
+                  if (idxB !== -1) return 1;
+                  return a.id - b.id;
+                })
+              : [...modalidade.escalao].sort((a, b) => a.id - b.id)
+            } />
             {modalidade.slug === "patinagem-artistica" && (
               <div className="mt-4 text-sm text-blue-700">
                 <strong>Nota:</strong> A época da patinagem é de <span className="font-bold">janeiro a dezembro</span>.
               </div>
             )}
           </section>
+          )}
+          {modalidade.slug === "hoquei-em-patins" && (
+            <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+              <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
+              <ul className="w-full max-w-xl mx-auto flex flex-col gap-4">
+                {[...modalidade.escalao].sort((a, b) => {
+                  const ordem = [
+                    "Manitas/Bâmbis/Minis",
+                    "Sub-14", "Sub/14",
+                    "Sub-16 M", "Sub-16 F",
+                    "Sub-18",
+                    "Seniores",
+                    "Veteranos"
+                  ];
+                  const nomeA = a.nome.toLowerCase();
+                  const nomeB = b.nome.toLowerCase();
+                  const idxA = ordem.findIndex(o => nomeA.includes(o));
+                  const idxB = ordem.findIndex(o => nomeB.includes(o));
+                  if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                  if (idxA !== -1) return -1;
+                  if (idxB !== -1) return 1;
+                  return a.id - b.id;
+                }).map((esc: any) => (
+                  <li key={esc.id} className="bg-gray-100 rounded-xl px-6 py-4 text-xl font-semibold text-blue-900 shadow text-center">
+                    {esc.nome}
+                  </li>
+                ))}
+              </ul>
+            </section>
         )}
         {modalidade.slug === "hoquei-em-patins" && (
           <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
