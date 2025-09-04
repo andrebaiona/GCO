@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Escalao = {
   id: number;
@@ -33,8 +33,8 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
     );
   }
   const [activeTab, setActiveTab] = useState(0);
+  const [isAndebol, setIsAndebol] = useState(false);
 
-  // Função utilitária para mostrar info detalhada de inscrição, renovação e seguro
   function getExtraInfo(
     precos: { tipo?: string; valor?: number; observacoes?: string | null }[]
   ) {
@@ -67,6 +67,14 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
     }
     return info;
   }
+
+  // Detecta se é página do Andebol (client-only)
+  // Use useEffect to avoid SSR/CSR mismatch
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsAndebol(window.location.pathname.includes("/modalidades/andebol"));
+    }
+  }, []);
 
   return (
     <div>
@@ -108,11 +116,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
         {(() => {
           const esc = escaloes[activeTab];
           const precos = esc.preco_escalao || [];
-
-          // Detecta se é página do Andebol
-          const isAndebol =
-            typeof window !== "undefined" &&
-            window.location.pathname.includes("/modalidades/andebol");
 
           // Caso especial: Andebol → Séniores
           if (isAndebol && esc.nome.toLowerCase() === "seniores") {
@@ -259,7 +262,7 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                     )}
                   </div>
                 )}
-                {seguro && (
+                {seguro && esc.nome.toLowerCase() !== "veteranos" && esc.nome.toLowerCase() !== "seniores" && (
                   <div className="w-[200px] h-[200px] bg-green-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-green-400">
                     <span className="text-lg font-semibold text-green-900 mb-2">
                       Seguro

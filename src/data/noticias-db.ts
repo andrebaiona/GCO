@@ -66,7 +66,7 @@ export async function fetchNoticiasByCategoria(
     titulo: n.titulo,
     resumo: n.conteudo?.slice(0, 120) ?? "",
     descricao: n.conteudo,
-    data: n.data_publicacao?.toISOString() ?? "",
+    data: n.data_publicacao?.toLocaleDateString() ?? "",
     categoria: n.categoria,
     imagem: n.imagem ?? undefined,
     link: undefined,
