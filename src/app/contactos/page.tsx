@@ -106,7 +106,7 @@ export default function ContactosPage() {
                 </div>
                 <div className="ml-4">
                   <p className="text-lg font-medium text-gray-900">Horário da Secretaria</p>
-                  <p className="text-gray-600">Segunda a Sexta: 18h00 - 20h00</p>
+                  <p className="text-gray-600">Segunda a Sexta: 19h00 - 20h00</p>
                 </div>
               </div>
             </div>
