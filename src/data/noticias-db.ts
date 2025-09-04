@@ -32,15 +32,15 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
   });
 
   return noticias.map((n: NoticiasModel) => ({
-    id: n.id,
-    titulo: n.titulo,
-    resumo: n.conteudo?.slice(0, 120) ?? "",
-    descricao: n.conteudo,
-    data: n.data_publicacao?.toISOString() ?? "",
-    categoria: n.categoria,
-    imagem: n.imagem ?? undefined,
-    link: undefined,
-    autor: n.autor ?? undefined,
+  id: n.id,
+  titulo: n.titulo,
+  resumo: n.conteudo?.slice(0, 120) ?? "",
+  descricao: n.conteudo,
+  data: n.data_publicacao?.toISOString() ?? "",
+  categoria: n.categoria,
+  imagem: n.imagem ? (n.imagem.startsWith('/') ? n.imagem : `/${n.imagem}`) : undefined,
+  link: undefined,
+  autor: n.autor ?? undefined,
   }));
 }
 
