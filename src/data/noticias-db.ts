@@ -33,11 +33,11 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
     take: limit,
   });
 
-  return noticias.map((n: NoticiasModel) => ({
+    return noticias.map((n) => ({
     id: n.id,
     titulo: n.titulo,
     resumo: n.resumo ?? "",
-    conteudo: n.conteudo,
+    conteudo: n.conteudo ?? "",
     data: n.data_publicacao?.toLocaleDateString() ?? "",
     categoria: n.categoria,
     imagem: n.imagem
