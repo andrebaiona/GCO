@@ -50,7 +50,7 @@ model preco_escalao {
 model noticias {
   id              Int       @id @default(autoincrement())
   titulo          String    @db.VarChar(200)
-  conteudo        String
+  conteudo        String?
   imagem          String?   @db.VarChar(255)
   imagem_extra    String?   @db.VarChar(255)
   data_publicacao DateTime? @db.Date

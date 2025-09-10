@@ -44,7 +44,7 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
               </span>
             </div>
           </div>
-
+          
           <div className="p-8">
             <div className="flex items-center text-sm text-gray-500 mb-6">
               <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -53,9 +53,14 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
               {noticia.data}
             </div>
 
+
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               {noticia.titulo}
             </h1>
+
+            {/* Mostra imagem_extra logo abaixo do título */}
+            
+
             <div className="mb-4">
               <span className="bg-blue-800 text-white px-3 py-1 rounded-full text-sm font-semibold">
                 {noticia.categoria && noticia.categoria.trim() !== "" ? noticia.categoria : "Sem categoria"}
@@ -72,6 +77,9 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
                   ))}
                 </div>
               )}
+              {noticia.imagem_extra && (
+                    <img src={noticia.imagem_extra} alt="Imagem extra da notícia" style={{ marginTop: 16, maxWidth: '100%' }} />
+                  )}
               {noticia.conteudo && (
                 <div className="space-y-4 text-black">
                   {noticia.conteudo.split('\n\n').map((paragrafo, index) => (
@@ -89,10 +97,10 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
                     ) : null;
                   })()}
                   {/* Adiciona imagem_extra ao final, se existir */}
-                  {noticia.imagem_extra && (
-                    <img src={noticia.imagem_extra} alt="Imagem extra da notícia" style={{ marginTop: 16, maxWidth: '100%' }} />
-                  )}
+                  
+                  
                 </div>
+                
               )}
             </div>
 
@@ -115,7 +123,6 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
   );
 }
 
-// Gerar páginas estáticas para todas as notícias
 export async function generateStaticParams() {
   const noticias = await fetchNoticias();
   return noticias.map((noticia) => ({

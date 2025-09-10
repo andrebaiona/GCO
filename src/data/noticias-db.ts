@@ -40,8 +40,20 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
     conteudo: n.conteudo,
     data: n.data_publicacao?.toLocaleDateString() ?? "",
     categoria: n.categoria,
-    imagem: n.imagem ? (n.imagem.startsWith('/') ? n.imagem : `/${n.imagem}`) : undefined,
-    imagem_extra: n.imagem_extra ? (n.imagem_extra.startsWith('/') ? n.imagem_extra : `/${n.imagem_extra}`) : undefined,
+    imagem: n.imagem
+      ? (n.imagem.startsWith("http://") || n.imagem.startsWith("https://")
+        ? n.imagem
+        : n.imagem.startsWith("/")
+          ? n.imagem
+          : `/${n.imagem}`)
+      : undefined,
+    imagem_extra: n.imagem_extra
+      ? (n.imagem_extra.startsWith("http://") || n.imagem_extra.startsWith("https://")
+        ? n.imagem_extra
+        : n.imagem_extra.startsWith("/")
+          ? n.imagem_extra
+          : `/${n.imagem_extra}`)
+      : undefined,
     link: undefined,
     autor: n.autor ?? undefined,
   }));
