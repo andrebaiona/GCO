@@ -136,7 +136,8 @@ export default function SerSocioPage() {
               <AccordionSection title='Relatórios de Contas / Atividades'>
                 <div className='space-y-4'>
                     <div>
-                    <AccordionSection title='2023-2020'>
+                    <AccordionSection title='2024-2020'>
+                      <a href="\files\pdf\relatorios-de-contas\Relatorio-contas-2024.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline cursor-pointer block">2024</a>
                       <a href="\files\pdf\relatorios-de-contas\Relatorio-de-contas_GCO_2023.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline cursor-pointer block">2023</a>
                       <a href="\files\pdf\relatorios-de-contas\Relatorio-de-contas_GCO_2022.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline cursor-pointer block">2022</a>
                       <a href="\files\pdf\relatorios-de-contas\Relatorio-contas-2021.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline cursor-pointer block">2021</a>
