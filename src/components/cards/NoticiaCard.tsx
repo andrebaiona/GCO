@@ -14,6 +14,7 @@ export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaC
         isHighlighted ? 'md:col-span-2 lg:col-span-1' : ''
       }`}
     >
+      {imagem && (
       <div className="relative h-48">
         <img
           src={imagem}
@@ -26,6 +27,7 @@ export default function NoticiaCard({ noticia, isHighlighted = false }: NoticiaC
           </span>
         </div>
       </div>
+      )}
       <div className="p-6">
         <div className="flex items-center text-sm text-gray-500 mb-3">
           <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">

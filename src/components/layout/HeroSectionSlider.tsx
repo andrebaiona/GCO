@@ -12,7 +12,7 @@ interface Slide {
   alt?: string;
   title: string;
   subtitle?: string;
-  description?: string;
+  description?: string | null;
   buttons: Button[];
 }
 
