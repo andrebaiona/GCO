@@ -1,13 +1,12 @@
-import { Noticia, fetchNoticias } from "@/data/noticias-db";
+import { Noticia, fetchNoticiaById, fetchNoticias } from "@/data/noticias-db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+
 
 export default async function NoticiaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const noticiaId = parseInt(id);
-  const noticias = await fetchNoticias();
-  const noticia = noticias.find(n => n.id === noticiaId);
-
+  const noticia = await fetchNoticiaById(noticiaId);
   if (!noticia) {
     notFound();
   }
@@ -15,7 +14,6 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
   return (
     <main className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumb */}
         <nav className="mb-8">
           <div className="flex items-center space-x-2 text-sm text-gray-500">
             <Link href="/" className="hover:text-blue-600">
@@ -32,20 +30,26 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
 
         {/* Artigo */}
         <article className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {noticia.imagem && (
-          <div className="relative h-64 md:h-96">
+          <div className="flex h-64 md:h-96">
             <img
-              src={noticia.imagem}
+              src={
+                noticia.imagem
+                  ? noticia.imagem.startsWith('http')
+                    ? noticia.imagem
+                    : noticia.imagem.startsWith('/')
+                      ? noticia.imagem
+                      : `/${noticia.imagem}`
+                  : ""
+              }
               alt={noticia.titulo}
               className="w-full h-full object-cover"
             />
             <div className="absolute top-4 left-4">
               <span className="bg-blue-800 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                {noticia.categoria}
+                {noticia.categoria && noticia.categoria.trim() !== "" ? noticia.categoria : "Sem categoria"}
               </span>
             </div>
           </div>
-          )}
           
           <div className="p-8">
             <div className="flex items-center text-sm text-gray-500 mb-6">
@@ -58,10 +62,7 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
 
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
               {noticia.titulo}
-            </h1>
-
-            {/* Mostra imagem_extra logo abaixo do título */}
-            
+            </h1>            
 
             <div className="mb-4">
               <span className="bg-blue-800 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -80,13 +81,36 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
                 </div>
               )}
               {noticia.imagem_extra && (
-                    <img src={noticia.imagem_extra} alt="Imagem extra da notícia" style={{ marginTop: 16, maxWidth: '100%' }} />
-                  )}
+                <img
+                  src={
+                    noticia.imagem_extra.startsWith('http')
+                      ? noticia.imagem_extra
+                      : noticia.imagem_extra.startsWith('/')
+                        ? noticia.imagem_extra
+                        : `/${noticia.imagem_extra}`
+                  }
+                  alt={noticia.titulo}
+                  className="w-full h-full object-cover"
+                />
+              )}
               {noticia.conteudo && (
                 <div className="space-y-4 text-black">
                   {noticia.conteudo.split('\n\n').map((paragrafo, index) => (
                     <p key={paragrafo.slice(0,10) + index} className="whitespace-pre-line">
                       {paragrafo}
+                      {noticia.id === 3 && index === 0 && (
+                        <>
+                          {' '}
+                          <a
+                            href="/files/pdf/relatorios-de-contas/Relatorio-contas-2024.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-700 underline ml-2"
+                          >
+                            aqui
+                          </a>
+                        </>
+                      )}
                     </p>
                   ))}
                   {/* Se a última linha for uma imagem, mostrar também no final */}
@@ -98,11 +122,7 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
                       <img src={ultimaLinha} alt="Imagem da notícia" style={{ marginTop: 16, maxWidth: '100%' }} />
                     ) : null;
                   })()}
-                  {/* Adiciona imagem_extra ao final, se existir */}
-                  
-                  
                 </div>
-                
               )}
             </div>
 
