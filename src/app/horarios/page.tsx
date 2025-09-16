@@ -1,18 +1,46 @@
-'use client';
 
-import LogoRain from '@/components/layout/LogoRain';
-import { useState } from 'react';
+import HorariosCalendar from '../../components/HorariosCalendar';
+import prisma from '@/lib/prisma';
 
-
-  export default function HorariosPage() {
-    return (
-      <main className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-blue-100 overflow-hidden">
-        <LogoRain fullScreen={true} count={14} speed={7} />
-        <div className="relative z-10 flex flex-col items-center justify-center px-6 py-12 rounded-xl shadow-xl bg-white/80 backdrop-blur-md border border-gray-200">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-blue-900 mb-4 drop-shadow-lg">Horários</h1>
-          <p className="text-lg md:text-xl text-gray-700 font-medium mb-2">Ainda por determinar</p>
-          <span className="text-sm text-gray-500">Em breve serão publicados os horários das modalidades / eventos do clube.</span>
-        </div>
-      </main>
-    );
-  }
+export default async function HorariosPage() {
+  const horarios = await prisma.horarios.findMany({ include: { modalidades: true } });
+  // Transforma os dados para eventos do calendário
+  const events = horarios.map((h) => {
+    let startDate: Date;
+    let endDate: Date;
+    if (h.data_excecao) {
+      startDate = new Date(h.data_excecao);
+      if (h.inicio) {
+        startDate.setHours(new Date(h.inicio).getHours(), new Date(h.inicio).getMinutes());
+      }
+      endDate = new Date(startDate);
+      if (h.fim) {
+        endDate.setHours(new Date(h.fim).getHours(), new Date(h.fim).getMinutes());
+      }
+    } else {
+      const now = new Date();
+      const day = h.dia_da_semana ?? 1;
+      const diff = (day + 7 - now.getDay()) % 7;
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() + diff);
+      if (h.inicio) {
+        startDate.setHours(new Date(h.inicio).getHours(), new Date(h.inicio).getMinutes(), 0, 0);
+      } else {
+        startDate.setHours(0, 0, 0, 0);
+      }
+      endDate = new Date(startDate);
+      if (h.fim) {
+        endDate.setHours(new Date(h.fim).getHours(), new Date(h.fim).getMinutes(), 0, 0);
+      } else {
+        endDate.setHours(startDate.getHours() + 1, startDate.getMinutes(), 0, 0);
+      }
+    }
+    return {
+      title: h.modalidades?.nome || 'Modalidade',
+      start: startDate,
+      end: endDate,
+      local: h.local,
+    };
+  });
+  return <HorariosCalendar events={events} />;
+}

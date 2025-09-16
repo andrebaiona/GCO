@@ -30,7 +30,7 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
 
         {/* Artigo */}
         <article className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="flex h-64 md:h-96">
+          <div className="flex h-90 md:h-90">
             <img
               src={
                 noticia.imagem
