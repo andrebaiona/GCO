@@ -63,9 +63,9 @@ model noticias {
 model horarios {
   id             Int          @id @default(autoincrement())
   modalidade_id  Int
-  local          String
-  inicio         String
-  fim            String
+  local          String?
+  inicio         DateTime
+  fim            DateTime
   dia_da_semana  Int
   data_excecao   DateTime?
   modalidades    modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
