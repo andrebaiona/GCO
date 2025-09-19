@@ -24,10 +24,25 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+function EventCard({ event }: { event: any }) {
+  return (
+    <div className="flex flex-col h-full w-full overflow-hidden">
+      <div className="text-[11px] font-semibold leading-snug tracking-wide drop-shadow-sm break-words">
+        {event.title}
+      </div>
+      {event.local && (
+        <div className="text-[10px] mt-0.5 opacity-85 font-medium truncate">
+          {event.local}
+        </div>
+      )}
+    
+    </div>
+  );
+}
+
 export default function HorariosCalendar({ events }: { events: any[] }) {
   const [modalidade, setModalidade] = useState<string | null>(null);
   const defaultDate = new Date();
-  // Modalidades e respetivas cores
   const modalidades = [
     {
       nome: 'Ginástica',
@@ -46,16 +61,16 @@ export default function HorariosCalendar({ events }: { events: any[] }) {
     },
   ];
 
-  // Filtra eventos se houver modalidade selecionada
   const filteredEvents = modalidade
     ? events.filter(e => modalidades.find(m => m.nome === modalidade)?.filtro(e.title))
     : events;
 
+    
+
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-blue-100 overflow-hidden py-8 px-4">
-      <div className="relative z-10 flex flex-col items-center w-full max-w-5xl px-2 md:px-8 py-8 md:py-14 rounded-3xl shadow-2xl bg-gradient-to-br from-white via-blue-50 to-blue-100/80 backdrop-blur-md border-2 border-blue-300">
+  <div className="relative z-10 flex flex-col items-center w-full max-w-7xl px-2 md:px-10 py-8 md:py-14 rounded-3xl shadow-2xl bg-gradient-to-br from-white via-blue-50 to-blue-100/80 backdrop-blur-md border-2 border-blue-300">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-8 text-blue-900 tracking-tight drop-shadow-xl uppercase text-center">Horários Semanais</h1>
-        {/* Botões de filtro por modalidade */}
         <div className="flex flex-wrap gap-4 justify-center mb-8">
           {modalidades.map((m) => (
             <button
@@ -70,14 +85,15 @@ export default function HorariosCalendar({ events }: { events: any[] }) {
         </div>
         <div className="w-full">
           <Calendar
+          
             localizer={localizer}
             events={filteredEvents}
             defaultView={Views.WEEK}
             views={{ week: true }}
             defaultDate={defaultDate}
-            style={{ height: 1100, background: 'transparent', borderRadius: '1.5rem', boxShadow: '0 4px 32px rgba(59,130,246,0.10)', padding: '0.5rem' }}
-            min={new Date(1970, 0, 1, 8, 0, 0)}
-            max={new Date(1970, 0, 1, 23, 59, 59)}
+            style={{ height: 1100, background: 'transparent', borderRadius: '1.5rem', boxShadow: '0 4px 32px rgba(59,130,246,0.10)', padding: '0.75rem' }}
+            min={new Date(1970, 0, 1, 9, 0, 0)}
+            max={new Date(1970, 0, 1, 22, 59, 59)}
             step={60}
             timeslots={1}
             popup
@@ -100,33 +116,33 @@ export default function HorariosCalendar({ events }: { events: any[] }) {
             }}
             className="rounded-2xl border-2 border-blue-200 shadow-lg bg-white/90 text-blue-900 font-medium calendar-gco"
             eventPropGetter={(event) => {
-              let bg = 'linear-gradient(90deg, #2563eb 0%, #38bdf8 100%)';
-              let border = '2px solid #2563eb';
-              if (event.title?.toLowerCase().includes('ginástica')) {
-                bg = 'linear-gradient(90deg, #2563eb 0%, #60a5fa 100%)';
-                border = '2px solid #2563eb';
-              } else if (event.title?.toLowerCase().includes('andebol')) {
-                bg = 'linear-gradient(90deg, #22c55e 0%, #4ade80 100%)';
-                border = '2px solid #22c55e';
-              } else if (event.title?.toLowerCase().includes('patinagem')) {
-                bg = 'linear-gradient(90deg, #f59e42 0%, #fbbf24 100%)';
-                border = '2px solid #f59e42';
+              const title = (event.title || '').toLowerCase();
+              let bg = 'linear-gradient(135deg,#1d4ed8 0%,#3b82f6 100%)';
+              let border = '1px solid #1d4ed8';
+              if (title.includes('andebol')) {
+                bg = 'linear-gradient(135deg,#15803d 0%,#22c55e 100%)';
+                border = '1px solid #15803d';
+              } else if (title.includes('patinagem')) {
+                bg = 'linear-gradient(135deg,#c2410c 0%,#f59e0b 100%)';
+                border = '1px solid #c2410c';
               }
               return {
                 style: {
                   background: bg,
                   color: 'white',
-                  borderRadius: '1rem',
+                  borderRadius: '0.9rem',
                   border,
-                  fontWeight: 700,
-                  boxShadow: '0 4px 16px rgba(59,130,246,0.13)',
-                  fontSize: '1.08rem',
-                  letterSpacing: '0.01em',
-                  transition: 'box-shadow 0.2s, transform 0.2s',
-                  cursor: 'pointer',
-                  padding: '0.25rem 0.5rem',
+                  fontWeight: 600,
+                  boxShadow: '0 6px 18px rgba(0,0,0,0.18)',
+                  fontSize: '0.72rem',
+                  lineHeight: 1.05,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '0.45rem 0.55rem 0.4rem',
+                  gap: '0.15rem',
+                  isolation: 'isolate',
                 },
-                className: 'hover:scale-105 hover:shadow-xl',
+                className: 'event-card hover:brightness-110 transition-all backdrop-blur-sm',
               };
             }}
             dayPropGetter={date => {
@@ -146,6 +162,7 @@ export default function HorariosCalendar({ events }: { events: any[] }) {
                   </span>
                 </div>
               ),
+              event: EventCard,
             }}
             toolbar={true}
           />
