@@ -1,18 +1,65 @@
-'use client';
 
-import LogoRain from '@/components/layout/LogoRain';
-import { useState } from 'react';
+import HorariosCalendar from '../../components/HorariosCalendar';
+import prisma from '@/lib/prisma';
 
+export default async function HorariosPage() {
+  const horarios = await prisma.$queryRaw<{
+    id: number;
+    modalidade_id: number;
+    local: string | null;
+    inicio: Date;
+    fim: Date;
+    dia_da_semana: number;
+    data_excecao: Date | null;
+    modalidade_nome: string;
+  }[]>`SELECT h.id,
+           h.modalidade_id,
+           COALESCE(h.local, '') AS local,
+           h.inicio,
+           h.fim,
+           h.dia_da_semana,
+           h.data_excecao,
+           m.nome AS modalidade_nome
+    FROM horarios h
+    JOIN modalidades m ON m.id = h.modalidade_id`;
+  const events = horarios.map((h) => {
+    const inicioRaw = h.inicio ? new Date(h.inicio) : null;
+    const fimRaw = h.fim ? new Date(h.fim) : null;
 
-  export default function HorariosPage() {
-    return (
-      <main className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-blue-100 overflow-hidden">
-        <LogoRain fullScreen={true} count={14} speed={7} />
-        <div className="relative z-10 flex flex-col items-center justify-center px-6 py-12 rounded-xl shadow-xl bg-white/80 backdrop-blur-md border border-gray-200">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-blue-900 mb-4 drop-shadow-lg">Horários</h1>
-          <p className="text-lg md:text-xl text-gray-700 font-medium mb-2">Ainda por determinar</p>
-          <span className="text-sm text-gray-500">Em breve serão publicados os horários das modalidades / eventos do clube.</span>
-        </div>
-      </main>
-    );
-  }
+    const now = new Date();
+    const targetWeekday = h.dia_da_semana; 
+    const jsCurrent = now.getDay();
+    const diff = (targetWeekday + 7 - jsCurrent) % 7;
+    const baseDate = new Date(now);
+    baseDate.setHours(0, 0, 0, 0);
+    baseDate.setDate(now.getDate() + diff);
+
+    const startDate = new Date(baseDate);
+    if (inicioRaw) {
+      startDate.setHours(inicioRaw.getUTCHours(), inicioRaw.getUTCMinutes(), 0, 0);
+    }
+
+    const endDate = new Date(baseDate);
+    if (fimRaw) {
+      endDate.setHours(fimRaw.getUTCHours(), fimRaw.getUTCMinutes(), 0, 0);
+    } else if (inicioRaw) {
+      endDate.setHours(startDate.getHours(), startDate.getMinutes(), 0, 0);
+    } else {
+      endDate.setHours(startDate.getHours(), 0, 0, 0);
+    }
+
+    if (h.data_excecao) {
+      const exc = new Date(h.data_excecao);
+      startDate.setFullYear(exc.getFullYear(), exc.getMonth(), exc.getDate());
+      endDate.setFullYear(exc.getFullYear(), exc.getMonth(), exc.getDate());
+    }
+
+    return {
+  title: h.modalidade_nome || 'Modalidade',
+      start: startDate,
+      end: endDate,
+  local: h.local ,
+    };
+  });
+  return <HorariosCalendar events={events} />;
+}
