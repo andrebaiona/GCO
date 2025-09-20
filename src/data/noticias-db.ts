@@ -6,7 +6,7 @@ export interface Noticia {
   resumo: string | null;
   conteudo: string | null;
   data: string; 
-  categoria: string;
+  categoria: string | null;
   imagem?: string | null;
   imagem_extra?: string | null;
   link?: string;
