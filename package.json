@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@daypilot/daypilot-lite-react": "^4.5.0",
     "@prisma/client": "^6.15.0",
     "date-fns": "^4.1.0",
     "next": "^15.5.3",

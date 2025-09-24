@@ -1,65 +1,63 @@
+// src/app/horario/page.tsx
+import { fetchEventos, Event } from "@/data/horarios-db";
 
-import HorariosCalendar from '../../components/HorariosCalendar';
-import prisma from '@/lib/prisma';
+const dias = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const horaInicio = 8;
+const horaFim = 23;
+const totalMinutos = (horaFim - horaInicio) * 60;
 
-export default async function HorariosPage() {
-  const horarios = await prisma.$queryRaw<{
-    id: number;
-    modalidade_id: number;
-    local: string | null;
-    inicio: Date;
-    fim: Date;
-    dia_da_semana: number;
-    data_excecao: Date | null;
-    modalidade_nome: string;
-  }[]>`SELECT h.id,
-           h.modalidade_id,
-           COALESCE(h.local, '') AS local,
-           h.inicio,
-           h.fim,
-           h.dia_da_semana,
-           h.data_excecao,
-           m.nome AS modalidade_nome
-    FROM horarios h
-    JOIN modalidades m ON m.id = h.modalidade_id`;
-  const events = horarios.map((h) => {
-    const inicioRaw = h.inicio ? new Date(h.inicio) : null;
-    const fimRaw = h.fim ? new Date(h.fim) : null;
+const toMin = (d: Date) => d.getUTCHours() * 60 + d.getUTCMinutes();
 
-    const now = new Date();
-    const targetWeekday = h.dia_da_semana; 
-    const jsCurrent = now.getDay();
-    const diff = (targetWeekday + 7 - jsCurrent) % 7;
-    const baseDate = new Date(now);
-    baseDate.setHours(0, 0, 0, 0);
-    baseDate.setDate(now.getDate() + diff);
+export default async function HorarioPage() {
+  const eventos: Event[] = await fetchEventos();
 
-    const startDate = new Date(baseDate);
-    if (inicioRaw) {
-      startDate.setHours(inicioRaw.getUTCHours(), inicioRaw.getUTCMinutes(), 0, 0);
-    }
+  return (
+    <div className="flex border border-gray-300">
+      {/* Coluna das horas */}
+      <div className="flex flex-col border-r border-gray-300">
+        {Array.from({ length: horaFim - horaInicio }).map((_, i) => (
+          <div key={i} className="h-16 border-b border-gray-300 text-right pr-2">
+            {String(horaInicio + i).padStart(2, "0")}:00
+          </div>
+        ))}
+      </div>
 
-    const endDate = new Date(baseDate);
-    if (fimRaw) {
-      endDate.setHours(fimRaw.getUTCHours(), fimRaw.getUTCMinutes(), 0, 0);
-    } else if (inicioRaw) {
-      endDate.setHours(startDate.getHours(), startDate.getMinutes(), 0, 0);
-    } else {
-      endDate.setHours(startDate.getHours(), 0, 0, 0);
-    }
+      {/* Colunas dos dias */}
+      {dias.map((_, diaIdx) => (
+        <div key={diaIdx} className="flex-1 relative border-r border-gray-300">
+          {/* Linhas de fundo */}
+          {Array.from({ length: horaFim - horaInicio }).map((_, i) => (
+            <div key={i} className="h-16 border-b border-gray-300"></div>
+          ))}
 
-    if (h.data_excecao) {
-      const exc = new Date(h.data_excecao);
-      startDate.setFullYear(exc.getFullYear(), exc.getMonth(), exc.getDate());
-      endDate.setFullYear(exc.getFullYear(), exc.getMonth(), exc.getDate());
-    }
+          {/* Eventos */}
+          {eventos
+            .filter(e => e.dia_da_semana === diaIdx)
+            .map(e => {
+              const inicioMin = toMin(new Date(e.inicio)) - horaInicio * 60;
+              const fimMin = toMin(new Date(e.fim)) - horaInicio * 60;
+              const top = (inicioMin / totalMinutos) * 100;
+              const height = ((fimMin - inicioMin) / totalMinutos) * 100;
 
-    return {
-  title: h.modalidade_nome || 'Modalidade',
-      start: startDate,
-      end: endDate,
-  local: h.local ,
-    };
-  });
-  return <HorariosCalendar events={events} />;
+              const formatHora = (d: Date) =>
+                String(d.getUTCHours()).padStart(2, "0") +
+                ":" +
+                String(d.getUTCMinutes()).padStart(2, "0");
+
+              return (
+                <div
+                  key={e.id}
+                  className="absolute left-1 right-1 bg-blue-500 text-white text-xs rounded p-1 shadow"
+                  style={{ top: `${top}%`, height: `${height}%` }}
+                >
+                  <div className="font-bold">{e.modalidade_id}</div>
+                  <div>{formatHora(new Date(e.inicio))} - {formatHora(new Date(e.fim))}</div>
+                  <div className="text-[10px]">{e.local ?? ""}</div>
+                </div>
+              );
+            })}
+        </div>
+      ))}
+    </div>
+  );
 }
