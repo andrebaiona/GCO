@@ -34,7 +34,8 @@ const Navbar = () => {
   const clube = [
     { name: 'História', href: '/historia' },
     { name: 'Ser Sócio', href: '/ser_socio' },
-    { name: 'Contactos', href: '/contactos' }
+    { name: 'Contactos', href: '/contactos' },
+    { name: 'Documentos Importantes', href: '/documentos-importantes' },
   ];
 
   const toggleDropdown = (dropdown: string) => {
