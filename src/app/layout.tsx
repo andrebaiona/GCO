@@ -5,6 +5,7 @@ import Footer from "../components/layout/footer";
 import Navbar from "../components/layout/navbar";
 import SponsorsSection from "@/components/SponsorsSection";
 import { calcularIdadeClube } from "@/utils/idadeClube";
+import { Analytics } from '@vercel/analytics/next';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
       >
         <Navbar />
         {children}
+        <Analytics />
         <SponsorsSection />
         <Footer />
       </body>
