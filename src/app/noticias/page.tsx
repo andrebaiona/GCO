@@ -1,8 +1,10 @@
 import { Noticia, fetchNoticias } from "@/data/noticias-db";
 import NoticiaCard from "@/components/cards/NoticiaCard";
+import NoticiasFilter from "@/components/filter-buttons";
 
 export default async function NoticiasPage() {
-  const noticias = await fetchNoticias();
+  const noticias = await fetchNoticias(100);
+
   return (
     <main className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,11 +17,7 @@ export default async function NoticiasPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {noticias.map((noticia: Noticia) => (
-            <NoticiaCard key={noticia.id} noticia={noticia} />
-          ))}
-        </div>
+        <NoticiasFilter noticias={noticias} />
       </div>
     </main>
   );
