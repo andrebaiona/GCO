@@ -36,6 +36,7 @@ const Navbar = () => {
     { name: 'Ser Sócio', href: '/ser_socio' },
     { name: 'Contactos', href: '/contactos' },
     { name: 'Documentos Importantes', href: '/documentos-importantes' },
+    { name: 'Orgãos Sociais', href: '/orgaos_sociais' }
   ];
 
   const toggleDropdown = (dropdown: string) => {
