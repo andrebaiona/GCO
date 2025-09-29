@@ -4,6 +4,8 @@ import Image from "next/image";
 import { fetchModalidadeBySlug } from "@/data/modalidades-db";
 import { fetchAllModalidadeSlugs } from "@/data/modalidades-db";
 import TabsEscaloes from "@/components/TabsEscaloes";
+import NoticiaCard from "@/components/cards/NoticiaCard";
+import { fetchNoticias } from "@/data/noticias-db";
 
 
 export default async function ModalidadePage(props:any) {
@@ -13,6 +15,19 @@ export default async function ModalidadePage(props:any) {
 
   if (!modalidade) notFound();
 
+
+  const noticias = await fetchNoticias(100);
+  const normalize = (str: string) =>
+  str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+const noticiasModalidade = noticias
+  .filter(
+    noticia =>
+      noticia.categoria &&
+      normalize(noticia.categoria) === normalize(modalidade.nome)
+  )
+  .slice(0, 2);
+  
   const escalas = modalidade.escalao || [];
   return (
     
@@ -125,7 +140,33 @@ export default async function ModalidadePage(props:any) {
                 ))}
               </ul>
             </section>
+            
         )}
+        <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+          <h2 className="text-3xl font-bold text-blue-900 mb-6">
+            Notícias de {modalidade.nome}
+          </h2>
+        
+          {noticiasModalidade.length === 0 ? (
+            <p className="text-gray-500">Ainda não existem notícias para esta modalidade.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {noticiasModalidade.map((noticia) => {
+  console.log("noticia card", noticia);
+  return <NoticiaCard key={noticia.id} noticia={noticia} />;
+})}
+            </div>
+          )}
+          <div className="mt-6 text-right">
+            <Link
+              href="/noticias"
+              className="text-blue-700 hover:underline font-semibold"
+            >
+              Ver todas as notícias
+            </Link>
+          </div>
+        </section>
+        
         {modalidade.slug === "hoquei-em-patins" && (
           <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
             <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>

@@ -26,8 +26,8 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
     conteudo: n.conteudo ?? null,
     data: n.data_publicacao ? n.data_publicacao.toISOString().split("T")[0]: "",
     categoria: n.categoria,
-    imagem: n.imagem ?? undefined,
-    imagem_extra: n.imagem_extra ?? null,
+    imagem: n.imagem ? `/${n.imagem.replace(/^\/+/, "")}` : undefined,
+    imagem_extra: n.imagem_extra ? `/${n.imagem_extra.replace(/^\/+/, "")}` : undefined,
     autor: n.autor ?? null,
     link: undefined,
   }));
