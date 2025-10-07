@@ -13,11 +13,6 @@ type Escalao = {
     valor: number;
     observacoes?: string | null;
   }[];
-  preco_escalaos?: {
-    tipo: string;
-    valor: number;
-    observacoes?: string | null;
-  }[];
 };
 
 interface TabsEscaloesProps {
@@ -34,6 +29,16 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
   }
   const [activeTab, setActiveTab] = useState(0);
   const [isAndebol, setIsAndebol] = useState(false);
+  const [isPatinagem, setIsPatinagem] = useState(false);
+
+  // Extract global inscription and insurance info for Patinagem
+  const inscricaoGlobal = escaloes
+    .flatMap(esc => (esc.preco_escalao || []))
+    .find(p => p.tipo?.toLowerCase() === "inscricao");
+  
+  const seguroGlobal = escaloes
+    .flatMap(esc => (esc.preco_escalao || []))
+    .find(p => p.tipo?.toLowerCase() === "seguro");
 
   function getExtraInfo(
     precos: { tipo?: string; valor?: number; observacoes?: string | null }[]
@@ -68,16 +73,55 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
     return info;
   }
 
-  // Detecta se é página do Andebol (client-only)
-  // Use useEffect to avoid SSR/CSR mismatch
   useEffect(() => {
     if (typeof window !== "undefined") {
       setIsAndebol(window.location.pathname.includes("/modalidades/andebol"));
+      setIsPatinagem(window.location.pathname.includes("/modalidades/patinagem-artistica"));
     }
   }, []);
 
   return (
     <div>
+      {/* Global inscription and insurance cards for Patinagem */}
+      {isPatinagem && (inscricaoGlobal || seguroGlobal) && (
+        <div className="mb-8">
+          <h3 className="text-xl font-bold mb-4 text-blue-900">Valores Gerais</h3>
+          <div className="flex flex-row flex-wrap gap-6 justify-center items-center w-full mb-4">
+            {inscricaoGlobal && (
+              <div className="w-[200px] h-[200px] bg-yellow-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-yellow-400">
+                <span className="text-lg font-semibold text-yellow-900 mb-2">
+                  Inscrição
+                </span>
+                <span className="text-2xl font-bold text-yellow-800 mb-2">
+                  {inscricaoGlobal.valor} €
+                </span>
+                {inscricaoGlobal.observacoes && (
+                  <span className="text-xs text-yellow-700 text-center mt-1">
+                    {inscricaoGlobal.observacoes}
+                  </span>
+                )}
+              </div>
+            )}
+            {seguroGlobal && (
+              <div className="w-[200px] h-[200px] bg-green-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-green-400">
+                <span className="text-lg font-semibold text-green-900 mb-2">
+                  Seguro
+                </span>
+                <span className="text-2xl font-bold text-green-800 mb-2">
+                  {seguroGlobal.valor} €
+                </span>
+                {seguroGlobal.observacoes && (
+                  <span className="text-xs text-green-700 text-center mt-1">
+                    {seguroGlobal.observacoes}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="border-b border-gray-300 mb-6"></div>
+        </div>
+      )}
+
       <div className="mb-6">
         <div className="flex border-b border-gray-300">
           {escaloes.slice(0, 3).map((esc, idx) => (
@@ -112,10 +156,14 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
           </div>
         )}
       </div>
+
       <div className="p-8 bg-white rounded-xl shadow flex flex-col items-center border border-blue-100">
         {(() => {
           const esc = escaloes[activeTab];
           const precos = esc.preco_escalao || [];
+
+          console.log(`\n=== ESCALÃO: ${esc.nome} ===`);
+          console.log('Preços do escalão:', precos);
 
           // Caso especial: Andebol → Séniores
           if (isAndebol && esc.nome.toLowerCase() === "seniores") {
@@ -169,7 +217,80 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
             );
           }
 
-          // 👉 resto do código original (todas as outras modalidades e escalões)
+          // Caso especial: Patinagem - Mostrar mensalidades em layout especial
+          if (isPatinagem) {
+            // Ordenar mensalidades por horas (3h, 4h, 5h, 6h) no componente também
+            const mensalidadesPatinagem = precos
+              .filter(p => p.tipo?.toLowerCase() === "mensalidade")
+              .sort((a, b) => {
+                const horasA = a.observacoes?.match(/(\d+)\s*horas?/i);
+                const horasB = b.observacoes?.match(/(\d+)\s*horas?/i);
+                
+                if (horasA && horasB) {
+                  const numA = parseInt(horasA[1]);
+                  const numB = parseInt(horasB[1]);
+                  return numA - numB; // 3h, 4h, 5h, 6h
+                }
+                return 0;
+              });
+            
+            console.log(`Mensalidades ordenadas para ${esc.nome}:`, mensalidadesPatinagem);
+            
+            return (
+              <>
+                <h3 className="text-2xl font-bold mb-2 text-blue-900">
+                  {esc.nome}
+                </h3>
+                {esc.descricao && (
+                  <p className="mb-2 text-gray-700 text-base text-center">
+                    {esc.descricao}
+                  </p>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                  {mensalidadesPatinagem.map((mensalidade, index) => {
+                    return (
+                      <div key={index} className="flex flex-col items-center">
+                        {/* Nome (horas por semana) */}
+                        <h4 className="text-xl font-bold text-blue-900 mb-4">
+                          {mensalidade.observacoes || "Mensalidade"}
+                        </h4>
+                        {/* Card containing Mensalidade and value */}
+                        <div className="w-full bg-blue-100 rounded-xl shadow-md border border-blue-200 overflow-hidden">
+                          <div className="bg-blue-200 py-3 text-center">
+                            <p className="font-semibold text-blue-900">Mensalidade</p>
+                          </div>
+                          <div className="p-6 text-center">
+                            <p className="text-2xl font-bold text-blue-800">{mensalidade.valor} €</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {mensalidadesPatinagem.length === 0 && (
+                  <div className="mt-4 text-xs text-red-600 text-center">
+                    <strong>Sem preços de mensalidade para este escalão!</strong>
+                  </div>
+                )}
+                
+                {(esc.idade_minima || esc.idade_maxima) && (
+                  <div className="mt-6 text-base text-gray-700 text-center">
+                    {esc.idade_minima && esc.idade_maxima
+                      ? `Idades: ${esc.idade_minima} - ${esc.idade_maxima} anos`
+                      : esc.idade_minima
+                      ? `A partir dos ${esc.idade_minima} anos`
+                      : esc.idade_maxima
+                      ? `Até aos ${esc.idade_maxima} anos`
+                      : null}
+                  </div>
+                )}
+              </>
+            );
+          }
+
+          // Comportamento padrão para outras modalidades
           const mensalidades = precos.filter(
             (p: any) => p.tipo?.toLowerCase() === "mensalidade"
           );
@@ -298,7 +419,11 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
           );
         })()}
       </div>
+      {isPatinagem && (
+        <div className="mt-4 text-base text-blue-700 text-center">
+          <strong>Nota:</strong> A época da patinagem é de janeiro a dezembro.
+        </div>
+      )}
     </div>
   );
 }
-
