@@ -27,7 +27,8 @@ const SponsorsSection = () => {
     { id: 13, name: 'Lara Coffee', logo: '/sponsors_img/Lara Coffee.jpeg', website: 'https://www.facebook.com/gerallaracoffee/' },
     { id: 14, name: 'Simplefy', logo: '/sponsors_img/Simplefy.jpg', website: 'https://www.simplefy.pt/pt' },
     { id: 15, name: 'MFTN', logo: '/sponsors_img/mftn.jpg', website: '#' },
-    { id: 16, name: 'Simplefy', logo: '/sponsors_img/xd_logo-1-3129999812.png', website: 'https://www.xdsoftware.com/xdgc/unlimited.php' }
+    { id: 16, name: 'XDSoftware', logo: '/sponsors_img/xd_logo-1-3129999812.png', website: 'https://www.xdsoftware.com/xdgc/unlimited.php' },
+    { id: 17, name: 'Amovalflor', logo:'/sponsors_img/amovalflor.jpg', website: 'http://www.amovalflor.org'}
   ];
 
   const allSponsors = [...sponsors, ...sponsors];
