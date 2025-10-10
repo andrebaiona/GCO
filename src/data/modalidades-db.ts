@@ -58,6 +58,38 @@ export async function fetchModalidadeBySlug(slug: string) {
 
   if (!modalidade) return null;
 
+  // Buscar preços globais primeiro
+  const precosGlobais = modalidade.preco_escalao
+    ? modalidade.preco_escalao.filter((preco: any) => {
+        const precoEscalao = preco.escalao?.toString().toLowerCase().trim();
+        return precoEscalao === 'todos';
+      })
+      .map((preco: any) => ({
+        tipo: preco.tipo,
+        valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor),
+        observacoes: preco.observacoes ?? null
+      }))
+    : [];
+
+  console.log('\n=== PREÇOS GLOBAIS ENCONTRADOS ===');
+  console.log('Preços globais:', precosGlobais);
+
+  // Criar escalão "Todos" se existirem preços globais
+  let escalaoTodos = null;
+  if (precosGlobais.length > 0) {
+    escalaoTodos = {
+      id: -1,
+      nome: "Todos",
+      modalidade_id: modalidade.id,
+      idade_minima: null,
+      idade_maxima: null,
+      descricao: "Valores aplicáveis a todos os escalões",
+      mensalidade: null,
+      preco_escalao: precosGlobais,
+    };
+    console.log('✅ Escalão "Todos" criado com', precosGlobais.length, 'preços');
+  }
+
   const escalaoComPrecos = modalidade.escalao?.map((esc: any) => {
     console.log(`\n--- Processando escalão: ${esc.nome} ---`);
     
@@ -159,6 +191,11 @@ export async function fetchModalidadeBySlug(slug: string) {
     }
   }) || [];
 
+  // Adicionar escalão "Todos" à lista se existir
+  const todosOsEscaloes = escalaoTodos 
+    ? [escalaoTodos, ...escalaoComPrecos] 
+    : escalaoComPrecos;
+
   // Debug: mostrar TODOS os preços da patinagem
   if (slug === 'patinagem-artistica') {
     console.log('\n=== TODOS OS PREÇOS DA PATINAGEM ===');
@@ -167,14 +204,19 @@ export async function fetchModalidadeBySlug(slug: string) {
     });
     
     console.log('\n=== ESCALÕES DISPONÍVEIS ===');
-    modalidade.escalao?.forEach((esc: any, index: number) => {
+    todosOsEscaloes?.forEach((esc: any, index: number) => {
       console.log(`${index + 1}. Nome: "${esc.nome}"`);
     });
   }
 
+  console.log('\n=== RESULTADO FINAL ===');
+  console.log('Total de escalões processados:', todosOsEscaloes?.length || 0);
+  console.log('Escalões retornados:', todosOsEscaloes?.map((esc: any) => esc.nome) || []);
+  console.log('Escalão "Todos" incluído:', !!escalaoTodos);
+
   return {
     ...modalidade,
-    escalao: escalaoComPrecos,
+    escalao: todosOsEscaloes,
     preco_escalao: modalidade.preco_escalao?.map((preco: any) => ({
       ...preco,
       valor: typeof preco.valor === 'object' && preco.valor !== null && 'toNumber' in preco.valor ? preco.valor.toNumber() : Number(preco.valor)

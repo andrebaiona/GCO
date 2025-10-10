@@ -26,7 +26,7 @@ export default async function NoticiasSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {noticias.map((noticia, index) => (
+          {noticias.slice(0, 4).map((noticia, index) => (
             <NoticiaCard
               key={noticia.id}
               noticia={noticia}
