@@ -10,8 +10,8 @@ const CATEGORIAS = [
   "Andebol",
   "Ginástica",
   "Patinagem",
-  "Hoquei",
-  "Xadrez"
+  "Xadrez",
+  "Hoquei"
 ];
 
 type NoticiasFilterProps = {
