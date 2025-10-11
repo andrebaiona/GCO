@@ -12,8 +12,8 @@ import type { FC } from "react";
 
 const globals = {
   days: ['2.ª', '3.ª', '4.ª', '5.ª', '6.ª', 'Sábado', 'Domingo'],
-  startHour: '10:00',
-  endHour: '21:00',
+  startHour: '09:00',
+  endHour: '21:30',
   slotMinutes: 30,
   timezone: 'Europe/Lisbon'
   };
@@ -40,6 +40,22 @@ const schedule_patinagem = [
   { day: 'Domingo', start: '12:30', end: '13:30', title: 'Solo Dance', room: 'GCO', color: 'green' }
 ];
 
+const schedule_ginastica = [
+  { day: '2.ª', start: '17:00', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: '2.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
+  { day: '2.ª', start: '18:15', end: '19:00', title: 'Formativa I', room: '', color: 'var(--blue-500)' },
+  { day: '2.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
+  { day: '4.ª', start: '17:00', end: '21:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: '4.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
+  { day: '4.ª', start: '18:15', end: '19:00', title: 'Formativa II', room: '', color: 'var(--blue-600)' },
+  { day: '4.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
+  { day: '6.ª', start: '17:45', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: '6.ª', start: '17:45', end: '18:30', title: 'Formativa(II)', room: '', color: 'var(--blue-600)' },
+  { day: '6.ª', start: '18:15', end: '19:00', title: 'Formativa(I)', room: '', color: 'var(--blue-500)' },
+  { day: '6.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
+  { day: 'Sábado', start: '09:00', end: '12:00', title: 'Competição', room: '', color: 'var(--blue-900)' }
+];
+
 type Event = {
 day: string;
 start: string;
@@ -56,40 +72,58 @@ return h * 60 + m;
 }
 
 
-const Calendar: FC = () => {
+type CalendarProps = {
+  events: Event[];
+};
+
+const Calendar: FC<CalendarProps> = ({ events }) => {
   const { days, startHour, endHour, slotMinutes } = globals;
   const startMin = timeToMinutes(startHour);
   const endMin = timeToMinutes(endHour);
   const totalSlots = Math.ceil((endMin - startMin) / slotMinutes);
-  const slotHeight = 40; // altura fixa
+  const slotHeight = 40;
 
+  // Agrupar eventos por dia
   const eventsByDay: Record<string, Event[]> = {};
   for (const d of days) eventsByDay[d] = [];
-  for (const ev of schedule_patinagem) {
+  for (const ev of events) {
     if (!eventsByDay[ev.day]) eventsByDay[ev.day] = [];
     eventsByDay[ev.day].push(ev);
   }
 
-  function distributeColumns(events: Event[]) {
-    if (!events.length) return [];
-    const sorted = [...events].sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
-    const positioned: Array<Event & { left: number; width: number }> = [];
+function distributeColumns(events: Event[]) {
+  if (!events.length) return [];
+  const sorted = [...events].sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
+  const columns: Event[][] = [];
 
-    sorted.forEach(ev => {
-      const overlaps = sorted.filter(
-        e => !(timeToMinutes(e.end) <= timeToMinutes(ev.start) || timeToMinutes(e.start) >= timeToMinutes(ev.end))
-      );
-      if (overlaps.length === 1) {
-        positioned.push({ ...ev, left: 0, width: 100 });
-      } else {
-        const index = overlaps.findIndex(o => o === ev);
-        const width = 100 / overlaps.length;
-        positioned.push({ ...ev, left: index * width, width });
+  sorted.forEach(ev => {
+    let placed = false;
+    for (const col of columns) {
+      const lastInCol = col[col.length - 1];
+      if (timeToMinutes(ev.start) >= timeToMinutes(lastInCol.end)) {
+        col.push(ev);
+        placed = true;
+        break;
       }
-    });
+    }
+    if (!placed) columns.push([ev]);
+  });
 
-    return positioned;
-  }
+  const positioned: Array<Event & { left: number; width: number }> = [];
+  columns.forEach((col, colIndex) => {
+    const width = 100 / columns.length;
+    col.forEach(ev => {
+      positioned.push({
+        ...ev,
+        left: colIndex * width,
+        width,
+      });
+    });
+  });
+
+  return positioned;
+}
+
 
   return (
     <section className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 mb-10">
@@ -99,36 +133,24 @@ const Calendar: FC = () => {
 
       <div className="overflow-x-auto overflow-y-hidden rounded-xl">
         <div className="grid grid-cols-[80px_repeat(7,minmax(180px,1fr))] sm:grid-cols-[80px_repeat(7,minmax(200px,1fr))] md:grid-cols-[80px_repeat(7,minmax(220px,1fr))] gap-[1px] sm:gap-2 min-w-[1300px]">
-          {/* Cabeçalhos dos dias */}
-          <div /> {/* célula vazia no canto superior esquerdo */}
+          <div />
           {days.map(d => (
-            <div
-              key={d}
-              className="text-center font-semibold text-[11px] sm:text-[13px] md:text-[14px] text-blue-800 py-1 border-b border-blue-50"
-            >
-              {d}
-            </div>
+            <div key={d} className="text-center font-semibold text-[11px] sm:text-[13px] md:text-[14px] text-blue-800 py-1 border-b border-blue-50">{d}</div>
           ))}
 
-          {/* Coluna das horas */}
           <div className="flex flex-col text-[9px] sm:text-[11px] text-gray-600 border-r border-blue-200">
             {Array.from({ length: totalSlots }).map((_, i) => {
               const mins = startMin + i * slotMinutes;
               const hh = String(Math.floor(mins / 60)).padStart(2, "0");
               const mm = String(mins % 60).padStart(2, "0");
               return (
-                <div
-                  key={i}
-                  className="h-10 sm:h-10 md:h-12 text-right pr-2 border-b border-blue-50 flex items-center justify-end"
-                  style={{ height: slotHeight }}
-                >
+                <div key={i} className="h-10 sm:h-10 md:h-12 text-right pr-2 border-b border-blue-50 flex items-center justify-end" style={{ height: slotHeight }}>
                   {`${hh}:${mm}`}
                 </div>
               );
             })}
           </div>
 
-          {/* Colunas de dias */}
           {days.map(d => {
             const positioned = distributeColumns(eventsByDay[d]);
             return (
@@ -141,26 +163,11 @@ const Calendar: FC = () => {
                   const top = ((timeToMinutes(ev.start) - startMin) / slotMinutes) * slotHeight;
                   const height = ((timeToMinutes(ev.end) - timeToMinutes(ev.start)) / slotMinutes) * slotHeight;
                   return (
-                    <div
-                      key={idx}
-                      className="absolute rounded-md sm:rounded-lg p-[2px] sm:p-2 text-[8px] sm:text-[10px] md:text-xs text-white shadow-md"
-                      style={{
-                        top: `${top}px`,
-                        height: `${height}px`,
-                        left: `${ev.left}%`,
-                        width: `${ev.width}%`,
-                        backgroundColor: ev.color,
-                      }}
-                    >
-                      <div className="font-semibold text-[9px] sm:text-[10px] md:text-[11px] leading-tight">
-                        {ev.title}
-                      </div>
-                      <div className="hidden sm:block text-[8px] sm:text-[9px] text-yellow-100">
-                        {ev.room}
-                      </div>
-                      <div className="text-[7px] sm:text-[8px] md:text-[9px] opacity-80">
-                        {ev.start} — {ev.end}
-                      </div>
+                    <div key={idx} className="absolute rounded-md sm:rounded-lg p-[2px] sm:p-2 text-[8px] sm:text-[10px] md:text-xs text-white shadow-md"
+                      style={{ top: `${top}px`, height: `${height}px`, left: `${ev.left}%`, width: `${ev.width}%`, backgroundColor: ev.color }}>
+                      <div className="font-semibold text-[9px] sm:text-[10px] md:text-[11px] leading-tight">{ev.title}</div>
+                      <div className="hidden sm:block text-[8px] sm:text-[9px] text-yellow-100">{ev.room}</div>
+                      <div className="text-[7px] sm:text-[8px] md:text-[9px] opacity-80">{ev.start} — {ev.end}</div>
                     </div>
                   );
                 })}
@@ -172,6 +179,7 @@ const Calendar: FC = () => {
     </section>
   );
 };
+
 
 
 
@@ -326,8 +334,10 @@ export default async function ModalidadePage(props: any) {
           </section>
         )}
 
-        {/* === CALENDÁRIO ACIMA DAS NOTÍCIAS === */}
-        {slug === "patinagem-artistica" && <Calendar />}
+        {(slug === "patinagem-artistica" || slug === "ginastica") && (
+          <Calendar events={slug === "patinagem-artistica" ? schedule_patinagem : schedule_ginastica} />
+        )}
+
 
         <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
           <h2 className="text-3xl font-bold text-blue-900 mb-6">
