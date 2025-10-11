@@ -11,7 +11,7 @@ const CATEGORIAS = [
   "Ginástica",
   "Patinagem",
   "Hoquei",
-  "outros"
+  "Xadrez"
 ];
 
 type NoticiasFilterProps = {
