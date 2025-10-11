@@ -6,7 +6,184 @@ import TabsEscaloes from "@/components/TabsEscaloes";
 import NoticiaCard from "@/components/cards/NoticiaCard";
 import { fetchNoticias } from "@/data/noticias-db";
 import { fetchPrecosPorModalidade } from "@/data/modalidades-db";
+import React from 'react';
+import type { FC } from "react";
 
+
+const globals = {
+  days: ['2.ª', '3.ª', '4.ª', '5.ª', '6.ª', 'Sábado', 'Domingo'],
+  startHour: '09:00',
+  endHour: '21:30',
+  slotMinutes: 30,
+  timezone: 'Europe/Lisbon'
+  };
+
+const schedule_patinagem = [
+  { day: '2.ª', start: '17:00', end: '19:00', title: 'Iniciação | Pré-Competição | Competição', room: 'Casal do Rato', color: 'var(--blue-400)' },
+  { day: '3.ª', start: '17:00', end: '18:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
+  { day: '3.ª', start: '18:00', end: '19:00', title: 'Preparação Física', room: 'GCO', color: 'var(--yellow-500)' },
+  { day: '3.ª', start: '18:00', end: '19:00', title: 'Minis', room: 'GCO', color: 'var(--blue-900)' },
+  { day: '3.ª', start: '19:00', end: '20:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
+  { day: '3.ª', start: '20:00', end: '20:30', title: 'Competição', room: '', color: 'var(--blue-500)' },
+  { day: '4.ª', start: '17:00', end: '19:00', title: 'Iniciação | Pré-Competição | Competição', room: 'Casal do Rato', color: 'var(--blue-400)' },
+  { day: '5.ª', start: '17:00', end: '18:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
+  { day: '5.ª', start: '18:00', end: '19:00', title: 'Preparação Física', room: 'GCO', color: 'var(--yellow-500)' },
+  { day: '5.ª', start: '18:00', end: '19:00', title: 'Minis', room: 'GCO', color: 'var(--blue-900)' },
+  { day: '5.ª', start: '19:00', end: '20:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
+  { day: '5.ª', start: '20:00', end: '20:30', title: 'Competição', room: '', color: 'var(--blue-500)' },
+  { day: '6.ª', start: '17:00', end: '19:00', title: 'Iniciação | Pré-C. | Competição', room: 'Casal do Rato', color: 'var(--blue-400)' },
+  { day: 'Sábado', start: '12:00', end: '13:00', title: 'Minis', room: 'GCO', color: 'var(--blue-900)' },
+  { day: 'Sábado', start: '13:00', end: '14:00', title: 'Pré-Competição | Competição', room: 'GCO', color: 'var(--blue-400)' },
+  { day: 'Sábado', start: '14:00', end: '15:00', title: 'Iniciação', room: 'GCO', color: 'var(--blue-500)' },
+  { day: 'Domingo', start: '10:30', end: '11:30', title: 'Solo Dance', room: 'GCO', color: 'green' },
+  { day: 'Domingo', start: '11:30', end: '12:30', title: 'Solo Dance', room: 'GCO', color: 'green' },
+  { day: 'Domingo', start: '12:30', end: '13:30', title: 'Solo Dance', room: 'GCO', color: 'green' }
+];
+
+const schedule_ginastica = [
+  { day: '2.ª', start: '17:00', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: '2.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
+  { day: '2.ª', start: '18:15', end: '19:00', title: 'Formativa I', room: '', color: 'var(--blue-500)' },
+  { day: '2.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
+  { day: '4.ª', start: '17:00', end: '21:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: '4.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
+  { day: '4.ª', start: '18:15', end: '19:00', title: 'Formativa II', room: '', color: 'var(--blue-600)' },
+  { day: '4.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
+  { day: '6.ª', start: '17:45', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: '6.ª', start: '17:45', end: '18:30', title: 'Formativa(II)', room: '', color: 'var(--blue-600)' },
+  { day: '6.ª', start: '18:15', end: '19:00', title: 'Formativa(I)', room: '', color: 'var(--blue-500)' },
+  { day: '6.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
+  { day: 'Sábado', start: '09:00', end: '12:00', title: 'Competição', room: '', color: 'var(--blue-900)' }
+];
+
+type Event = {
+day: string;
+start: string;
+end: string;
+title: string;
+room?: string;
+color?: string;
+};
+
+
+function timeToMinutes(t: string) {
+const [h, m] = t.split(':').map(Number);
+return h * 60 + m;
+}
+
+
+type CalendarProps = {
+  events: Event[];
+};
+
+const Calendar: FC<CalendarProps> = ({ events }) => {
+  const { days, startHour, endHour, slotMinutes } = globals;
+  const startMin = timeToMinutes(startHour);
+  const endMin = timeToMinutes(endHour);
+  const totalSlots = Math.ceil((endMin - startMin) / slotMinutes);
+  const slotHeight = 40;
+
+  // Agrupar eventos por dia
+  const eventsByDay: Record<string, Event[]> = {};
+  for (const d of days) eventsByDay[d] = [];
+  for (const ev of events) {
+    if (!eventsByDay[ev.day]) eventsByDay[ev.day] = [];
+    eventsByDay[ev.day].push(ev);
+  }
+
+function distributeColumns(events: Event[]) {
+  if (!events.length) return [];
+  const sorted = [...events].sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
+  const columns: Event[][] = [];
+
+  sorted.forEach(ev => {
+    let placed = false;
+    for (const col of columns) {
+      const lastInCol = col[col.length - 1];
+      if (timeToMinutes(ev.start) >= timeToMinutes(lastInCol.end)) {
+        col.push(ev);
+        placed = true;
+        break;
+      }
+    }
+    if (!placed) columns.push([ev]);
+  });
+
+  const positioned: Array<Event & { left: number; width: number }> = [];
+  columns.forEach((col, colIndex) => {
+    const width = 100 / columns.length;
+    col.forEach(ev => {
+      positioned.push({
+        ...ev,
+        left: colIndex * width,
+        width,
+      });
+    });
+  });
+
+  return positioned;
+}
+
+
+  return (
+    <section className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 mb-10">
+      <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-4 sm:mb-6 text-center sm:text-left">
+        Horário de Treinos
+      </h2>
+
+      <div className="overflow-x-auto overflow-y-hidden rounded-xl">
+        <div className="grid grid-cols-[80px_repeat(7,minmax(180px,1fr))] sm:grid-cols-[80px_repeat(7,minmax(200px,1fr))] md:grid-cols-[80px_repeat(7,minmax(220px,1fr))] gap-[1px] sm:gap-2 min-w-[1300px]">
+          <div />
+          {days.map(d => (
+            <div key={d} className="text-center font-semibold text-[11px] sm:text-[13px] md:text-[14px] text-blue-800 py-1 border-b border-blue-50">{d}</div>
+          ))}
+
+          <div className="flex flex-col text-[9px] sm:text-[11px] text-gray-600 border-r border-blue-200">
+            {Array.from({ length: totalSlots }).map((_, i) => {
+              const mins = startMin + i * slotMinutes;
+              const hh = String(Math.floor(mins / 60)).padStart(2, "0");
+              const mm = String(mins % 60).padStart(2, "0");
+              return (
+                <div key={i} className="h-10 sm:h-10 md:h-12 text-right pr-2 border-b border-blue-50 flex items-center justify-end" style={{ height: slotHeight }}>
+                  {`${hh}:${mm}`}
+                </div>
+              );
+            })}
+          </div>
+
+          {days.map(d => {
+            const positioned = distributeColumns(eventsByDay[d]);
+            return (
+              <div key={d} className="relative border-l border-blue-200" style={{ minHeight: totalSlots * slotHeight }}>
+                {Array.from({ length: totalSlots }).map((_, i) => (
+                  <div key={i} className="border-b border-blue-50" style={{ height: slotHeight }} />
+                ))}
+
+                {positioned.map((ev, idx) => {
+                  const top = ((timeToMinutes(ev.start) - startMin) / slotMinutes) * slotHeight;
+                  const height = ((timeToMinutes(ev.end) - timeToMinutes(ev.start)) / slotMinutes) * slotHeight;
+                  return (
+                    <div key={idx} className="absolute rounded-md sm:rounded-lg p-[2px] sm:p-2 text-[8px] sm:text-[10px] md:text-xs text-white shadow-md"
+                      style={{ top: `${top}px`, height: `${height}px`, left: `${ev.left}%`, width: `${ev.width}%`, backgroundColor: ev.color }}>
+                      <div className="font-semibold text-[9px] sm:text-[10px] md:text-[11px] leading-tight">{ev.title}</div>
+                      <div className="hidden sm:block text-[8px] sm:text-[9px] text-yellow-100">{ev.room}</div>
+                      <div className="text-[7px] sm:text-[8px] md:text-[9px] opacity-80">{ev.start} — {ev.end}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+
+
+// === PÁGINA PRINCIPAL ===
 export default async function ModalidadePage(props: any) {
   const params = await props.params;
   const { slug } = params;
@@ -30,9 +207,6 @@ export default async function ModalidadePage(props: any) {
 
   // Ordenar escalões especificamente para patinagem
   if (slug === 'patinagem-artistica') {
-    console.log('\n=== ESCALÕES ANTES DA ORDENAÇÃO ===');
-    escalas.forEach(esc => console.log(`- "${esc.nome}" (length: ${esc.nome.length})`));
-    
     escalas = escalas.sort((a, b) => {
       const ordemPatinagem = [
         { pattern: "minis", order: 1 },
@@ -41,50 +215,33 @@ export default async function ModalidadePage(props: any) {
         { pattern: "pré-competição", order: 3 },
         { pattern: "pre-competição", order: 3 },
         { pattern: "pre-competicao", order: 3 },
-        { pattern: "precompetição", order: 3 },
-        { pattern: "precompetição", order: 3 },
         { pattern: "competição", order: 4 },
         { pattern: "competicao", order: 4 }
       ];
-      
-      const nomeA = a.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[-\s]/g, "").trim();
-      const nomeB = b.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[-\s]/g, "").trim();
-      
-      console.log(`Comparando: "${a.nome}" (${nomeA}) vs "${b.nome}" (${nomeB})`);
-      
+
+      const nomeA = a.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[-\\s]/g, "").trim();
+      const nomeB = b.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[-\\s]/g, "").trim();
+
       const findOrder = (nome: string) => {
         for (const item of ordemPatinagem) {
-          const pattern = item.pattern.replace(/[-\s]/g, "").trim();
-          if (nome.includes(pattern)) {
-            console.log(`  Match encontrado: "${nome}" -> ordem ${item.order}`);
-            return item.order;
-          }
+          const pattern = item.pattern.replace(/[-\\s]/g, "").trim();
+          if (nome.includes(pattern)) return item.order;
         }
-        console.log(`  Sem match para: "${nome}"`);
         return 999;
       };
-      
+
       const orderA = findOrder(nomeA);
       const orderB = findOrder(nomeB);
-      
       if (orderA !== orderB) return orderA - orderB;
       return a.id - b.id;
     });
-    
-    console.log('\n=== ESCALÕES DEPOIS DA ORDENAÇÃO ===');
-    escalas.forEach(esc => console.log(`- ${esc.nome}`));
   }
 
   const precos = await fetchPrecosPorModalidade(modalidade.id);
-
-  // Criar um mapeamento mais flexível que ignora espaços extras
   const precosPorEscalao: { [escalao: string]: Array<{ tipo: string, valor: number, observacoes: string }> } = {};
-  
-  console.log('\n=== MAPEAMENTO DE PREÇOS ===');
+
   precos.forEach(preco => {
-    const escalaoNormalizado = preco.escalao.trim(); // Remove espaços extras
-    console.log(`Preço: escalão="${preco.escalao}" -> normalizado="${escalaoNormalizado}"`);
-    
+    const escalaoNormalizado = preco.escalao.trim();
     if (!precosPorEscalao[escalaoNormalizado]) {
       precosPorEscalao[escalaoNormalizado] = [];
     }
@@ -95,75 +252,10 @@ export default async function ModalidadePage(props: any) {
     });
   });
 
-  // Debug para ver todos os preços por escalão
-  if (slug === 'patinagem-artistica') {
-    console.log('\n=== PREÇOS POR ESCALÃO (NORMALIZADO) ===');
-    Object.keys(precosPorEscalao).forEach(escalaoNome => {
-      console.log(`\nEscalão: "${escalaoNome}"`);
-      precosPorEscalao[escalaoNome].forEach(preco => {
-        console.log(`  - ${preco.tipo}: ${preco.valor}€ (${preco.observacoes})`);
-      });
-    });
-  }
-
-  // Ordenar preços dentro de cada escalão (3h, 4h, 5h, 6h para patinagem)
-  if (slug === 'patinagem-artistica') {
-    Object.keys(precosPorEscalao).forEach(escalaoNome => {
-      precosPorEscalao[escalaoNome] = precosPorEscalao[escalaoNome].sort((a, b) => {
-        // Ordenar mensalidades por horas (3h, 4h, 5h, 6h)
-        if (a.tipo === 'mensalidade' && b.tipo === 'mensalidade') {
-          const horasA = a.observacoes.match(/(\d+)\s*horas?/i);
-          const horasB = b.observacoes.match(/(\d+)\s*horas?/i);
-          
-          if (horasA && horasB) {
-            const numA = parseInt(horasA[1]);
-            const numB = parseInt(horasB[1]);
-            console.log(`Ordenando mensalidades: ${numA}h vs ${numB}h`);
-            return numA - numB;
-          }
-        }
-        
-        // Para outros tipos, manter ordem original
-        return 0;
-      });
-    });
-  }
-
-  // Anexar preços aos escalões usando matching flexível
   const escaloesComPrecos = escalas.map(escalao => {
-    // Procurar preços usando o nome normalizado (sem espaços extras)
     const escalaoNormalizado = escalao.nome.trim();
-    let precosDoEscalao = precosPorEscalao[escalaoNormalizado] || [];
-    
-    // Se não encontrou com o nome exato, tentar matching flexível
-    if (precosDoEscalao.length === 0) {
-      const escalaoFlexivel = escalaoNormalizado.toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[-\s]/g, "");
-      
-      for (const [escalaoPreco, precos] of Object.entries(precosPorEscalao)) {
-        const escalaoPrecoFlexivel = escalaoPreco.toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[-\s]/g, "");
-        
-        if (escalaoFlexivel === escalaoPrecoFlexivel) {
-          console.log(`Match flexível encontrado: "${escalaoNormalizado}" -> "${escalaoPreco}"`);
-          precosDoEscalao = precos;
-          break;
-        }
-      }
-    }
-    
-    if (slug === 'patinagem-artistica') {
-      console.log(`\nEscalão "${escalaoNormalizado}" recebeu ${precosDoEscalao.length} preços:`, precosDoEscalao);
-    }
-    
-    return {
-      ...escalao,
-      preco_escalao: precosDoEscalao
-    };
+    const precosDoEscalao = precosPorEscalao[escalaoNormalizado] || [];
+    return { ...escalao, preco_escalao: precosDoEscalao };
   });
 
   return (
@@ -196,20 +288,6 @@ export default async function ModalidadePage(props: any) {
           <div className="flex-1">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-white drop-shadow-lg">{modalidade.nome}</h1>
             <p className="text-lg md:text-xl text-blue-100 mb-4 font-medium">{modalidade.descricao ?? ""}</p>
-            <div className="flex flex-wrap gap-3 items-center mb-2">
-              {modalidade.categoria && (
-                <span className="bg-blue-200 text-blue-900 px-3 py-1 rounded-full font-semibold shadow">{modalidade.categoria}</span>
-              )}
-              {modalidade.ativo ? (
-                <span className="bg-green-500 px-3 py-1 rounded-full text-white font-semibold shadow flex items-center">
-                  ✓ Ativo
-                </span>
-              ) : (
-                <span className="bg-red-500 px-3 py-1 rounded-full text-white font-semibold shadow flex items-center">
-                  ⚠ Atualmente sem atividade
-                </span>
-              )}
-            </div>
           </div>
         </section>
 
@@ -255,6 +333,11 @@ export default async function ModalidadePage(props: any) {
             </ul>
           </section>
         )}
+
+        {(slug === "patinagem-artistica" || slug === "ginastica") && (
+          <Calendar events={slug === "patinagem-artistica" ? schedule_patinagem : schedule_ginastica} />
+        )}
+
 
         <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
           <h2 className="text-3xl font-bold text-blue-900 mb-6">
