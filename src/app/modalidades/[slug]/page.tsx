@@ -297,10 +297,45 @@ export default async function ModalidadePage(props: any) {
           </p>
         </div>
 
-        {(modalidade.slug !== "xadrez" && modalidade.slug !== "hoquei-em-patins") && (
+        {(modalidade.slug !== "hoquei-em-patins" && modalidade.slug !== "xadrez") && (
           <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
             <h2 className="text-3xl font-bold text-blue-900 mb-6">Escalões</h2>
             <TabsEscaloes escaloes={escaloesComPrecos} />
+          </section>
+        )}
+
+        {modalidade.slug === "xadrez" && (
+          <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+            <h2 className="text-3xl font-bold text-blue-900 mb-6">Mensalidade</h2>
+            {(() => {
+              const chaveTodos = Object.keys(precosPorEscalao).find(k => k.toLowerCase() === 'todos');
+              const mensalidadeGlobal = chaveTodos
+                ? precosPorEscalao[chaveTodos].find(p => p.tipo?.toLowerCase() === 'mensalidade')
+                : undefined;
+
+              if (mensalidadeGlobal && typeof mensalidadeGlobal.valor === 'number' && mensalidadeGlobal.valor > 0) {
+                return (
+                  <div className="flex flex-col items-center">
+                    <div className="w-[220px] h-[220px] bg-blue-100 rounded-xl px-4 py-6 flex flex-col items-center justify-center shadow border border-blue-200">
+                      <span className="text-3xl font-bold text-blue-800">{mensalidadeGlobal.valor} €</span>
+                      {mensalidadeGlobal.observacoes && (
+                        <span className="text-xs text-blue-700 text-center mt-2">{mensalidadeGlobal.observacoes}</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+
+              if (mensalidadeGlobal) {
+                return (
+                  <div className="text-sm text-red-600">Valor registado: {mensalidadeGlobal.valor ?? 'não definido'}. Por favor atualize o preço para o valor correto (ex.: 10 €).</div>
+                );
+              }
+
+              return (
+                <div className="text-gray-500">Sem preço de mensalidade definido para Xadrez.</div>
+              );
+            })()}
           </section>
         )}
 

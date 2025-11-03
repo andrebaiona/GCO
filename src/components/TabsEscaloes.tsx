@@ -31,6 +31,19 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [isAndebol, setIsAndebol] = useState(false);
   const [isPatinagem, setIsPatinagem] = useState(false);
+  const [isXadrez, setIsXadrez] = useState(false);
+
+  // Garantir que activeTab é válido quando a lista de escalões muda
+  useEffect(() => {
+    const visiveis = escaloes.filter(esc => esc.nome?.toLowerCase() !== 'todos');
+    if (visiveis.length === 0) {
+      setActiveTab(0);
+      return;
+    }
+    if (activeTab >= visiveis.length) {
+      setActiveTab(0);
+    }
+  }, [escaloes, activeTab]);
 
   // Buscar valores globais do escalão "Todos"
   const escalaoTodos = escaloes.find(e => e.nome?.toLowerCase() === "todos");
@@ -49,8 +62,50 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
       const pathname = window.location.pathname;
       setIsAndebol(pathname.includes("/modalidades/andebol"));
       setIsPatinagem(pathname.includes("/modalidades/patinagem-artistica"));
+      setIsXadrez(pathname.includes("/modalidades/xadrez"));
     }
   }, []);
+
+  // Leitura imediata do pathname (client-side) para evitar flicker e permitir retorno antecipado
+  const clientPathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const showAsXadrez = clientPathname.includes("/modalidades/xadrez") || isXadrez;
+
+  // Se for Xadrez: não mostrar tabs — apenas a mensalidade geral (escalão 'Todos')
+  if (showAsXadrez) {
+    const mensalidadeGlobal = escalaoTodos?.preco_escalao?.find(
+      (p: any) => p.tipo?.toLowerCase() === "mensalidade"
+    );
+
+    if (mensalidadeGlobal && typeof mensalidadeGlobal.valor === 'number' && mensalidadeGlobal.valor > 0) {
+      return (
+        <div className="flex flex-col items-center p-6">
+          <h3 className="text-2xl font-bold mb-2 text-blue-900">Mensalidade</h3>
+          <div className="w-[220px] h-[220px] bg-blue-100 rounded-xl px-4 py-6 flex flex-col items-center justify-center shadow border border-blue-200">
+            <span className="text-3xl font-bold text-blue-800">{mensalidadeGlobal.valor} €</span>
+            {mensalidadeGlobal.observacoes && (
+              <span className="text-xs text-blue-700 text-center mt-2">{mensalidadeGlobal.observacoes}</span>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    if (mensalidadeGlobal) {
+      return (
+        <div className="p-6 text-gray-700 text-center">
+          <div className="text-lg font-semibold mb-2">Mensalidade</div>
+          <div className="text-sm text-red-600">Valor registado: {mensalidadeGlobal.valor ?? 'não definido'}. Por favor atualize o preço para o valor correto (ex.: 10 €).</div>
+          {mensalidadeGlobal.observacoes && (
+            <div className="text-xs text-gray-600 mt-2">Observações: {mensalidadeGlobal.observacoes}</div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-6 text-gray-500">Sem preço de mensalidade definido para Xadrez.</div>
+    );
+  }
 
   return (
     <div>
@@ -132,10 +187,44 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
       <div className="p-8 bg-white rounded-xl shadow flex flex-col items-center border border-blue-100">
         {(() => {
           const escaloesVisiveis = escaloes.filter(esc => esc.nome?.toLowerCase() !== 'todos');
-          const esc = escaloesVisiveis[activeTab];
-          const precos = esc.preco_escalao || [];
-          
-          console.log(`\n=== ESCALÃO ATIVO: "${esc.nome}" ===`);
+          console.log('TabsEscaloes: visiveis.length =', escaloesVisiveis.length, 'activeTab =', activeTab);
+
+          if (escaloesVisiveis.length === 0) {
+            // Caso especial: Xadrez não tem escalões — mostramos apenas a mensalidade global se existir
+            if (isXadrez) {
+              const mensalidadeGlobal = escalaoTodos?.preco_escalao?.find(
+                (p: any) => p.tipo?.toLowerCase() === "mensalidade"
+              );
+
+              if (mensalidadeGlobal) {
+                return (
+                  <div className="flex flex-col items-center p-6">
+                    <h3 className="text-2xl font-bold mb-2 text-blue-900">Mensalidade</h3>
+                    <div className="w-[220px] h-[220px] bg-blue-100 rounded-xl px-4 py-6 flex flex-col items-center justify-center shadow border border-blue-200">
+                      <span className="text-3xl font-bold text-blue-800">{mensalidadeGlobal.valor} €</span>
+                      {mensalidadeGlobal.observacoes && (
+                        <span className="text-xs text-blue-700 text-center mt-2">{mensalidadeGlobal.observacoes}</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="p-6 text-gray-500">Sem preço de mensalidade definido para Xadrez.</div>
+              );
+            }
+
+            return (
+              <div className="p-6 text-gray-500">Nenhum escalão visível.</div>
+            );
+          }
+
+          const safeIndex = Math.max(0, Math.min(activeTab, escaloesVisiveis.length - 1));
+          const esc = escaloesVisiveis[safeIndex];
+          const precos = esc?.preco_escalao || [];
+
+          console.log(`\n=== ESCALÃO ATIVO: "${esc?.nome ?? 'undefined'}" (safeIndex=${safeIndex}) ===`);
           console.log('Preços do escalão:', precos);
 
           // Caso especial: Andebol → Séniores
