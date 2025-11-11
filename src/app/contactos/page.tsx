@@ -1,56 +1,13 @@
-'use client'
 
 import LogoRain from '@/components/layout/LogoRain'
-import { useState } from 'react'
 
 export default function ContactosPage() {
-  const [mensagem, setMensagem] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setMensagem('')
-    setLoading(true)
-
-    const form = e.target as HTMLFormElement
-    const formData = new FormData(form)
-
-    const payload = {
-      nome: formData.get('nome'),
-      email: formData.get('email'),
-      assunto: formData.get('assunto'),
-      mensagem: formData.get('mensagem'),
-    }
-
-    try {
-      const res = await fetch('/api/contacto', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      const data = await res.json()
-
-      if (res.ok) {
-        setMensagem('Mensagem enviada com sucesso!')
-        form.reset()
-      } else {
-        setMensagem('Erro: ' + data.erro)
-      }
-    } catch (err) {
-      setMensagem('Erro ao enviar o formulário.')
-    }
-
-    setLoading(false)
-  }
-
-  return (
+return (
     <main className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Contactos</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Informações de contacto */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-blue-800 mb-4">Informações de Contacto</h2>
 
@@ -111,7 +68,6 @@ export default function ContactosPage() {
               </div>
             </div>
 
-            {/* Redes Sociais */}
             <div className="mt-8">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Siga-nos nas Redes Sociais</h3>
               <div className="flex space-x-4">
@@ -131,7 +87,6 @@ export default function ContactosPage() {
             </div>
           </div>
 
-          {/* Mapa */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-2xl font-bold text-blue-800 mb-4">Como Chegar</h2>
             <div className="h-96 bg-gray-200 rounded-md">
@@ -148,34 +103,8 @@ export default function ContactosPage() {
             </div>
           </div>
 
-          {/* Formulário comentado */}
           {/*
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-blue-800 mb-4">Envie-nos uma Mensagem</h2>
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="nome" className="block text-sm font-medium text-gray-700">Nome</label>
-                <input type="text" id="nome" name="nome" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-              </div>
-              <div>
-                <label htmlFor="assunto" className="block text-sm font-medium text-gray-700">Assunto</label>
-                <input type="text" id="assunto" name="assunto" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
-              </div>
-              <div>
-                <label htmlFor="mensagem" className="block text-sm font-medium text-gray-700">Mensagem</label>
-                <textarea id="mensagem" name="mensagem" rows={5} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
-              </div>
-              <div>
-                <button type="submit" className="w-full bg-blue-800 border border-transparent rounded-md shadow-sm py-3 px-4 text-white font-medium hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                  Enviar Mensagem
-                </button>
-              </div>
-            </form>
-          </div>
+          
           */}
         </div>
       </div>

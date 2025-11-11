@@ -1,7 +1,7 @@
 import Link from "next/link";
-import HeroSection from "@/components/layout/HeroSection";
-import ModalidadesSection from "@/components/layout/ModalidadesSection";
-import NoticiasSection from "@/components/layout/NoticiasSection";
+import HeroSection from "@/components/layout/Home/HeroSection";
+import ModalidadesSection from "@/components/layout/Home/ModalidadesSection";
+import NoticiasSection from "@/components/layout/Home/NoticiasSection";
 
 export default function Home() {
   return (

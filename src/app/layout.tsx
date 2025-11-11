@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Footer from "../components/layout/footer";
 import Navbar from "../components/layout/navbar";
-import SponsorsSection from "@/components/SponsorsSection";
+import SponsorsSection from "@/components/layout/SponsorsSection";
 import { calcularIdadeClube } from "@/utils/idadeClube";
 import { Analytics } from '@vercel/analytics/next';
 

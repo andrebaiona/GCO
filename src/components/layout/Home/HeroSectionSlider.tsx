@@ -75,7 +75,6 @@ export default function HeroSectionSlider({ slides }: Props) {
               </div>
             </div>
           ) : (
-            // Slide principal do clube
             <div className="text-center">
               <div className="flex justify-center mb-6">
                 <img
