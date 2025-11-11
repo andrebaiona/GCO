@@ -6,7 +6,6 @@ export default async function HeroSection() {
   const idade = calcularIdadeClube(new Date(1978, 4, 5));
   const todasNoticias = await fetchNoticias();
 
-  // Ordena por data (mais recente primeiro) e pega só a primeira
   const noticiasOrdenadas = todasNoticias
     .filter(n => n.data && n.data.trim() !== "")
     .sort((a, b) => (a.data < b.data ? 1 : -1));
