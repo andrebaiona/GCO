@@ -28,7 +28,8 @@ const SponsorsSection = () => {
     { id: 14, name: 'Simplefy', logo: '/sponsors_img/Simplefy.jpg', website: 'https://www.simplefy.pt/pt' },
     { id: 15, name: 'MFTN', logo: '/sponsors_img/mftn.jpg', website: '#' },
     { id: 16, name: 'XDSoftware', logo: '/sponsors_img/xd_logo-1-3129999812.png', website: 'https://www.xdsoftware.com/xdgc/unlimited.php' },
-    { id: 17, name: 'Amovalflor', logo:'/sponsors_img/amovalflor.jpg', website: 'http://www.amovalflor.org'}
+    { id: 17, name: 'Amovalflor', logo:'/sponsors_img/amovalflor.jpg', website: 'http://www.amovalflor.org'},
+    { id: 18, name: 'Ouriços do Saber', logo: '/sponsors_img/Ouriços.jpeg', website: '#' },
   ];
 
   const allSponsors = [...sponsors, ...sponsors];
