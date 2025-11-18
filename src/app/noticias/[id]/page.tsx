@@ -28,7 +28,6 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
           </div>
         </nav>
 
-        {/* Artigo */}
         <article className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="flex h-90 md:h-90">
             <img
@@ -113,7 +112,6 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
                       )}
                     </p>
                   ))}
-                  {/* Se a última linha for uma imagem, mostrar também no final */}
                   {(() => {
                     const partes = noticia.conteudo.split('\n\n');
                     const ultimaLinha = partes[partes.length - 1];
@@ -126,7 +124,6 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
               )}
             </div>
 
-            {/* Botão de voltar */}
             <div className="mt-8 pt-8 border-t border-gray-200">
               <Link
                 href="/noticias"

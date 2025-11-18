@@ -3,7 +3,6 @@ import ModalidadeCard from "@/components/cards/ModalidadeCard";
 
 export default async function ModalidadesPage() {
   const modalidades = await fetchAllModalidades();
-  // Ordena alfabeticamente, exceto hoquei-em-patins que fica em último
   const modalidadesOrdenadas = [
     ...modalidades
       .filter(m => m.slug !== "hoquei-em-patins")

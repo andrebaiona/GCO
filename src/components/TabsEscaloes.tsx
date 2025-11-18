@@ -33,7 +33,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
   const [isPatinagem, setIsPatinagem] = useState(false);
   const [isXadrez, setIsXadrez] = useState(false);
 
-  // Garantir que activeTab é válido quando a lista de escalões muda
   useEffect(() => {
     const visiveis = escaloes.filter(esc => esc.nome?.toLowerCase() !== 'todos');
     if (visiveis.length === 0) {
@@ -45,7 +44,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
     }
   }, [escaloes, activeTab]);
 
-  // Buscar valores globais do escalão "Todos"
   const escalaoTodos = escaloes.find(e => e.nome?.toLowerCase() === "todos");
   const inscricaoGlobal = escalaoTodos?.preco_escalao?.find(p => 
     p.tipo?.toLowerCase() === "inscricao" || p.tipo?.toLowerCase() === "inscrição"
@@ -66,11 +64,9 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
     }
   }, []);
 
-  // Leitura imediata do pathname (client-side) para evitar flicker e permitir retorno antecipado
   const clientPathname = typeof window !== "undefined" ? window.location.pathname : "";
   const showAsXadrez = clientPathname.includes("/modalidades/xadrez") || isXadrez;
 
-  // Se for Xadrez: não mostrar tabs — apenas a mensalidade geral (escalão 'Todos')
   if (showAsXadrez) {
     const mensalidadeGlobal = escalaoTodos?.preco_escalao?.find(
       (p: any) => p.tipo?.toLowerCase() === "mensalidade"
@@ -109,7 +105,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
 
   return (
     <div>
-      {/* Global inscription and insurance cards for Patinagem */}
       {isPatinagem && (inscricaoGlobal || seguroGlobal) && (
         <div className="mb-8">
           <h3 className="text-xl font-bold mb-4 text-blue-900">Valores Gerais</h3>
@@ -190,7 +185,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
           console.log('TabsEscaloes: visiveis.length =', escaloesVisiveis.length, 'activeTab =', activeTab);
 
           if (escaloesVisiveis.length === 0) {
-            // Caso especial: Xadrez não tem escalões — mostramos apenas a mensalidade global se existir
             if (isXadrez) {
               const mensalidadeGlobal = escalaoTodos?.preco_escalao?.find(
                 (p: any) => p.tipo?.toLowerCase() === "mensalidade"
@@ -227,7 +221,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
           console.log(`\n=== ESCALÃO ATIVO: "${esc?.nome ?? 'undefined'}" (safeIndex=${safeIndex}) ===`);
           console.log('Preços do escalão:', precos);
 
-          // Caso especial: Andebol → Séniores
           if (isAndebol && esc.nome.toLowerCase() === "seniores") {
             console.log('🏐 Renderizando Andebol Seniores (layout especial)');
             return (
@@ -242,7 +235,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                 )}
 
                 <div className="flex flex-row flex-wrap gap-6 justify-center items-center w-full mt-4">
-                  {/* Inscrição - 1º ano */}
                   <div className="w-[220px] h-[220px] bg-yellow-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-yellow-400">
                     <span className="text-lg font-semibold text-yellow-900 mb-2">
                       Inscrição (1º ano)
@@ -260,7 +252,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                     </span>
                   </div>
 
-                  {/* Renovação - anos seguintes */}
                   <div className="w-[220px] h-[220px] bg-purple-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-purple-400">
                     <span className="text-lg text-center font-semibold text-purple-900 mb-2">
                       Renovação<br /> 
@@ -280,7 +271,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
             );
           }
 
-          // Caso especial: Patinagem - Mostrar mensalidades em layout especial
           if (isPatinagem) {
             console.log('⛸️ Renderizando Patinagem (layout especial)');
             const mensalidadesPatinagem = precos
@@ -351,7 +341,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
             );
           }
 
-          // Comportamento padrão para TODAS as outras modalidades
           console.log('⚙️ Renderizando comportamento padrão');
           
           const mensalidades = precos.filter(
@@ -360,7 +349,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
           
           console.log('Mensalidades encontradas:', mensalidades);
           
-          // Usar valores do escalão atual OU valores globais
           const inscricaoEscalao = precos.find(
             (p: any) =>
               p.tipo?.toLowerCase() === "inscrição" ||
@@ -380,7 +368,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
           console.log('  - Renovação escalão:', renovacaoEscalao);
           console.log('  - Seguro escalão:', seguroEscalao);
 
-          // Usar valores do escalão ou fallback para valores globais
           const inscricao = inscricaoEscalao || inscricaoGlobal;
           const renovacao = renovacaoEscalao || renovacaoGlobal;
           const seguro = seguroEscalao || seguroGlobal;
@@ -390,7 +377,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
           console.log('  - Renovação final:', renovacao);
           console.log('  - Seguro final:', seguro);
           
-          // Verificar se é veteranos ou seniores para esconder inscrição/seguro
           const isVeteranosOuSeniores = esc.nome.toLowerCase() === "veteranos" || esc.nome.toLowerCase() === "seniores";
           
           console.log('É veteranos ou seniores?', isVeteranosOuSeniores);
@@ -409,7 +395,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                 </p>
               )}
               <div className="flex flex-row flex-wrap gap-6 justify-center items-center w-full mt-4">
-                {/* Mensalidade - SEMPRE mostrar */}
                 {mensalidades.length > 0 && (
                   <div className="w-[200px] h-[200px] bg-blue-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-blue-400">
                     <span className="text-lg font-semibold text-blue-900 mb-2">
@@ -443,7 +428,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                   </div>
                 )}
                 
-                {/* Inscrição - MOSTRAR EM TODOS, EXCETO veteranos e seniores */}
                 {inscricao && !isVeteranosOuSeniores && (
                   <div className="w-[200px] h-[200px] bg-yellow-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-yellow-400">
                     <span className="text-lg font-semibold text-yellow-900 mb-2">
@@ -460,7 +444,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                   </div>
                 )}
                 
-                {/* Renovação - MOSTRAR EM TODOS, EXCETO veteranos e seniores */}
                 {renovacao && !isVeteranosOuSeniores && (
                   <div className="w-[200px] h-[200px] bg-purple-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-purple-400">
                     <span className="text-lg font-semibold text-purple-900 mb-2">
@@ -477,7 +460,6 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                   </div>
                 )}
                 
-                {/* Seguro - MOSTRAR EM TODOS, EXCETO veteranos e seniores */}
                 {seguro && !isVeteranosOuSeniores && (
                   <div className="w-[200px] h-[200px] bg-green-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-green-400">
                     <span className="text-lg font-semibold text-green-900 mb-2">

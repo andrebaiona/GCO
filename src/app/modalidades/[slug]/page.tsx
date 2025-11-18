@@ -83,7 +83,6 @@ const Calendar: FC<CalendarProps> = ({ events }) => {
   const totalSlots = Math.ceil((endMin - startMin) / slotMinutes);
   const slotHeight = 40;
 
-  // Agrupar eventos por dia
   const eventsByDay: Record<string, Event[]> = {};
   for (const d of days) eventsByDay[d] = [];
   for (const ev of events) {
@@ -180,10 +179,6 @@ function distributeColumns(events: Event[]) {
   );
 };
 
-
-
-
-// === PÁGINA PRINCIPAL ===
 export default async function ModalidadePage(props: any) {
   const params = await props.params;
   const { slug } = params;
@@ -205,7 +200,6 @@ export default async function ModalidadePage(props: any) {
 
   let escalas = modalidade.escalao || [];
 
-  // Ordenar escalões especificamente para patinagem
   if (slug === 'patinagem-artistica') {
     escalas = escalas.sort((a, b) => {
       const ordemPatinagem = [

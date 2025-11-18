@@ -1,4 +1,3 @@
-// src/app/orgaos-sociais/page.tsx
 'use client'
 
 export default function OrgaosSociaisPage() {

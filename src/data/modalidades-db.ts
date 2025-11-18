@@ -58,7 +58,6 @@ export async function fetchModalidadeBySlug(slug: string) {
 
   if (!modalidade) return null;
 
-  // Buscar preços globais primeiro
   const precosGlobais = modalidade.preco_escalao
     ? modalidade.preco_escalao.filter((preco: any) => {
         const precoEscalao = preco.escalao?.toString().toLowerCase().trim();
@@ -74,7 +73,6 @@ export async function fetchModalidadeBySlug(slug: string) {
   console.log('\n=== PREÇOS GLOBAIS ENCONTRADOS ===');
   console.log('Preços globais:', precosGlobais);
 
-  // Criar escalão "Todos" se existirem preços globais
   let escalaoTodos = null;
   if (precosGlobais.length > 0) {
     escalaoTodos = {
@@ -93,18 +91,14 @@ export async function fetchModalidadeBySlug(slug: string) {
   const escalaoComPrecos = modalidade.escalao?.map((esc: any) => {
     console.log(`\n--- Processando escalão: ${esc.nome} ---`);
     
-    // Buscar preços que correspondem a este escalão
     const precosEscalao = modalidade.preco_escalao
       ? modalidade.preco_escalao.filter((preco: any) => {
           const precoEscalao = preco.escalao?.toString().toLowerCase().trim();
           const escalaoNome = esc.nome?.toString().toLowerCase().trim();
           
-          // Para patinagem, usar matching mais flexível
           if (slug === 'patinagem-artistica') {
-            // Match direto
             const directMatch = precoEscalao === escalaoNome;
             
-            // Match por partes (ex: "pré-competição" matches "Pre-Competição")
             const normalizedPreco = precoEscalao?.replace(/[-\s]/g, '');
             const normalizedEscalao = escalaoNome?.replace(/[-\s]/g, '');
             const normalizedMatch = normalizedPreco === normalizedEscalao;
@@ -114,7 +108,6 @@ export async function fetchModalidadeBySlug(slug: string) {
             
             return directMatch || normalizedMatch;
           } else {
-            // Para outras modalidades, match exato
             return precoEscalao === escalaoNome;
           }
         })
@@ -125,7 +118,6 @@ export async function fetchModalidadeBySlug(slug: string) {
         }))
       : [];
 
-    // Buscar preços globais (escalão 'Todos')
     const precosGlobais = modalidade.preco_escalao
       ? modalidade.preco_escalao.filter((preco: any) => {
           const precoEscalao = preco.escalao?.toString().toLowerCase().trim();
@@ -143,12 +135,9 @@ export async function fetchModalidadeBySlug(slug: string) {
     console.log(`Preços globais encontrados: ${precosGlobais.length}`);
     console.log('Preços globais:', precosGlobais);
 
-    // Para patinagem, permitir múltiplas mensalidades
     if (slug === 'patinagem-artistica') {
-      // Primeiro adicionar TODAS as mensalidades específicas do escalão
       const todasMensalidades = precosEscalao.filter(p => p.tipo?.toLowerCase() === 'mensalidade');
       
-      // Depois adicionar preços globais que não sejam mensalidades
       const outrosPrecos = precosGlobais.filter(p => p.tipo?.toLowerCase() !== 'mensalidade');
       
       const precosFinal = [...todasMensalidades, ...outrosPrecos];
@@ -161,11 +150,9 @@ export async function fetchModalidadeBySlug(slug: string) {
         preco_escalao: precosFinal,
       };
     } else {
-      // Para outras modalidades, usar lógica original (sem duplicados de tipo)
       const tiposAdicionados = new Set<string>();
       const precosFinal: { tipo?: string; valor?: number; observacoes?: string | null }[] = [];
       
-      // Primeiro adicionar preços específicos do escalão
       precosEscalao.forEach((preco) => {
         if (preco.tipo && !tiposAdicionados.has(preco.tipo.toLowerCase())) {
           precosFinal.push(preco);
@@ -173,7 +160,6 @@ export async function fetchModalidadeBySlug(slug: string) {
         }
       });
       
-      // Depois adicionar preços globais (só se não existir já)
       precosGlobais.forEach((preco) => {
         if (preco.tipo && !tiposAdicionados.has(preco.tipo.toLowerCase())) {
           precosFinal.push(preco);
@@ -191,12 +177,10 @@ export async function fetchModalidadeBySlug(slug: string) {
     }
   }) || [];
 
-  // Adicionar escalão "Todos" à lista se existir
   const todosOsEscaloes = escalaoTodos 
     ? [escalaoTodos, ...escalaoComPrecos] 
     : escalaoComPrecos;
 
-  // Debug: mostrar TODOS os preços da patinagem
   if (slug === 'patinagem-artistica') {
     console.log('\n=== TODOS OS PREÇOS DA PATINAGEM ===');
     modalidade.preco_escalao?.forEach((preco: any, index: number) => {

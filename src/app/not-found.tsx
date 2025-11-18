@@ -4,11 +4,9 @@ import LogoRain from '@/components/layout/LogoRain';
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-blue-100 flex flex-col justify-center items-center px-4 relative overflow-hidden">
-      {/* LogoRain de fundo */}
       <LogoRain fullScreen={true} count={15} speed={8} />
       
       <div className="max-w-md w-full text-center relative z-10">
-        {/* Logo do Clube */}
         <div className="mb-8">
           <img 
             src="/GCO-LOGO-noBG.png" 
@@ -17,7 +15,6 @@ export default function NotFound() {
           />
         </div>
         
-        {/* Erro 404 */}
         <div className="mb-8">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
             <h1 className="text-6xl font-bold text-blue-800 mb-4">404</h1>
@@ -30,7 +27,6 @@ export default function NotFound() {
           </div>
         </div>
 
-        {/* Botões de navegação */}
         <div className="space-y-4">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -57,7 +53,6 @@ export default function NotFound() {
           </div>
         </div>
 
-        {/* Links útis */}
         <div className="mt-12">
           <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-t border-gray-200/50">
             <p className="text-sm text-gray-600 mb-4 font-medium">Pode também visitar:</p>

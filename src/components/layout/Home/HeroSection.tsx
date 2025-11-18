@@ -72,7 +72,6 @@ export default async function HeroSection() {
             "bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-bold text-lg hover:bg-yellow-300 transition-colors",
         },
       ],
-      // imagem das inscrições fixa
       src: "/530131865_18073306919003286_1218223041355361627_n.jpg",
       alt: "Inscrições GCO",
     },

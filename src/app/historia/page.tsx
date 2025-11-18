@@ -10,7 +10,6 @@ export default function HistoriaPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Encontrar a secção da timeline
       const timelineSection = document.getElementById('timeline-section');
       if (!timelineSection) return;
 
@@ -20,9 +19,8 @@ export default function HistoriaPage() {
       
       const scrollTop = window.scrollY;
       const windowHeight = window.innerHeight;
-      const currentPosition = scrollTop + windowHeight / 2; // Posição central da viewport
+      const currentPosition = scrollTop + windowHeight / 2;
 
-      // Calcular progresso apenas dentro da secção da timeline
       if (currentPosition >= timelineTop && currentPosition <= timelineBottom) {
         const progressInSection = (currentPosition - timelineTop) / timelineHeight;
         const progress = Math.min(Math.max(progressInSection * 100, 0), 100);
@@ -35,7 +33,6 @@ export default function HistoriaPage() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    // Chamar uma vez para definir o estado inicial
     handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);

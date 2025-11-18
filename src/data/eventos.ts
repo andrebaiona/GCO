@@ -36,7 +36,6 @@ export interface Evento {
 }
 
 export const eventos: Evento[] = [
-  // ANDEBOL - Eventos 2025
   {
     id: 1,
     nome: "Campeonato Distrital de Iniciados",
@@ -152,7 +151,6 @@ export const eventos: Evento[] = [
     edicaoAnual: 2025
   },
 
-  // GINÁSTICA - Eventos 2025
   {
     id: 5,
     nome: "Torneio Regional de Ginástica",
@@ -254,7 +252,6 @@ export const eventos: Evento[] = [
     ]
   },
 
-  // PATINAGEM ARTÍSTICA - Eventos 2025
   {
     id: 8,
     nome: "Campeonato Distrital de Patinagem",
@@ -311,7 +308,6 @@ export const eventos: Evento[] = [
     edicaoAnual: 2025
   },
 
-  // XADREZ - Eventos 2025
   {
     id: 10,
     nome: "Campeonato Escolar de Xadrez",
@@ -425,7 +421,6 @@ export const eventos: Evento[] = [
     edicaoAnual: 2025
   },
 
-  // EVENTOS GERAIS DO CLUBE
   {
     id: 14,
     nome: "Assembleia Geral Ordinária",
@@ -506,7 +501,6 @@ export const eventos: Evento[] = [
     edicaoAnual: 2025
   },
 
-  // EVENTOS PASSADOS (para histórico)
   {
     id: 17,
     nome: "Gala do Desporto GCO 2024",
@@ -537,8 +531,6 @@ export const eventos: Evento[] = [
     ]
   }
 ];
-
-// Funções auxiliares para trabalhar com os dados dos eventos
 
 export function getEventosByModalidade(modalidade: string): Evento[] {
   return eventos.filter(evento => evento.modalidade === modalidade && evento.ativo);
