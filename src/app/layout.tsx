@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/Logo_GCO_Natal.png",
   },
+  openGraph: {
+    images: ["/Logo_GCO_Natal.png"],
+  },
 };
 
 export default function RootLayout({
