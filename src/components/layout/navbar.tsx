@@ -54,7 +54,7 @@ const Navbar = () => {
             <Link href="/" className="flex items-center space-x-3">
               <div className="w-12 h-12 flex items-center justify-center">
                 <img
-                  src="/GCO-LOGO-noBG.png"
+                  src="/Logo_GCO_Natal.png"
                   alt="Ginásio Clube de Odivelas Logo"
                   className="w-12 h-12 object-contain"
                 />

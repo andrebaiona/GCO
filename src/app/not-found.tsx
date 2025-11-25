@@ -9,7 +9,7 @@ export default function NotFound() {
       <div className="max-w-md w-full text-center relative z-10">
         <div className="mb-8">
           <img 
-            src="/GCO-LOGO-noBG.png" 
+            src="/Logo_GCO_Natal.png" 
             alt="GCO Logo" 
             className="h-32 w-auto mx-auto drop-shadow-lg"
           />

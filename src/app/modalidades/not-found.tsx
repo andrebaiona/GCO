@@ -6,7 +6,7 @@ export default function ModalidadeNotFound() {
       <div className="max-w-md w-full text-center">
         <div className="mb-8">
           <img 
-            src="/GCO-LOGO-noBG.png" 
+            src="/Logo_GCO_Natal.png" 
             alt="GCO Logo" 
             className="h-20 w-auto mx-auto"
           />

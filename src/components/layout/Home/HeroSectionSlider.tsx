@@ -1,4 +1,5 @@
 "use client";
+import WinterBackground from "@/components/backgrounds/Winter";
 import { useState, useEffect } from "react";
 
 interface Button {
@@ -39,6 +40,7 @@ export default function HeroSectionSlider({ slides }: Props) {
 
   return (
     <section className="relative bg-gradient-to-r from-blue-800 via-blue-700 to-blue-900 text-white py-20 min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden">
+      <WinterBackground />
       <div className="absolute inset-0 bg-black opacity-20"></div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div

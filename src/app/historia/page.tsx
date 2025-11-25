@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import LogoRain from '@/components/layout/LogoRain';
 import { calcularIdadeClube } from '@/utils/idadeClube';
+import WinterBackground from '@/components/backgrounds/Winter';
 
 export default function HistoriaPage() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -92,7 +93,7 @@ Perante a nova dimensão e prestígio alcançado, o nome original deixou de refl
 • A preocupação permanente com o atendimento aos associados e à população
 
 A motivação mantém-se inabalável: fazer do G.C.O. o maior e melhor clube do concelho de Odivelas.`,
-      image: '/2000_5f6603c1a8aad.jpg', 
+      image: '/noticias/2000_5f6603c1a8aad.jpg', 
       emoji: '📆'
     }
   ];
@@ -110,7 +111,7 @@ A motivação mantém-se inabalável: fazer do G.C.O. o maior e melhor clube do 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 relative overflow-hidden">
      
-      <div className="relative bg-gradient-to-r from-blue-800 to-blue-900 text-white py-20">
+      <div className="relative bg-gradient-to-r from-blue-800 to-blue-900 text-white py-20 relative z-3">
          <LogoRain />
          <LogoRain />
          <LogoRain />
@@ -135,8 +136,10 @@ A motivação mantém-se inabalável: fazer do G.C.O. o maior e melhor clube do 
       </div>
 
       <div id="timeline-section" className="relative py-16">
-        <div className="absolute left-1/2 transform -translate-x-0.5 top-0 bottom-0 w-1 bg-gray-300 opacity-40"></div>
-        
+      
+      <div className="absolute left-1/2 transform -translate-x-0.5 top-0 bottom-0 w-1 bg-gray-300 opacity-40"></div>
+      <WinterBackground />
+
         <div 
           className="absolute left-1/2 transform -translate-x-0.5 top-0 w-1 bg-gradient-to-b from-blue-400 via-blue-600 to-blue-800 transition-all duration-300 ease-out"
           style={{
