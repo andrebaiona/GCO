@@ -1,6 +1,5 @@
 import TimelineProgress from './TimelineProgress';
 import TimelineItem from './TimelineItem';
-import WinterBackground from '@/components/backgrounds/Winter';
 import { TimelineItem as TimelineItemType } from '@/data/history';
 
 interface TimelineSectionProps {
@@ -11,7 +10,6 @@ export default function TimelineSection({ items }: TimelineSectionProps) {
   return (
     <div id="timeline-section" className="relative py-16">
       <div className="absolute left-1/2 transform -translate-x-0.5 top-0 bottom-0 w-1 bg-gray-300 opacity-40"></div>
-      <WinterBackground />
       <TimelineProgress />
       
       <div className="container mx-auto px-6 relative z-10">

@@ -14,7 +14,7 @@ export default async function HeroSection() {
 
   const slides = [
     {
-      src: "/Logo_GCO_Natal.png",
+      src: "/gco-logo.png",
       alt: "Ginásio Clube de Odivelas",
       title: "Ginásio Clube de Odivelas",
       subtitle: `${idade} anos de tradição desportiva e cultural`,

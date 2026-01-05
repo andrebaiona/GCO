@@ -69,7 +69,7 @@ export default async function InscricoesPage() {
           <div className="space-y-6">
             <div className="bg-gradient-to-r from-blue-100 via-blue-50 to-white p-6 rounded-xl shadow-md flex flex-col md:flex-row items-center gap-6">
               <div className="flex flex-col items-center justify-center md:w-1/4">
-                <img src="/Logo_GCO_Natal.png" alt="GCO Logo" className="w-20 h-20 mb-2" />
+                <img src="/gco-logo.png" alt="GCO Logo" className="w-20 h-20 mb-2" />
                 <span className="text-blue-700 font-bold text-lg">Inscrição Presencial</span>
               </div>
               <div className="flex-1">

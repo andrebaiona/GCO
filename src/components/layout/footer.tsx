@@ -40,7 +40,7 @@ const Footer = () => {
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-12 h-12 flex items-center justify-center bg-white rounded-lg p-1">
                 <img
-                  src="/Logo_GCO_Natal.png"
+                  src="/gco-logo.png"
                   alt="Ginásio Clube de Odivelas Logo"
                   className="w-full h-full object-contain"
                 />

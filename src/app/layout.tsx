@@ -24,10 +24,10 @@ export const metadata: Metadata = {
   title: `Ginásio Clube de Odivelas - ${idade} anos de tradição desportiva`,
   description: "Clube desportivo em Odivelas com modalidades de ginástica, andebol, patinagem artística, hóquei em patins, dança e xadrez. Junte-se à nossa família desportiva!",
   icons: {
-    icon: "/Logo_GCO_Natal.png",
+    icon: "/favicon.png",
   },
   openGraph: {
-    images: ["/Logo_GCO_Natal.png"],
+    images: ["/favicon.png"],
   },
 };
 

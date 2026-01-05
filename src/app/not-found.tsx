@@ -1,15 +1,12 @@
 import Link from 'next/link';
-import LogoRain from '@/components/layout/LogoRain';
 
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-blue-100 flex flex-col justify-center items-center px-4 relative overflow-hidden">
-      <LogoRain fullScreen={true} count={15} speed={8} />
-      
       <div className="max-w-md w-full text-center relative z-10">
         <div className="mb-8">
           <img 
-            src="/Logo_GCO_Natal.png" 
+            src="/gco-logo.png" 
             alt="GCO Logo" 
             className="h-32 w-auto mx-auto drop-shadow-lg"
           />
