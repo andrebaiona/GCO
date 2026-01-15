@@ -70,7 +70,7 @@ export default function SerSocioPage() {
               <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
                 <p><strong>Jóia:</strong> 3,00 €</p>
                 <p><strong>Cartão:</strong> 3,00 €</p>
-                <p><strong>Quotas:</strong> 5,00 € mensais (60,00 € por ano)</p>
+                <p><strong>Quotas:</strong> 3,50 € mensais</p>
               </div>
             </div>
 
@@ -84,7 +84,7 @@ export default function SerSocioPage() {
 
             <AccordionSection title="Pagamento de Quotas">
               <p>
-                Conforme os Estatutos e Regulamentos gerais internos, o pagamento das quotas mensais (5,00 €) deve ser efetuado semestral ou anualmente e realizado nos primeiros quinze dias do semestre ou do ano civil, respetivamente.
+                Conforme os Estatutos e Regulamentos gerais internos, o pagamento das quotas mensais (3,50 €) deve ser efetuado semestral ou anualmente e realizado nos primeiros quinze dias do semestre ou do ano civil, respetivamente.
               </p>
               <p className="mt-2">
                 Para maior comodidade, poderá realizar os pagamentos por transferência bancária, indicando no descritivo o número de sócio e o NIF. O comprovativo da operação deve ser enviado para o email:
