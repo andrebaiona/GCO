@@ -143,7 +143,7 @@ const Navbar = () => {
               href="/horarios"
               className="text-white hover:text-yellow-200 font-medium transition-colors"
             >
-              Horários
+              Calendário
             </Link>
             <Link
               href="/inscricoes"

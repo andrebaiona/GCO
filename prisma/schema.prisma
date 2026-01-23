@@ -24,8 +24,8 @@ model modalidades {
   categoria     String?         @db.VarChar(100)
   email         String?
   escalao       escalao[]
+  jogo          jogo[]
   preco_escalao preco_escalao[]
-  horarios      horarios[]
 }
 
 model escalao {
@@ -37,6 +37,8 @@ model escalao {
   descricao     String?
   mensalidade   Decimal?    @db.Decimal(10, 2)
   modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  horarios      horarios[]
+  jogo          jogo[]
 }
 
 model preco_escalao {
@@ -62,12 +64,27 @@ model noticias {
 }
 
 model horarios {
-  id            Int         @id @default(autoincrement())
+  id            Int       @id @default(autoincrement())
   modalidade_id Int
   local         String?
-  inicio        DateTime
-  fim           DateTime
+  inicio        DateTime  @db.Time(6)
+  fim           DateTime  @db.Time(6)
   dia_da_semana Int
-  data_excecao  DateTime?
-  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  data_excecao  DateTime? @db.Time(6)
+  escalao_id    Int?
+  escalao       escalao?  @relation(fields: [escalao_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "constraint_1")
+}
+
+model jogo {
+  id            Int         @id @default(autoincrement())
+  numero_jogo   Int?
+  modalidade_id Int
+  escalao_id    Int
+  visitado      String      @db.VarChar(100)
+  visitante     String      @db.VarChar(100)
+  data          DateTime    @db.Date
+  hora          DateTime    @db.Time(6)
+  local         String?     @db.VarChar(100)
+  escalao       escalao     @relation(fields: [escalao_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "escalao")
+  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "modalidade")
 }
