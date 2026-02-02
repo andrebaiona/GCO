@@ -29,7 +29,7 @@ const SponsorsSection = () => {
     { id: 15, name: 'MFTN', logo: '/sponsors_img/mftn.jpg', website: '#' },
     { id: 16, name: 'XDSoftware', logo: '/sponsors_img/xd_logo-1-3129999812.png', website: 'https://www.xdsoftware.com/xdgc/unlimited.php' },
     { id: 17, name: 'Amovalflor', logo:'/sponsors_img/amovalflor.jpg', website: 'http://www.amovalflor.org'},
-    { id: 18, name: 'Ouriços do Saber', logo: '/sponsors_img/Ouriços.jpeg', website: 'https://ouricosdosaber.wixsite.com/ouri-os-do-saber' },
+    { id: 18, name: 'Pirulito Park', logo: '/sponsors_img/Pirulito Park.jpeg', website: 'https://www.pirulitopark.pt/' },
   ];
 
   const allSponsors = [...sponsors, ...sponsors];
