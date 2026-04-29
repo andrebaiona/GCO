@@ -13,7 +13,6 @@ interface Sponsor {
 const SponsorsSection = () => {
   const sponsors: Sponsor[] = [
     { id: 1, name: 'AGP Auto', logo: '/sponsors_img/images (1).png', website: 'https://agpauto.pt/?doing_wp_cron=1753376086.5354089736938476562500' },
-    { id: 2, name: 'Contas Soltas', logo: '/sponsors_img/logo-net-empregos.jpg', website: 'https://www.facebook.com/p/Contas-Soltas-100057547206888/' },
     { id: 3, name: 'Janellux', logo: '/sponsors_img/images.png', website: 'https://www.facebook.com/p/Janellux-Lda-100036607254417/' },
     { id: 4, name: 'Lord Of Light', logo: '/sponsors_img/LL-LORD-OF-LIGHT.png', website: 'https://lordoflight.pt/' },
     { id: 5, name: 'Luís Almeida', logo: '/sponsors_img/LuisAlmeida.png', website: 'https://www.facebook.com/LuisAlmeidaconsultorimobiliario' },
