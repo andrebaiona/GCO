@@ -25,7 +25,8 @@ export default function DocumentosImportantesPage() {
           <section className="space-y-6">
             <h2 className="text-xl font-bold text-gray-900">Relatórios de Contas / Atividades</h2>
 
-            <AccordionSection title="2024 - 2020" >
+            <AccordionSection title="2025 - 2020" >
+              <a href="/files/pdf/relatorios-de-contas/relatorio-contas-2025.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline block">2025</a>
               <a href="/files/pdf/relatorios-de-contas/Relatorio-contas-2024.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline block">2024</a>
               <a href="/files/pdf/relatorios-de-contas/Relatorio-de-contas_GCO_2023.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline block">2023</a>
               <a href="/files/pdf/relatorios-de-contas/Relatorio-de-contas_GCO_2022.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline block">2022</a>
