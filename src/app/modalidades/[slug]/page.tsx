@@ -43,17 +43,18 @@ const schedule_patinagem = [
 const schedule_ginastica = [
   { day: '2.ª', start: '17:00', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
   { day: '2.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
-  { day: '2.ª', start: '18:15', end: '19:00', title: 'Formativa I', room: '', color: 'var(--blue-500)' },
-  { day: '2.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
+  { day: '2.ª', start: '18:15', end: '19:00', title: 'Formativa Base I', room: '', color: 'var(--blue-500)' },
+  { day: '2.ª', start: '19:00', end: '20:00', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' },
   { day: '4.ª', start: '17:00', end: '21:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
-  { day: '4.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
-  { day: '4.ª', start: '18:15', end: '19:00', title: 'Formativa II', room: '', color: 'var(--blue-600)' },
-  { day: '4.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
-  { day: '6.ª', start: '17:45', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
-  { day: '6.ª', start: '17:45', end: '18:30', title: 'Formativa(II)', room: '', color: 'var(--blue-600)' },
-  { day: '6.ª', start: '18:15', end: '19:00', title: 'Formativa(I)', room: '', color: 'var(--blue-500)' },
-  { day: '6.ª', start: '19:00', end: '20:00', title: 'Pré-Competição', room: '', color: 'var(--blue-700)' },
-  { day: 'Sábado', start: '09:00', end: '12:00', title: 'Competição', room: '', color: 'var(--blue-900)' }
+  { day: '4.ª', start: '18:00', end: '18:45', title: 'Formativa Base I', room: '', color: 'var(--blue-500)' },
+  { day: '4.ª', start: '18:45', end: '19:30', title: 'Formativa Base II', room: '', color: 'var(--blue-600)' },
+  { day: '4.ª', start: '19:30', end: '20:30', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' },
+  { day: '6.ª', start: '17:00', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: '6.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
+  { day: '6.ª', start: '18:15', end: '19:00', title: 'Formativa Base II', room: '', color: 'var(--blue-600)' },
+  { day: '6.ª', start: '19:00', end: '20:00', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' },
+  { day: 'Sábado', start: '09:00', end: '12:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
+  { day: 'Sábado', start: '09:00', end: '11:00', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' }
 ];
 
 type Event = {
