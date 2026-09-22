@@ -57,6 +57,35 @@ const schedule_ginastica = [
   { day: 'Sábado', start: '09:00', end: '11:00', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' }
 ];
 
+const info_ginastica = {
+  pagamentos: {
+    mensalidade: 'Do dia 1 ao dia 8 do mês corrente.',
+    quotas: 'Valor mensal de 3,50 € — pagamento semestral ou anual.',
+    iban: 'PT50 0010 0000 6426 3690 001 91',
+  },
+  merchandising: [
+    'T-Shirts',
+    'Sweat shirts',
+    'Cachecóis',
+    'Pin',
+    'Fato de treino',
+    'Mochilas',
+  ],
+  seguro: {
+    franquia: '90 € (a suportar pelo atleta)',
+    companhias: 'Fidelidade Seguros e Allianz',
+    sinistro: 'Em caso de sinistro, dirigir-se à secção de ginástica para alinhamento do processo.',
+  },
+  seccao: {
+    horario: '2.ª, 4.ª e 6.ª feiras, das 17h30 às 20h00',
+    email: 'ginastica.gco@gmail.com',
+    contactos: [
+      { nome: 'Mafalda', telefone: '967 980 454' },
+      { nome: 'Patrícia', telefone: '919 168 115' },
+    ],
+  },
+};
+
 type Event = {
 day: string;
 start: string;
@@ -366,6 +395,113 @@ export default async function ModalidadePage(props: any) {
 
         {(slug === "patinagem-artistica" || slug === "ginastica") && (
           <Calendar events={slug === "patinagem-artistica" ? schedule_patinagem : schedule_ginastica} />
+        )}
+
+        {slug === "ginastica" && (
+          <>
+            <section className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+              <h2 className="text-3xl font-bold text-blue-900 mb-6">Informações Adicionais</h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col">
+                  <h3 className="text-lg font-bold text-blue-900 mb-4 pb-2 border-b border-blue-200">
+                    Pagamentos
+                  </h3>
+                  <dl className="space-y-3 text-sm text-gray-700">
+                    <div>
+                      <dt className="font-semibold text-gray-900">Mensalidade</dt>
+                      <dd>{info_ginastica.pagamentos.mensalidade}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-semibold text-gray-900">Quotas</dt>
+                      <dd>{info_ginastica.pagamentos.quotas}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-semibold text-gray-900">IBAN</dt>
+                      <dd className="mt-1 font-mono text-[13px] tracking-tight bg-white border border-blue-200 rounded-lg px-3 py-2 text-blue-900 break-all">
+                        {info_ginastica.pagamentos.iban}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col">
+                  <h3 className="text-lg font-bold text-blue-900 mb-4 pb-2 border-b border-blue-200">
+                    Merchandising
+                  </h3>
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    {info_ginastica.merchandising.map((artigo) => (
+                      <li key={artigo} className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 flex-shrink-0" />
+                        {artigo}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 flex flex-col">
+                  <h3 className="text-lg font-bold text-blue-900 mb-4 pb-2 border-b border-blue-200">
+                    Seguro Desportivo
+                  </h3>
+                  <dl className="space-y-3 text-sm text-gray-700">
+                    <div>
+                      <dt className="font-semibold text-gray-900">Franquia</dt>
+                      <dd>{info_ginastica.seguro.franquia}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-semibold text-gray-900">Companhias de seguros</dt>
+                      <dd>{info_ginastica.seguro.companhias}</dd>
+                    </div>
+                  </dl>
+                  <p className="mt-3 text-xs text-gray-600 leading-relaxed">
+                    {info_ginastica.seguro.sinistro}
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="bg-gradient-to-r from-blue-800 to-blue-900 rounded-2xl shadow-lg p-8 mb-10 text-white">
+              <h2 className="text-3xl font-bold mb-6">Secção de Ginástica</h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <p className="text-sm font-semibold text-yellow-400 mb-1">Horário de atendimento</p>
+                  <p className="text-blue-50">{info_ginastica.seccao.horario}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-yellow-400 mb-1">Email</p>
+                  <a
+                    href={`mailto:${info_ginastica.seccao.email}`}
+                    className="text-blue-50 hover:text-yellow-300 underline transition-colors break-all"
+                  >
+                    {info_ginastica.seccao.email}
+                  </a>
+                </div>
+
+                <div>
+                  <p className="text-sm font-semibold text-yellow-400 mb-1">Telefones</p>
+                  <ul className="space-y-1">
+                    {info_ginastica.seccao.contactos.map((c) => (
+                      <li key={c.nome} className="text-blue-50">
+                        {c.nome}:{" "}
+                        <a
+                          href={`tel:+351${c.telefone.replace(/\s/g, "")}`}
+                          className="hover:text-yellow-300 underline transition-colors"
+                        >
+                          {c.telefone}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <p className="mt-6 pt-6 border-t border-blue-700 text-sm text-blue-100">
+                Inscrições abertas durante todo o ano. Fala connosco na secretaria ou na secção de ginástica.
+              </p>
+            </section>
+          </>
         )}
 
 
