@@ -37,3 +37,7 @@ export default function Home() {
     </main>
   );
 }
+
+
+// Re-fetch from the DB at most once per minute (ISR) so content updates appear without a redeploy.
+export const revalidate = 60;
