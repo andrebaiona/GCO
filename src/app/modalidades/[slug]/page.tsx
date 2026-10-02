@@ -333,31 +333,48 @@ export default async function ModalidadePage(props: any) {
             <h2 className="text-3xl font-bold text-blue-900 mb-6">Mensalidade</h2>
             {(() => {
               const chaveTodos = Object.keys(precosPorEscalao).find(k => k.toLowerCase() === 'todos');
-              const mensalidadeGlobal = chaveTodos
-                ? precosPorEscalao[chaveTodos].find(p => p.tipo?.toLowerCase() === 'mensalidade')
-                : undefined;
+              const precosGlobais = chaveTodos ? precosPorEscalao[chaveTodos] : [];
 
-              if (mensalidadeGlobal && typeof mensalidadeGlobal.valor === 'number' && mensalidadeGlobal.valor > 0) {
-                return (
-                  <div className="flex flex-col items-center">
-                    <div className="w-[220px] h-[220px] bg-blue-100 rounded-xl px-4 py-6 flex flex-col items-center justify-center shadow border border-blue-200">
-                      <span className="text-3xl font-bold text-blue-800">{mensalidadeGlobal.valor} €</span>
-                      {mensalidadeGlobal.observacoes && (
-                        <span className="text-xs text-blue-700 text-center mt-2">{mensalidadeGlobal.observacoes}</span>
-                      )}
-                    </div>
-                  </div>
+              // Hipóteses de pagamento, por ordem de apresentação.
+              const hipoteses = [
+                { tipo: 'mensalidade', periodo: '/mês' },
+                { tipo: 'semestral', periodo: '/semestre' },
+                { tipo: 'anual', periodo: '/ano' },
+              ]
+                .map(h => ({
+                  ...h,
+                  preco: precosGlobais.find(p => p.tipo?.toLowerCase() === h.tipo),
+                }))
+                .filter((h): h is typeof h & { preco: { tipo: string; valor: number; observacoes: string } } =>
+                  !!h.preco && typeof h.preco.valor === 'number' && h.preco.valor > 0
                 );
-              }
 
-              if (mensalidadeGlobal) {
+              if (hipoteses.length === 0) {
                 return (
-                  <div className="text-sm text-red-600">Valor registado: {mensalidadeGlobal.valor ?? 'não definido'}. Por favor atualize o preço para o valor correto (ex.: 10 €).</div>
+                  <div className="text-gray-500">Sem preço de mensalidade definido para Xadrez.</div>
                 );
               }
 
               return (
-                <div className="text-gray-500">Sem preço de mensalidade definido para Xadrez.</div>
+                <div className="flex flex-wrap justify-center gap-6">
+                  {hipoteses.map((h, i) => (
+                    <div
+                      key={h.tipo}
+                      className="w-[220px] h-[220px] bg-blue-100 rounded-xl px-4 py-6 flex flex-col items-center justify-center shadow border border-blue-200"
+                    >
+                      <span className="text-sm font-semibold text-blue-700 uppercase tracking-wide mb-1">
+                        Hipótese {i + 1}
+                      </span>
+                      <span className="text-3xl font-bold text-blue-800">
+                        {h.preco.valor} €
+                        <span className="text-base font-medium text-blue-700">{h.periodo}</span>
+                      </span>
+                      {h.preco.observacoes && (
+                        <span className="text-xs text-blue-700 text-center mt-2">{h.preco.observacoes}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               );
             })()}
           </section>
