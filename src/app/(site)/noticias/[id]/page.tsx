@@ -1,6 +1,7 @@
 import { Noticia, fetchNoticiaById, fetchNoticias } from "@/data/noticias-db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { normalizeImagePath } from "@/utils/imagePath";
 
 
 export default async function NoticiaPage({ params }: { params: Promise<{ id: string }> }) {
@@ -31,15 +32,7 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
         <article className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="flex h-90 md:h-90">
             <img
-              src={
-                noticia.imagem
-                  ? noticia.imagem.startsWith('http')
-                    ? noticia.imagem
-                    : noticia.imagem.startsWith('/')
-                      ? noticia.imagem
-                      : `/${noticia.imagem}`
-                  : ""
-              }
+              src={normalizeImagePath(noticia.imagem) ?? ""}
               alt={noticia.titulo}
               className="w-full h-full object-cover"
             />
@@ -81,13 +74,7 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
               )}
               {noticia.imagem_extra && (
                 <img
-                  src={
-                    noticia.imagem_extra.startsWith('http')
-                      ? noticia.imagem_extra
-                      : noticia.imagem_extra.startsWith('/')
-                        ? noticia.imagem_extra
-                        : `/${noticia.imagem_extra}`
-                  }
+                  src={normalizeImagePath(noticia.imagem_extra)}
                   alt={noticia.titulo}
                   className="w-full h-full object-cover"
                 />

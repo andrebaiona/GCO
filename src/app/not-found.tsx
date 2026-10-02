@@ -1,7 +1,12 @@
 import Link from 'next/link';
+import Footer from '@/components/layout/footer';
+import Navbar from '@/components/layout/navbar';
+import SponsorsSection from '@/components/layout/SponsorsSection';
 
 export default function NotFound() {
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-blue-100 flex flex-col justify-center items-center px-4 relative overflow-hidden">
       <div className="max-w-md w-full text-center relative z-10">
         <div className="mb-8">
@@ -71,5 +76,8 @@ export default function NotFound() {
         </div>
       </div>
     </div>
+    <SponsorsSection />
+    <Footer />
+    </>
   );
 }
