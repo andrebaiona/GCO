@@ -36,7 +36,8 @@ export default async function EditarNoticiaPage({ params }: { params: Promise<{ 
           resumo: n.resumo ?? "",
           conteudo: n.conteudo ?? "",
           imagem: normalizeImagePath(n.imagem) ?? null,
-          imagem_extra: normalizeImagePath(n.imagem_extra) ?? null,
+          // value = stored reference (matched server-side on save), src = displayable URL
+          imagens_extra: n.imagens_extra.map((value) => ({ value, src: normalizeImagePath(value) ?? value })),
         }}
       />
     </div>

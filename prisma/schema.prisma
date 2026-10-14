@@ -58,7 +58,10 @@ model noticias {
   autor           String?  @db.VarChar(100)
   categoria       String?
   resumo          String?
+  /// Legacy single extra image; superseded by imagens_extra (kept for rollback, no longer written).
   imagem_extra    String?  @db.VarChar(255)
+  /// Up to 4 extra images, in display order (the main image is "imagem").
+  imagens_extra   String[] @default([])
 }
 
 model horarios {
