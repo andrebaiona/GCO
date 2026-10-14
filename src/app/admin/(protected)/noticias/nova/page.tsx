@@ -24,7 +24,7 @@ export default async function NovaNoticiaPage() {
           resumo: "",
           conteudo: "",
           imagem: null,
-          imagem_extra: null,
+          imagens_extra: [],
         }}
       />
     </div>

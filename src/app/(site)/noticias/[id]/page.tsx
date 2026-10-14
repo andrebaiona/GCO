@@ -4,6 +4,14 @@ import Link from "next/link";
 import { normalizeImagePath } from "@/utils/imagePath";
 
 
+// Gallery columns by number of extra images: 1 full width, 2 side by side, 3 in a row, 4 as 2x2 (2x2 on mobile too).
+const GALLERY_COLS: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-1 sm:grid-cols-2",
+  3: "grid-cols-1 sm:grid-cols-3",
+  4: "grid-cols-2",
+};
+
 export default async function NoticiaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const noticiaId = parseInt(id);
@@ -72,12 +80,29 @@ export default async function NoticiaPage({ params }: { params: Promise<{ id: st
                   ))}
                 </div>
               )}
-              {noticia.imagem_extra && (
-                <img
-                  src={normalizeImagePath(noticia.imagem_extra)}
-                  alt={noticia.titulo}
-                  className="w-full h-full object-cover"
-                />
+              {noticia.imagens_extra.length > 0 && (
+                <div className={`not-prose my-6 grid gap-3 ${GALLERY_COLS[Math.min(noticia.imagens_extra.length, 4)]}`}>
+                  {noticia.imagens_extra.map((src, i) => (
+                    <a
+                      key={src + i}
+                      href={src}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`block overflow-hidden rounded-lg bg-gray-100 ${
+                        noticia.imagens_extra.length === 1 ? "" : "aspect-[4/3]"
+                      }`}
+                    >
+                      <img
+                        src={src}
+                        alt={`${noticia.titulo} (imagem ${i + 2})`}
+                        loading="lazy"
+                        className={`w-full transition-transform hover:scale-105 ${
+                          noticia.imagens_extra.length === 1 ? "h-auto" : "h-full object-cover"
+                        }`}
+                      />
+                    </a>
+                  ))}
+                </div>
               )}
               {noticia.conteudo && (
                 <div className="space-y-4 text-black">

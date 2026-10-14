@@ -9,9 +9,13 @@ export interface Noticia {
   data: string; 
   categoria: string | null;
   imagem?: string | null;
-  imagem_extra?: string | null;
+  imagens_extra: string[];
   link?: string;
   autor?: string | null;
+}
+
+function normalizeExtras(paths: string[] | null | undefined): string[] {
+  return (paths ?? []).map((p) => normalizeImagePath(p)).filter((p): p is string => !!p);
 }
 
 export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
@@ -28,7 +32,7 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
     data: n.data_publicacao ? n.data_publicacao.toISOString().split("T")[0]: "",
     categoria: n.categoria,
     imagem: normalizeImagePath(n.imagem),
-    imagem_extra: normalizeImagePath(n.imagem_extra),
+    imagens_extra: normalizeExtras(n.imagens_extra),
     autor: n.autor ?? null,
     link: undefined,
   }));
@@ -46,7 +50,7 @@ export async function fetchNoticiaById(id: number): Promise<Noticia | null> {
     data: n.data_publicacao ? n.data_publicacao.toISOString().split("T")[0] : "",
     categoria: n.categoria,
     imagem: n.imagem ?? null,
-    imagem_extra: n.imagem_extra ?? null,
+    imagens_extra: normalizeExtras(n.imagens_extra),
     autor: n.autor ?? null,
     link: undefined,
   };

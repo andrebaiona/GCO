@@ -1,14 +1,17 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useState, useTransition } from "react";
+import { startTransition, useActionState, useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import SubmitButton from "../../_components/SubmitButton";
 import Alert from "../../_components/Alert";
 import type { FormState } from "../../_lib/form";
 import { ACCEPTED_TYPES, prepareImage } from "./prepareImage";
+import { MAX_EXTRA_IMAGES, MAX_NOTICIA_IMAGES } from "./limits";
 
 // Vercel rejects request bodies over 4.5 MB; keep some headroom for the text fields.
 const MAX_REQUEST_IMAGE_BYTES = 4 * 1024 * 1024;
+
+export type ExtraImage = { value: string; src: string }; // stored reference + displayable URL
 
 export type NoticiaFormValues = {
   titulo: string;
@@ -18,7 +21,7 @@ export type NoticiaFormValues = {
   resumo: string;
   conteudo: string;
   imagem: string | null; // displayable URL of the current image
-  imagem_extra: string | null;
+  imagens_extra: ExtraImage[];
 };
 
 const inputClass =
@@ -43,7 +46,7 @@ function ImageInput({
   current,
   error,
 }: {
-  name: "imagem" | "imagem_extra";
+  name: "imagem";
   label: string;
   current: string | null;
   error?: string;
@@ -101,6 +104,112 @@ function ImageInput({
   );
 }
 
+type NewExtra = { file: File; preview: string };
+
+/**
+ * Extra images: existing ones can be removed, new ones are added (several at a time) up to
+ * the limit. New files live in `filesRef` so the submit handler can downscale and append them.
+ */
+function ExtraImagesInput({
+  current,
+  filesRef,
+  error,
+}: {
+  current: ExtraImage[];
+  filesRef: React.MutableRefObject<File[]>;
+  error?: string;
+}) {
+  const [kept, setKept] = useState(current);
+  const [added, setAdded] = useState<NewExtra[]>([]);
+  const [notice, setNotice] = useState<string | null>(null);
+  const addedRef = useRef<NewExtra[]>([]);
+  const remaining = MAX_EXTRA_IMAGES - kept.length - added.length;
+
+  useEffect(() => () => addedRef.current.forEach((a) => URL.revokeObjectURL(a.preview)), []);
+
+  function commit(next: NewExtra[]) {
+    addedRef.current = next;
+    filesRef.current = next.map((a) => a.file);
+    setAdded(next);
+  }
+
+  function handlePick(e: React.ChangeEvent<HTMLInputElement>) {
+    const picked = Array.from(e.target.files ?? []);
+    e.target.value = ""; // allow picking the same file again
+    if (picked.length === 0) return;
+    const accepted = picked.slice(0, Math.max(remaining, 0));
+    setNotice(
+      accepted.length < picked.length
+        ? `Só cabem mais ${Math.max(remaining, 0)} imagem(ns); as restantes foram ignoradas.`
+        : null,
+    );
+    commit([...added, ...accepted.map((file) => ({ file, preview: URL.createObjectURL(file) }))]);
+  }
+
+  function removeAdded(index: number) {
+    URL.revokeObjectURL(added[index].preview);
+    commit(added.filter((_, i) => i !== index));
+    setNotice(null);
+  }
+
+  const tile = "relative aspect-[3/2] overflow-hidden rounded-lg border border-gray-300 bg-gray-50";
+  const removeBtn =
+    "absolute right-1 top-1 rounded-full bg-white/90 px-2 py-0.5 text-xs font-semibold text-red-700 shadow hover:bg-white";
+
+  return (
+    <div>
+      <Label htmlFor="imagens_extra_input" hint={`JPG, PNG ou WebP · até ${MAX_EXTRA_IMAGES} (${MAX_NOTICIA_IMAGES} com a principal)`}>
+        Imagens extra
+      </Label>
+
+      {kept.map((img) => (
+        <input key={img.value} type="hidden" name="imagens_extra_manter" value={img.value} />
+      ))}
+
+      {kept.length + added.length > 0 ? (
+        <ul className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {kept.map((img) => (
+            <li key={img.value} className={tile}>
+              <img src={img.src} alt="" className="h-full w-full object-cover" />
+              <button type="button" onClick={() => setKept(kept.filter((k) => k !== img))} className={removeBtn}>
+                Remover
+              </button>
+            </li>
+          ))}
+          {added.map((a, i) => (
+            <li key={a.preview} className={tile}>
+              <img src={a.preview} alt="" className="h-full w-full object-cover" />
+              <span className="absolute bottom-1 left-1 rounded bg-blue-800 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                Nova
+              </span>
+              <button type="button" onClick={() => removeAdded(i)} className={removeBtn}>
+                Remover
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mb-3 text-sm text-gray-400">Sem imagens extra.</p>
+      )}
+
+      <input
+        id="imagens_extra_input"
+        type="file"
+        multiple
+        accept={ACCEPTED_TYPES.join(",")}
+        disabled={remaining <= 0}
+        onChange={handlePick}
+        className="block w-full text-sm file:mr-3 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:font-semibold file:text-blue-800 hover:file:bg-blue-100 disabled:opacity-50"
+      />
+      <p className="mt-1 text-sm text-gray-500">
+        {remaining > 0 ? `Pode adicionar mais ${remaining}.` : "Limite de imagens extra atingido."}
+      </p>
+      {notice && <p className="mt-1 text-sm text-amber-700">{notice}</p>}
+      <FieldError message={error} />
+    </div>
+  );
+}
+
 export default function NoticiaForm({
   action,
   initial,
@@ -117,6 +226,7 @@ export default function NoticiaForm({
   const [state, formAction, isPending] = useActionState<FormState, FormData>(action, {});
   const [preparing, startPreparing] = useTransition();
   const [clientError, setClientError] = useState<string | null>(null);
+  const extraFilesRef = useRef<File[]>([]);
   const fe = state.fieldErrors ?? {};
   const busy = isPending || preparing;
 
@@ -129,13 +239,17 @@ export default function NoticiaForm({
 
     startPreparing(async () => {
       let total = 0;
-      for (const field of ["imagem", "imagem_extra"] as const) {
-        const value = formData.get(field);
-        if (value instanceof File && value.size > 0) {
-          const prepared = await prepareImage(value);
-          formData.set(field, prepared);
-          total += prepared.size;
-        }
+      const main = formData.get("imagem");
+      if (main instanceof File && main.size > 0) {
+        const prepared = await prepareImage(main);
+        formData.set("imagem", prepared);
+        total += prepared.size;
+      }
+      formData.delete("imagens_extra_novas");
+      for (const extra of extraFilesRef.current) {
+        const prepared = await prepareImage(extra);
+        formData.append("imagens_extra_novas", prepared);
+        total += prepared.size;
       }
       if (total > MAX_REQUEST_IMAGE_BYTES) {
         setClientError("As imagens são demasiado grandes (máximo 4 MB no total). Use imagens mais pequenas.");
@@ -198,12 +312,7 @@ export default function NoticiaForm({
         <FieldError message={fe.resumo} />
       </div>
 
-      <ImageInput
-        name="imagem_extra"
-        label="Imagem extra"
-        current={initial.imagem_extra}
-        error={fe.imagem_extra}
-      />
+      <ExtraImagesInput current={initial.imagens_extra} filesRef={extraFilesRef} error={fe.imagens_extra} />
 
       <div>
         <Label htmlFor="conteudo" hint="Deixe uma linha em branco para separar parágrafos.">

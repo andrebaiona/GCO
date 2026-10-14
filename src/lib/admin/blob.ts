@@ -67,7 +67,7 @@ export function isBlobUrl(url: string | null | undefined): url is string {
 
 /** Best-effort delete of Blob images; failures are logged but never block the DB change. */
 export async function deleteBlobImages(urls: (string | null | undefined)[]): Promise<void> {
-  const targets = urls.filter(isBlobUrl);
+  const targets = [...new Set(urls.filter(isBlobUrl))];
   if (targets.length === 0) return;
   try {
     await del(targets);

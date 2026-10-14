@@ -9,6 +9,7 @@ import { requireAdminAction } from "@/lib/admin/dal";
 import { adminHref } from "@/lib/admin/paths";
 import { uploadNoticiaImage, deleteBlobImages, ImageValidationError } from "@/lib/admin/blob";
 import { fieldErrorsFrom, file, text, SESSION_EXPIRED, type FormState } from "../../_lib/form";
+import { MAX_EXTRA_IMAGES, MAX_NOTICIA_IMAGES } from "./limits";
 
 // Textareas submit CRLF; the public pages split paragraphs on "\n\n".
 const normalizeNewlines = (v: string) => v.replace(/\r\n?/g, "\n");
@@ -52,8 +53,7 @@ function parseNoticia(formData: FormData) {
   });
 }
 
-type ImageField = "imagem" | "imagem_extra";
-type ImageResult = { value: string | null; uploaded?: string; replaced?: string | null };
+type ImageField = "imagem" | "imagens_extra";
 
 class ImageFieldError extends Error {
   constructor(public field: ImageField, message: string) {
@@ -61,41 +61,61 @@ class ImageFieldError extends Error {
   }
 }
 
-/** Decide the new value of an image column: new upload, removal, or keep current. */
-async function resolveImage(formData: FormData, field: ImageField, current: string | null): Promise<ImageResult> {
-  const upload = file(formData, field);
-  if (upload) {
-    try {
-      const url = await uploadNoticiaImage(upload);
-      return { value: url, uploaded: url, replaced: current };
-    } catch (err) {
-      if (err instanceof ImageValidationError) throw new ImageFieldError(field, err.message);
-      console.error(`Falha no upload de ${field}:`, err);
-      throw new ImageFieldError(field, "Não foi possível carregar a imagem. Tente novamente.");
-    }
+async function uploadOrThrow(upload: File, field: ImageField): Promise<string> {
+  try {
+    return await uploadNoticiaImage(upload);
+  } catch (err) {
+    if (err instanceof ImageValidationError) throw new ImageFieldError(field, err.message);
+    console.error(`Falha no upload de ${field}:`, err);
+    throw new ImageFieldError(field, "Não foi possível carregar a imagem. Tente novamente.");
   }
-  if (text(formData, `${field}_remover`) === "on") {
-    return { value: null, replaced: current };
-  }
-  return { value: current };
 }
 
-async function resolveImages(formData: FormData, current: { imagem: string | null; imagem_extra: string | null }) {
-  const results: ImageResult[] = [];
+/**
+ * Decide the final images of a noticia: main image (new upload, removal or keep) and the
+ * ordered extra list (kept existing ones, then new uploads). `replaced` lists the Blob
+ * images that stop being referenced once the DB write succeeds; `uploaded` the ones to
+ * roll back if it fails.
+ */
+async function resolveImages(formData: FormData, current: { imagem: string | null; imagens_extra: string[] }) {
+  // Never trust the client's list: only keep URLs that are actually stored on this noticia.
+  const keep = new Set(formData.getAll("imagens_extra_manter").filter((v): v is string => typeof v === "string"));
+  const kept = current.imagens_extra.filter((u) => keep.has(u));
+  const dropped = current.imagens_extra.filter((u) => !keep.has(u));
+  const novas = formData.getAll("imagens_extra_novas").filter((v): v is File => v instanceof File && v.size > 0);
+
+  if (kept.length + novas.length > MAX_EXTRA_IMAGES) {
+    throw new ImageFieldError(
+      "imagens_extra",
+      `No máximo ${MAX_EXTRA_IMAGES} imagens extra (${MAX_NOTICIA_IMAGES} com a principal).`,
+    );
+  }
+
+  const uploaded: string[] = [];
+  const replaced: (string | null)[] = [...dropped];
+  let imagem = current.imagem;
   try {
-    results.push(await resolveImage(formData, "imagem", current.imagem));
-    results.push(await resolveImage(formData, "imagem_extra", current.imagem_extra));
+    const mainUpload = file(formData, "imagem");
+    if (mainUpload) {
+      imagem = await uploadOrThrow(mainUpload, "imagem");
+      uploaded.push(imagem);
+      replaced.push(current.imagem);
+    } else if (text(formData, "imagem_remover") === "on") {
+      imagem = null;
+      replaced.push(current.imagem);
+    }
+
+    const extras = [...kept];
+    for (const nova of novas) {
+      const url = await uploadOrThrow(nova, "imagens_extra");
+      uploaded.push(url);
+      extras.push(url);
+    }
+    return { imagem, imagens_extra: extras, uploaded, replaced };
   } catch (err) {
-    await deleteBlobImages(results.map((r) => r.uploaded)); // don't orphan the first upload
+    await deleteBlobImages(uploaded); // don't orphan earlier uploads
     throw err;
   }
-  const [imagem, imagemExtra] = results;
-  return {
-    imagem: imagem.value,
-    imagem_extra: imagemExtra.value,
-    uploaded: results.map((r) => r.uploaded),
-    replaced: results.map((r) => r.replaced),
-  };
 }
 
 function revalidatePublicSite() {
@@ -111,7 +131,7 @@ export async function createNoticia(_prev: FormState, formData: FormData): Promi
 
   let images;
   try {
-    images = await resolveImages(formData, { imagem: null, imagem_extra: null });
+    images = await resolveImages(formData, { imagem: null, imagens_extra: [] });
   } catch (err) {
     if (err instanceof ImageFieldError) return { fieldErrors: { [err.field]: err.message } };
     throw err;
@@ -119,7 +139,7 @@ export async function createNoticia(_prev: FormState, formData: FormData): Promi
 
   try {
     await prisma.noticias.create({
-      data: { ...parsed.data, imagem: images.imagem, imagem_extra: images.imagem_extra },
+      data: { ...parsed.data, imagem: images.imagem, imagens_extra: images.imagens_extra },
     });
   } catch (err) {
     console.error("Falha ao criar notícia:", err);
@@ -142,7 +162,7 @@ export async function updateNoticia(id: number, _prev: FormState, formData: Form
 
   let images;
   try {
-    images = await resolveImages(formData, { imagem: existing.imagem, imagem_extra: existing.imagem_extra });
+    images = await resolveImages(formData, { imagem: existing.imagem, imagens_extra: existing.imagens_extra });
   } catch (err) {
     if (err instanceof ImageFieldError) return { fieldErrors: { [err.field]: err.message } };
     throw err;
@@ -151,7 +171,7 @@ export async function updateNoticia(id: number, _prev: FormState, formData: Form
   try {
     await prisma.noticias.update({
       where: { id },
-      data: { ...parsed.data, imagem: images.imagem, imagem_extra: images.imagem_extra },
+      data: { ...parsed.data, imagem: images.imagem, imagens_extra: images.imagens_extra },
     });
   } catch (err) {
     console.error("Falha ao atualizar notícia:", err);
@@ -173,7 +193,7 @@ export async function deleteNoticia(formData: FormData): Promise<void> {
   const existing = await prisma.noticias.findUnique({ where: { id } });
   if (existing) {
     await prisma.noticias.delete({ where: { id } });
-    await deleteBlobImages([existing.imagem, existing.imagem_extra]);
+    await deleteBlobImages([existing.imagem, existing.imagem_extra, ...existing.imagens_extra]);
     revalidatePublicSite();
   }
   redirect(adminHref("noticias?ok=eliminada"));
