@@ -1,3 +1,4 @@
+import { cache } from "react";
 import  prisma  from "@/lib/prisma";
 import { normalizeImagePath } from "@/utils/imagePath";
 
@@ -18,7 +19,7 @@ function normalizeExtras(paths: string[] | null | undefined): string[] {
   return (paths ?? []).map((p) => normalizeImagePath(p)).filter((p): p is string => !!p);
 }
 
-export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
+export const fetchNoticias = cache(async (limit = 5): Promise<Noticia[]> => {
   const noticias = await prisma.noticias.findMany({
     orderBy: { data_publicacao: "desc" },
     take: limit,
@@ -36,7 +37,7 @@ export async function fetchNoticias(limit = 5): Promise<Noticia[]> {
     autor: n.autor ?? null,
     link: undefined,
   }));
-}
+});
 
 export async function fetchNoticiaById(id: number): Promise<Noticia | null> {
   const n = await prisma.noticias.findUnique({ where: { id } });

@@ -1,3 +1,4 @@
+import { cache } from "react";
 import prisma from "@/lib/prisma";
 
 export async function fetchEscalaoInfo(modalidadeSlug: string, escalaoNome: string) {
@@ -35,10 +36,10 @@ export type Modalidade = {
   ativo: boolean;
 };
 
-export async function fetchAllModalidades(): Promise<Modalidade[]> {
+export const fetchAllModalidades = cache(async (): Promise<Modalidade[]> => {
   const modalidades = await prisma.modalidades.findMany();
   return modalidades as Modalidade[];
-}
+});
 
 export async function fetchAllModalidadeSlugs() {
   const modalidades = await prisma.modalidades.findMany({

@@ -110,5 +110,6 @@ export default async function InscricoesPage() {
 }
 
 
-// Re-fetch from the DB at most once per minute (ISR) so content updates appear without a redeploy.
-export const revalidate = 60;
+// Prices/schedules are edited via scripts (no on-demand revalidation), so refresh hourly at most.
+// Keep it long: every regeneration queries Neon and keeps its compute awake (free-plan CU-hours).
+export const revalidate = 3600;

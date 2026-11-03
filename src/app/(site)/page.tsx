@@ -39,5 +39,6 @@ export default function Home() {
 }
 
 
-// Re-fetch from the DB at most once per minute (ISR) so content updates appear without a redeploy.
-export const revalidate = 60;
+// News changes revalidate on demand from the admin (revalidatePublicSite); this is only a safety net.
+// Keep it long: every regeneration queries Neon and keeps its compute awake (free-plan CU-hours).
+export const revalidate = 86400;
