@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 
 const globals = {
   days: ['2.ª', '3.ª', '4.ª', '5.ª', '6.ª', 'Sábado', 'Domingo'],
@@ -30,9 +30,10 @@ type CalendarProps = {
   /** Admin preview: highlights this event and makes blocks clickable. */
   selectedId?: number | null;
   onSelect?: (id: number) => void;
+  title?: ReactNode;
 };
 
-const HorarioCalendar: FC<CalendarProps> = ({ events, selectedId, onSelect }) => {
+const HorarioCalendar: FC<CalendarProps> = ({ events, selectedId, onSelect, title = "Horário de Treinos" }) => {
   const { days, startHour, endHour, slotMinutes } = globals;
   // Default window, widened (in whole slots) when the admin schedules something outside it.
   const startMin = Math.min(
@@ -90,7 +91,7 @@ function distributeColumns(events: Event[]) {
   return (
     <section className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 mb-10">
       <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-4 sm:mb-6 text-center sm:text-left">
-        Horário de Treinos
+        {title}
       </h2>
 
       <div className="overflow-x-auto overflow-y-hidden rounded-xl">

@@ -243,3 +243,25 @@ export const fetchHorariosPorModalidade = cache(async (modalidadeId: number): Pr
     return [];
   }
 });
+
+/** Every modalidade that has at least one scheduled aula, with its weekly slots (for the /horarios page). */
+export const fetchHorariosTodasModalidades = cache(async () => {
+  try {
+    return await prisma.modalidades.findMany({
+      where: { horario_aulas: { some: {} } },
+      orderBy: { nome: "asc" },
+      select: {
+        id: true,
+        nome: true,
+        slug: true,
+        horario_aulas: {
+          orderBy: [{ dia_semana: "asc" }, { inicio: "asc" }, { id: "asc" }],
+          select: { id: true, dia_semana: true, inicio: true, fim: true, titulo: true, sala: true, cor: true },
+        },
+      },
+    });
+  } catch (err) {
+    console.error("Falha ao ler horários:", err);
+    return [];
+  }
+});

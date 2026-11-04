@@ -1,18 +1,52 @@
-'use client';
+import Link from "next/link";
+import HorarioCalendar, { type Event } from "@/components/HorarioCalendar";
+import { fetchHorariosTodasModalidades } from "@/data/modalidades-db";
+import { DIAS_SEMANA } from "@/lib/horarios";
 
-import LogoRain from '@/components/layout/LogoRain';
-import { useState } from 'react';
+// Schedules are published from the admin ("Aplicar"), which revalidates on demand; this is only a safety net.
+// Keep it long: every regeneration queries Neon and keeps its compute awake (free-plan CU-hours).
+export const revalidate = 86400;
 
+export default async function HorariosPage() {
+  const modalidades = await fetchHorariosTodasModalidades();
 
-  export default function HorariosPage() {
-    return (
-      <main className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 via-white to-blue-100 overflow-hidden">
-        <LogoRain fullScreen={true} count={14} speed={7} />
-        <div className="relative z-10 flex flex-col items-center justify-center px-6 py-12 rounded-xl shadow-xl bg-white/80 backdrop-blur-md border border-gray-200">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-blue-900 mb-4 drop-shadow-lg">Horários</h1>
-          <p className="text-lg md:text-xl text-gray-700 font-medium mb-2">Ainda por determinar</p>
-          <span className="text-sm text-gray-500">Em breve serão publicados os horários das modalidades / eventos do clube.</span>
-        </div>
-      </main>
-    );
-  }
+  return (
+    <main className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-blue-900 mb-8 text-center">Horários</h1>
+
+        {modalidades.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow-lg p-10 text-center">
+            <p className="text-lg md:text-xl text-gray-700 font-medium mb-2">Ainda por determinar</p>
+            <span className="text-sm text-gray-500">
+              Em breve serão publicados os horários das modalidades / eventos do clube.
+            </span>
+          </div>
+        ) : (
+          modalidades.map((m) => {
+            const events: Event[] = m.horario_aulas.map((h) => ({
+              id: h.id,
+              day: DIAS_SEMANA[h.dia_semana],
+              start: h.inicio,
+              end: h.fim,
+              title: h.titulo,
+              room: h.sala ?? "",
+              color: h.cor,
+            }));
+            return (
+              <HorarioCalendar
+                key={m.id}
+                events={events}
+                title={
+                  <Link href={`/modalidades/${m.slug}`} className="hover:text-blue-600 transition-colors">
+                    {m.nome}
+                  </Link>
+                }
+              />
+            );
+          })
+        )}
+      </div>
+    </main>
+  );
+}
