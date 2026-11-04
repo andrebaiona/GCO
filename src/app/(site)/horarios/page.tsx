@@ -1,5 +1,4 @@
-import Link from "next/link";
-import HorarioCalendar, { type Event } from "@/components/HorarioCalendar";
+import HorariosTabs from "@/components/HorariosTabs";
 import { fetchHorariosTodasModalidades } from "@/data/modalidades-db";
 import { DIAS_SEMANA } from "@/lib/horarios";
 
@@ -23,28 +22,22 @@ export default async function HorariosPage() {
             </span>
           </div>
         ) : (
-          modalidades.map((m) => {
-            const events: Event[] = m.horario_aulas.map((h) => ({
-              id: h.id,
-              day: DIAS_SEMANA[h.dia_semana],
-              start: h.inicio,
-              end: h.fim,
-              title: h.titulo,
-              room: h.sala ?? "",
-              color: h.cor,
-            }));
-            return (
-              <HorarioCalendar
-                key={m.id}
-                events={events}
-                title={
-                  <Link href={`/modalidades/${m.slug}`} className="hover:text-blue-600 transition-colors">
-                    {m.nome}
-                  </Link>
-                }
-              />
-            );
-          })
+          <HorariosTabs
+            modalidades={modalidades.map((m) => ({
+              id: m.id,
+              nome: m.nome,
+              slug: m.slug,
+              events: m.horario_aulas.map((h) => ({
+                id: h.id,
+                day: DIAS_SEMANA[h.dia_semana],
+                start: h.inicio,
+                end: h.fim,
+                title: h.titulo,
+                room: h.sala ?? "",
+                color: h.cor,
+              })),
+            }))}
+          />
         )}
       </div>
     </main>
