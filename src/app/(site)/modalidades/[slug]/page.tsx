@@ -1,61 +1,16 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { fetchModalidadeBySlug, fetchAllModalidadeSlugs } from "@/data/modalidades-db";
+import { fetchModalidadeBySlug, fetchAllModalidadeSlugs, fetchHorariosPorModalidade } from "@/data/modalidades-db";
+import { DIAS_SEMANA } from "@/lib/horarios";
 import TabsEscaloes from "@/components/TabsEscaloes";
 import NoticiaCard from "@/components/cards/NoticiaCard";
 import { fetchNoticias } from "@/data/noticias-db";
 import { fetchPrecosPorModalidade } from "@/data/modalidades-db";
 import React from 'react';
-import type { FC } from "react";
+import HorarioCalendar, { type Event } from "@/components/HorarioCalendar";
 
 
-const globals = {
-  days: ['2.ª', '3.ª', '4.ª', '5.ª', '6.ª', 'Sábado', 'Domingo'],
-  startHour: '09:00',
-  endHour: '21:30',
-  slotMinutes: 30,
-  timezone: 'Europe/Lisbon'
-  };
-
-const schedule_patinagem = [
-  { day: '2.ª', start: '17:00', end: '19:00', title: 'Iniciação | Pré-Competição | Competição', room: 'Casal do Rato', color: 'var(--blue-400)' },
-  { day: '3.ª', start: '17:00', end: '18:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
-  { day: '3.ª', start: '18:00', end: '19:00', title: 'Preparação Física', room: 'GCO', color: 'var(--yellow-500)' },
-  { day: '3.ª', start: '18:00', end: '19:00', title: 'Minis', room: 'GCO', color: 'var(--blue-900)' },
-  { day: '3.ª', start: '19:00', end: '20:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
-  { day: '3.ª', start: '20:00', end: '20:30', title: 'Competição', room: '', color: 'var(--blue-500)' },
-  { day: '4.ª', start: '17:00', end: '19:00', title: 'Iniciação | Pré-Competição | Competição', room: 'Casal do Rato', color: 'var(--blue-400)' },
-  { day: '5.ª', start: '17:00', end: '18:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
-  { day: '5.ª', start: '18:00', end: '19:00', title: 'Preparação Física', room: 'GCO', color: 'var(--yellow-500)' },
-  { day: '5.ª', start: '18:00', end: '19:00', title: 'Minis', room: 'GCO', color: 'var(--blue-900)' },
-  { day: '5.ª', start: '19:00', end: '20:00', title: 'Iniciação | Pré-C. | Competição', room: 'GCO', color: 'var(--blue-400)' },
-  { day: '5.ª', start: '20:00', end: '20:30', title: 'Competição', room: '', color: 'var(--blue-500)' },
-  { day: '6.ª', start: '17:00', end: '19:00', title: 'Iniciação | Pré-C. | Competição', room: 'Casal do Rato', color: 'var(--blue-400)' },
-  { day: 'Sábado', start: '12:00', end: '13:00', title: 'Minis', room: 'GCO', color: 'var(--blue-900)' },
-  { day: 'Sábado', start: '13:00', end: '14:00', title: 'Pré-Competição | Competição', room: 'GCO', color: 'var(--blue-400)' },
-  { day: 'Sábado', start: '14:00', end: '15:00', title: 'Iniciação', room: 'GCO', color: 'var(--blue-500)' },
-  { day: 'Domingo', start: '10:30', end: '11:30', title: 'Solo Dance', room: 'GCO', color: 'green' },
-  { day: 'Domingo', start: '11:30', end: '12:30', title: 'Solo Dance', room: 'GCO', color: 'green' },
-  { day: 'Domingo', start: '12:30', end: '13:30', title: 'Solo Dance', room: 'GCO', color: 'green' }
-];
-
-const schedule_ginastica = [
-  { day: '2.ª', start: '17:00', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
-  { day: '2.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
-  { day: '2.ª', start: '18:15', end: '19:00', title: 'Formativa Base I', room: '', color: 'var(--blue-500)' },
-  { day: '2.ª', start: '19:00', end: '20:00', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' },
-  { day: '4.ª', start: '17:00', end: '21:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
-  { day: '4.ª', start: '18:00', end: '18:45', title: 'Formativa Base I', room: '', color: 'var(--blue-500)' },
-  { day: '4.ª', start: '18:45', end: '19:30', title: 'Formativa Base II', room: '', color: 'var(--blue-600)' },
-  { day: '4.ª', start: '19:30', end: '20:30', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' },
-  { day: '6.ª', start: '17:00', end: '20:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
-  { day: '6.ª', start: '17:30', end: '18:15', title: 'Infantil', room: '', color: 'var(--blue-400)' },
-  { day: '6.ª', start: '18:15', end: '19:00', title: 'Formativa Base II', room: '', color: 'var(--blue-600)' },
-  { day: '6.ª', start: '19:00', end: '20:00', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' },
-  { day: 'Sábado', start: '09:00', end: '12:00', title: 'Competição', room: '', color: 'var(--blue-900)' },
-  { day: 'Sábado', start: '09:00', end: '11:00', title: 'Formativa Avançada', room: '', color: 'var(--blue-700)' }
-];
 
 const info_ginastica = {
   pagamentos: {
@@ -86,128 +41,6 @@ const info_ginastica = {
   },
 };
 
-type Event = {
-day: string;
-start: string;
-end: string;
-title: string;
-room?: string;
-color?: string;
-};
-
-
-function timeToMinutes(t: string) {
-const [h, m] = t.split(':').map(Number);
-return h * 60 + m;
-}
-
-
-type CalendarProps = {
-  events: Event[];
-};
-
-const Calendar: FC<CalendarProps> = ({ events }) => {
-  const { days, startHour, endHour, slotMinutes } = globals;
-  const startMin = timeToMinutes(startHour);
-  const endMin = timeToMinutes(endHour);
-  const totalSlots = Math.ceil((endMin - startMin) / slotMinutes);
-  const slotHeight = 40;
-
-  const eventsByDay: Record<string, Event[]> = {};
-  for (const d of days) eventsByDay[d] = [];
-  for (const ev of events) {
-    if (!eventsByDay[ev.day]) eventsByDay[ev.day] = [];
-    eventsByDay[ev.day].push(ev);
-  }
-
-function distributeColumns(events: Event[]) {
-  if (!events.length) return [];
-  const sorted = [...events].sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
-  const columns: Event[][] = [];
-
-  sorted.forEach(ev => {
-    let placed = false;
-    for (const col of columns) {
-      const lastInCol = col[col.length - 1];
-      if (timeToMinutes(ev.start) >= timeToMinutes(lastInCol.end)) {
-        col.push(ev);
-        placed = true;
-        break;
-      }
-    }
-    if (!placed) columns.push([ev]);
-  });
-
-  const positioned: Array<Event & { left: number; width: number }> = [];
-  columns.forEach((col, colIndex) => {
-    const width = 100 / columns.length;
-    col.forEach(ev => {
-      positioned.push({
-        ...ev,
-        left: colIndex * width,
-        width,
-      });
-    });
-  });
-
-  return positioned;
-}
-
-
-  return (
-    <section className="bg-white rounded-2xl shadow-lg p-4 sm:p-6 md:p-8 mb-10">
-      <h2 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-4 sm:mb-6 text-center sm:text-left">
-        Horário de Treinos
-      </h2>
-
-      <div className="overflow-x-auto overflow-y-hidden rounded-xl">
-        <div className="grid grid-cols-[80px_repeat(7,minmax(180px,1fr))] sm:grid-cols-[80px_repeat(7,minmax(200px,1fr))] md:grid-cols-[80px_repeat(7,minmax(220px,1fr))] gap-[1px] sm:gap-2 min-w-[1300px]">
-          <div />
-          {days.map(d => (
-            <div key={d} className="text-center font-semibold text-[11px] sm:text-[13px] md:text-[14px] text-blue-800 py-1 border-b border-blue-50">{d}</div>
-          ))}
-
-          <div className="flex flex-col text-[9px] sm:text-[11px] text-gray-600 border-r border-blue-200">
-            {Array.from({ length: totalSlots }).map((_, i) => {
-              const mins = startMin + i * slotMinutes;
-              const hh = String(Math.floor(mins / 60)).padStart(2, "0");
-              const mm = String(mins % 60).padStart(2, "0");
-              return (
-                <div key={i} className="h-10 sm:h-10 md:h-12 text-right pr-2 border-b border-blue-50 flex items-center justify-end" style={{ height: slotHeight }}>
-                  {`${hh}:${mm}`}
-                </div>
-              );
-            })}
-          </div>
-
-          {days.map(d => {
-            const positioned = distributeColumns(eventsByDay[d]);
-            return (
-              <div key={d} className="relative border-l border-blue-200" style={{ minHeight: totalSlots * slotHeight }}>
-                {Array.from({ length: totalSlots }).map((_, i) => (
-                  <div key={i} className="border-b border-blue-50" style={{ height: slotHeight }} />
-                ))}
-
-                {positioned.map((ev, idx) => {
-                  const top = ((timeToMinutes(ev.start) - startMin) / slotMinutes) * slotHeight;
-                  const height = ((timeToMinutes(ev.end) - timeToMinutes(ev.start)) / slotMinutes) * slotHeight;
-                  return (
-                    <div key={idx} className="absolute rounded-md sm:rounded-lg p-[2px] sm:p-2 text-[8px] sm:text-[10px] md:text-xs text-white shadow-md"
-                      style={{ top: `${top}px`, height: `${height}px`, left: `${ev.left}%`, width: `${ev.width}%`, backgroundColor: ev.color }}>
-                      <div className="font-semibold text-[9px] sm:text-[10px] md:text-[11px] leading-tight">{ev.title}</div>
-                      <div className="hidden sm:block text-[8px] sm:text-[9px] text-yellow-100">{ev.room}</div>
-                      <div className="text-[7px] sm:text-[8px] md:text-[9px] opacity-80">{ev.start} — {ev.end}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 export default async function ModalidadePage(props: any) {
   const params = await props.params;
@@ -260,6 +93,16 @@ export default async function ModalidadePage(props: any) {
       return a.id - b.id;
     });
   }
+
+  const horarios = await fetchHorariosPorModalidade(modalidade.id);
+  const eventosHorario: Event[] = horarios.map(h => ({
+    day: DIAS_SEMANA[h.dia_semana],
+    start: h.inicio,
+    end: h.fim,
+    title: h.titulo,
+    room: h.sala ?? '',
+    color: h.cor,
+  }));
 
   const precos = await fetchPrecosPorModalidade(modalidade.id);
   const precosPorEscalao: { [escalao: string]: Array<{ tipo: string, valor: number, observacoes: string }> } = {};
@@ -410,9 +253,7 @@ export default async function ModalidadePage(props: any) {
           </section>
         )}
 
-        {(slug === "patinagem-artistica" || slug === "ginastica") && (
-          <Calendar events={slug === "patinagem-artistica" ? schedule_patinagem : schedule_ginastica} />
-        )}
+        {eventosHorario.length > 0 && <HorarioCalendar events={eventosHorario} />}
 
         {slug === "ginastica" && (
           <>
@@ -555,6 +396,6 @@ export async function generateStaticParams() {
 }
 
 
-// Prices/schedules are edited via scripts (no on-demand revalidation), so refresh hourly at most.
+// Prices/schedules are edited in the admin (which revalidates on demand); this is only a safety net for script edits.
 // Keep it long: every regeneration queries Neon and keeps its compute awake (free-plan CU-hours).
 export const revalidate = 3600;

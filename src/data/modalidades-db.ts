@@ -1,5 +1,6 @@
 import { cache } from "react";
 import prisma from "@/lib/prisma";
+import type { AulaHorario } from "@/lib/horarios";
 
 export async function fetchEscalaoInfo(modalidadeSlug: string, escalaoNome: string) {
   const modalidade = await prisma.modalidades.findUnique({
@@ -227,3 +228,18 @@ export async function fetchPrecosPorModalidade(modalidadeId: number) {
 
   return precos;
 }
+
+/** Weekly training slots of a modalidade, ordered for display. Empty if the table is unavailable. */
+export const fetchHorariosPorModalidade = cache(async (modalidadeId: number): Promise<AulaHorario[]> => {
+  try {
+    return await prisma.horario_aulas.findMany({
+      where: { modalidade_id: modalidadeId },
+      orderBy: [{ dia_semana: "asc" }, { inicio: "asc" }, { id: "asc" }],
+      select: { id: true, dia_semana: true, inicio: true, fim: true, titulo: true, sala: true, cor: true },
+    });
+  } catch (err) {
+    // E.g. the horario_aulas migration has not been applied yet: don't take the whole page down.
+    console.error("Falha ao ler horários:", err);
+    return [];
+  }
+});

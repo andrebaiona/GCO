@@ -21,6 +21,9 @@ export default async function ProtectedLayout({ children }: { children: React.Re
               <Link href={adminHref("noticias")} className="hover:text-yellow-400">
                 Notícias
               </Link>
+              <Link href={adminHref("modalidades")} className="hover:text-yellow-400">
+                Modalidades
+              </Link>
               <Link href={adminHref("utilizadores")} className="hover:text-yellow-400">
                 Utilizadores
               </Link>

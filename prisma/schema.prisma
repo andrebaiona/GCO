@@ -26,6 +26,7 @@ model modalidades {
   escalao       escalao[]
   preco_escalao preco_escalao[]
   horarios      horarios[]
+  horario_aulas horario_aulas[]
 }
 
 model escalao {
@@ -95,4 +96,20 @@ model admin_sessions {
   created_at DateTime    @default(now()) @db.Timestamptz(6)
 
   @@index([user_id])
+}
+
+/// Weekly training slots shown on the public modalidade page (editable in the admin).
+/// dia_semana: 0 = 2.ª feira ... 4 = 6.ª feira, 5 = Sábado, 6 = Domingo. inicio/fim are "HH:MM".
+model horario_aulas {
+  id            Int         @id @default(autoincrement())
+  modalidade_id Int
+  dia_semana    Int         @db.SmallInt
+  inicio        String      @db.VarChar(5)
+  fim           String      @db.VarChar(5)
+  titulo        String      @db.VarChar(150)
+  sala          String?     @db.VarChar(100)
+  cor           String      @default("var(--blue-400)") @db.VarChar(30)
+  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade)
+
+  @@index([modalidade_id])
 }

@@ -6,11 +6,13 @@ export default function SubmitButton({
   children,
   pendingText = "A guardar…",
   pending: pendingProp,
+  disabled = false,
   className = "",
 }: {
   children: React.ReactNode;
   pendingText?: string;
   pending?: boolean;
+  disabled?: boolean;
   className?: string;
 }) {
   const { pending: formPending } = useFormStatus();
@@ -18,7 +20,7 @@ export default function SubmitButton({
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || disabled}
       className={`inline-flex items-center justify-center rounded-full bg-blue-800 px-6 py-2.5 text-sm font-semibold text-white shadow transition-colors hover:bg-blue-900 disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {pending ? pendingText : children}
