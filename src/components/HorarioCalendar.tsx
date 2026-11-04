@@ -94,11 +94,11 @@ function distributeColumns(events: Event[]) {
         {title}
       </h2>
 
-      <div className="overflow-x-auto overflow-y-hidden rounded-xl">
-        <div className="grid grid-cols-[80px_repeat(7,minmax(180px,1fr))] sm:grid-cols-[80px_repeat(7,minmax(200px,1fr))] md:grid-cols-[80px_repeat(7,minmax(220px,1fr))] gap-[1px] sm:gap-2 min-w-[1300px]">
+      <div className="overflow-hidden rounded-xl">
+        <div className="grid grid-cols-[40px_repeat(7,minmax(0,1fr))] sm:grid-cols-[56px_repeat(7,minmax(0,1fr))] md:grid-cols-[64px_repeat(7,minmax(0,1fr))] gap-[1px] sm:gap-1">
           <div />
           {days.map(d => (
-            <div key={d} className="text-center font-semibold text-[11px] sm:text-[13px] md:text-[14px] text-blue-800 py-1 border-b border-blue-50">{d}</div>
+            <div key={d} className="text-center font-semibold text-[11px] sm:text-[13px] md:text-[14px] text-blue-800 py-1 border-b border-blue-50"><span className="sm:hidden">{d.length > 4 ? d.slice(0, 3) : d}</span><span className="hidden sm:inline">{d}</span></div>
           ))}
 
           <div className="flex flex-col text-[9px] sm:text-[11px] text-gray-600 border-r border-blue-200">
@@ -128,11 +128,11 @@ function distributeColumns(events: Event[]) {
                   return (
                     <div key={ev.id ?? idx}
                       onClick={onSelect && ev.id !== undefined ? () => onSelect(ev.id as number) : undefined}
-                      className={`absolute rounded-md sm:rounded-lg p-[2px] sm:p-2 text-[8px] sm:text-[10px] md:text-xs text-white shadow-md ${onSelect ? 'cursor-pointer' : ''} ${selectedId !== undefined && selectedId !== null && ev.id === selectedId ? 'ring-4 ring-yellow-400 z-10' : ''}`}
+                      className={`absolute overflow-hidden break-words rounded-md sm:rounded-lg p-[2px] sm:p-2 text-[8px] sm:text-[10px] md:text-xs text-white shadow-md ${onSelect ? 'cursor-pointer' : ''} ${selectedId !== undefined && selectedId !== null && ev.id === selectedId ? 'ring-4 ring-yellow-400 z-10' : ''}`}
                       style={{ top: `${top}px`, height: `${height}px`, left: `${ev.left}%`, width: `${ev.width}%`, backgroundColor: ev.color }}>
                       <div className="font-semibold text-[9px] sm:text-[10px] md:text-[11px] leading-tight">{ev.title}</div>
                       <div className="hidden sm:block text-[8px] sm:text-[9px] text-yellow-100">{ev.room}</div>
-                      <div className="text-[7px] sm:text-[8px] md:text-[9px] opacity-80">{ev.start} — {ev.end}</div>
+                      <div className="hidden sm:block text-[7px] sm:text-[8px] md:text-[9px] opacity-80">{ev.start} — {ev.end}</div>
                     </div>
                   );
                 })}
