@@ -237,33 +237,17 @@ export default function TabsEscaloes({ escaloes }: TabsEscaloesProps) {
                 <div className="flex flex-row flex-wrap gap-6 justify-center items-center w-full mt-4">
                   <div className="w-[220px] h-[220px] bg-yellow-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-yellow-400">
                     <span className="text-lg font-semibold text-yellow-900 mb-2">
-                      Inscrição (1º ano)
+                      Anual
                     </span>
                     <span className="text-xs font-semibold text-yellow-900 mb-2">
-                      Seguro Incluído
+                      Inscrição + Seguro Desportivo
                     </span>
                     <span className="text-2xl font-bold text-yellow-800 mb-2">
-                      215 €
+                      206 €
                     </span>
                     <span className="text-xs text-yellow-700 text-center mt-1">
-                      Setembro: <strong>95€</strong><br />
-                      Outubro: <strong>60€</strong><br />
-                      Novembro: <strong>60€</strong>
-                    </span>
-                  </div>
-
-                  <div className="w-[220px] h-[220px] bg-purple-200 rounded-xl px-4 py-4 flex flex-col items-center justify-center shadow border border-purple-400">
-                    <span className="text-lg text-center font-semibold text-purple-900 mb-2">
-                      Renovação<br /> 
-                      (anos seguintes)
-                    </span>
-                    <span className="text-2xl font-bold text-purple-800 mb-2">
-                      205 €
-                    </span>
-                    <span className="text-xs text-purple-700 text-center mt-1">
-                      Setembro: <strong>85€</strong><br />
-                      Outubro: <strong>60€</strong><br />
-                      Novembro: <strong>60€</strong>
+                      Setembro: <strong>103€</strong><br />
+                      Outubro: <strong>103€</strong>
                     </span>
                   </div>
                 </div>
