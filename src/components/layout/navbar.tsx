@@ -146,6 +146,12 @@ const Navbar = () => {
               Horários
             </Link>
             <Link
+              href="/nutricao"
+              className="text-white hover:text-yellow-200 font-medium transition-colors"
+            >
+              Nutrição
+            </Link>
+            <Link
               href="/inscricoes"
               className="bg-blue-800 text-white px-6 py-2 rounded-full hover:bg-blue-900 transition-colors font-medium"
             >
@@ -273,6 +279,14 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Horários
+              </Link>
+
+              <Link
+                href="/nutricao"
+                className="block px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-800 rounded-md"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Nutrição
               </Link>
 
               <Link
